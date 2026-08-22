@@ -3155,6 +3155,57 @@ function addLightNodeToMap(node){
   }
 }
 
+// Convert a lat/lon into the schematic Grid map's SVG coordinate space,
+// using the same lat/lon <-> pixel relationship the Grid map already
+// uses for its live coordinate readout (top-left = 11.0100,76.9480,
+// spanning 0.02 deg over the 700x340 viewBox).
+function latLonToGridXY(lat, lon){
+  const x = ((lon - 76.9480) / 0.02) * 700;
+  const y = ((lat - 11.0100) / 0.02) * 340;
+  return {
+    x: Math.min(685, Math.max(15, x)),
+    y: Math.min(325, Math.max(15, y))
+  };
+}
+
+function addLightNodeToGrid(node){
+  const svg = document.getElementById('mainMap');
+  if(!svg) return;
+  const { x, y } = latLonToGridXY(node.lat, node.lon);
+  const color = LIGHT_STATUS_COLOR[node.s] || '#888';
+  const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  circle.setAttribute('class', 'mnode');
+  circle.setAttribute('cx', x);
+  circle.setAttribute('cy', y);
+  circle.setAttribute('r', '7');
+  circle.setAttribute('fill', color);
+  circle.setAttribute('filter', 'url(#lg)');
+  circle.setAttribute('stroke', '#fff');
+  circle.setAttribute('stroke-width', '1.5');
+  circle.setAttribute('data-id', node.id);
+  circle.setAttribute('data-s', node.s);
+  circle.setAttribute('data-z', node.z);
+  circle.setAttribute('data-added', 'true');
+  svg.appendChild(circle);
+  if(window.attachMnodeTooltip) attachMnodeTooltip(circle);
+}
+
+function addLightNodeToCoverageMap(node){
+  if(!homeCoverageMapInstance) return;
+  const color = LIGHT_STATUS_COLOR[node.s] || '#888';
+  const label = LIGHT_STATUS_LABEL[node.s] || node.s;
+  const marker = L.circleMarker([node.lat, node.lon], {
+    radius: 8,
+    color: '#fff',
+    weight: 2,
+    fillColor: color,
+    fillOpacity: 0.95
+  }).addTo(homeCoverageMapInstance);
+  marker.bindPopup(`<div style="font-family:'Share Tech Mono',monospace;font-size:11px;"><b style="color:${color};">${node.id}</b><br>${label} · Zone ${node.z}<br>${node.lat.toFixed(4)}, ${node.lon.toFixed(4)}</div>`);
+  window.coverageMarkers = window.coverageMarkers || {};
+  window.coverageMarkers[node.id] = { marker, status: node.s };
+}
+
 function handleAddLightSubmit(event){
   event.preventDefault();
   const errEl = document.getElementById('al-error');
@@ -3175,6 +3226,17 @@ function handleAddLightSubmit(event){
 
   const node = { id, s: status, z: zone, lat, lon, type: fixtureType || undefined, notes: notes || undefined };
   LIGHT_NODES.push(node);
+
+  // Grid map (schematic SVG) — always add immediately
+  addLightNodeToGrid(node);
+
+  // Coverage map — add if it's already initialised, otherwise wait for it
+  if(homeCoverageMapInstance){
+    addLightNodeToCoverageMap(node);
+  } else if(window.initHomeCoverageMap){
+    initHomeCoverageMap();
+    setTimeout(() => addLightNodeToCoverageMap(node), 200);
+  }
 
   // Make sure the Live Map is visible so the new node is immediately seen
   setHomeMapView('osm');
@@ -3361,7 +3423,7 @@ function setHomeMapView(view){
 // ── Map tooltip ──
 const mtt=document.getElementById('mtt');
 const mapWrap=document.querySelector('.map-panel');
-document.querySelectorAll('.mnode').forEach(n=>{
+function attachMnodeTooltip(n){
   n.style.cursor='pointer';
   n.addEventListener('mouseenter',()=>{
     document.getElementById('mtt-id').textContent=n.dataset.id;
@@ -3380,7 +3442,9 @@ document.querySelectorAll('.mnode').forEach(n=>{
     document.querySelectorAll('.mnode').forEach(x=>x.setAttribute('stroke-width','1.5'));
     n.setAttribute('stroke-width','3');
   });
-});
+}
+document.querySelectorAll('.mnode').forEach(attachMnodeTooltip);
+window.attachMnodeTooltip = attachMnodeTooltip;
 
 // ── Map coord ──
 const mapSvg=document.getElementById('mainMap');
