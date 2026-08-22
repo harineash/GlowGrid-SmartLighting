@@ -1116,28 +1116,28 @@ function logoutApp(){
     <div class="card" style="padding:16px;">
       <div class="card-accent cyan"></div>
       <div style="font-size:20px;margin-bottom:8px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg></div>
-      <div class="kpi-num" style="color:var(--cyan);font-size:24px;">248</div>
+      <div class="kpi-num" id="kpi-total-lights" style="color:var(--cyan);font-size:24px;">248</div>
       <div class="kpi-lbl">Total Lights</div>
-      <div class="kpi-delta up">↑ 3 new this month</div>
+      <div class="kpi-delta up" id="kpi-total-delta">↑ 3 new this month</div>
     </div>
     <div class="card" style="padding:16px;">
       <div class="card-accent green"></div>
       <div style="font-size:20px;margin-bottom:8px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-      <div class="kpi-num" style="color:var(--green);font-size:24px;">231</div>
+      <div class="kpi-num" id="kpi-online-count" style="color:var(--green);font-size:24px;">231</div>
       <div class="kpi-lbl">ON</div>
       <div class="kpi-delta up">↑ 93.1% uptime</div>
     </div>
     <div class="card" style="padding:16px;">
       <div class="card-accent red"></div>
       <div style="font-size:20px;margin-bottom:8px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" fill="currentColor" stroke="none"/></svg></div>
-      <div class="kpi-num" style="color:var(--red);font-size:24px;">11</div>
+      <div class="kpi-num" id="kpi-fault-count" style="color:var(--red);font-size:24px;">11</div>
       <div class="kpi-lbl">Faults</div>
       <div class="kpi-delta down">↑ 2 since yesterday</div>
     </div>
     <div class="card" style="padding:16px;">
       <div class="card-accent amber"></div>
       <div style="font-size:20px;margin-bottom:8px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
-      <div class="kpi-num" style="color:var(--amber);font-size:24px;">6</div>
+      <div class="kpi-num" id="kpi-dim-count" style="color:var(--amber);font-size:24px;">6</div>
       <div class="kpi-lbl">Dim / Low</div>
       <div class="kpi-delta warn"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Low voltage</div>
     </div>
@@ -1167,6 +1167,10 @@ function logoutApp(){
         <button class="btn sm" onclick="filterMap(this,'fault')">Fault</button>
         <button class="btn sm" onclick="filterMap(this,'dim')">Dim</button>
         <div style="flex:1;"></div>
+        <button class="btn sm primary" id="add-light-btn" onclick="openAddLightModal()" style="display:flex;align-items:center;gap:5px;">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Light
+        </button>
         <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);" id="map-coord">LAT: 11.0168 · LON: 76.9558</span>
       </div>
       <div id="osm-light-map"></div>
@@ -1266,6 +1270,74 @@ function logoutApp(){
         <div class="tt-row"><span>VOLTAGE</span><span>220V</span></div>
         <div class="tt-row"><span>UPTIME</span><span>99.2%</span></div>
       </div>
+    </div>
+
+    <!-- Add Street Light Modal -->
+    <div id="al-overlay" onclick="closeAddLightModal()" style="display:none;position:fixed;inset:0;z-index:900;background:rgba(2,6,12,0.65);backdrop-filter:blur(2px);"></div>
+    <div id="al-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:901;width:420px;max-width:92vw;max-height:88vh;overflow-y:auto;background:var(--surface);border:1px solid var(--border2);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.55),0 0 40px var(--glow-c);animation:loginIn .2s ease;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px 14px;border-bottom:1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:34px;height:34px;border-radius:9px;border:1px solid var(--cyan);display:flex;align-items:center;justify-content:center;color:var(--cyan);box-shadow:0 0 14px var(--glow-c);">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          </div>
+          <div>
+            <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--text);letter-spacing:0.5px;">Add Street Light</div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:9.5px;color:var(--muted);letter-spacing:1px;">REGISTER NEW NODE ON LIVE MAP</div>
+          </div>
+        </div>
+        <button onclick="closeAddLightModal()" style="background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;" title="Close">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <form id="al-form" onsubmit="return handleAddLightSubmit(event)" style="padding:18px 20px 20px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div class="login-field" style="grid-column:1 / -1;margin-bottom:0;">
+            <label class="login-label">Street Light Number / ID</label>
+            <input class="login-input" type="text" id="al-id" placeholder="e.g. SL-030" required>
+          </div>
+          <div class="login-field" style="margin-bottom:0;">
+            <label class="login-label">Latitude</label>
+            <input class="login-input" type="number" step="any" id="al-lat" placeholder="11.02266" required>
+          </div>
+          <div class="login-field" style="margin-bottom:0;">
+            <label class="login-label">Longitude</label>
+            <input class="login-input" type="number" step="any" id="al-lon" placeholder="76.95109" required>
+          </div>
+          <div class="login-field" style="margin-bottom:0;">
+            <label class="login-label">Zone</label>
+            <select class="login-input" id="al-zone" style="cursor:pointer;">
+              <option value="A">Zone A</option>
+              <option value="B">Zone B</option>
+              <option value="C">Zone C</option>
+              <option value="D">Zone D</option>
+              <option value="E">Zone E</option>
+              <option value="F">Zone F</option>
+            </select>
+          </div>
+          <div class="login-field" style="margin-bottom:0;">
+            <label class="login-label">Status</label>
+            <select class="login-input" id="al-status" style="cursor:pointer;">
+              <option value="online">Online (Proper)</option>
+              <option value="fault">Fault</option>
+              <option value="dim">Dim / Low</option>
+            </select>
+          </div>
+          <div class="login-field" style="grid-column:1 / -1;margin-bottom:0;">
+            <label class="login-label">Pole / Fixture Type (optional)</label>
+            <input class="login-input" type="text" id="al-type" placeholder="e.g. LED 40W, High Mast">
+          </div>
+          <div class="login-field" style="grid-column:1 / -1;margin-bottom:0;">
+            <label class="login-label">Notes / Location (optional)</label>
+            <input class="login-input" type="text" id="al-notes" placeholder="e.g. Near bus stop, Gandhi Road">
+          </div>
+        </div>
+        <div id="al-error" style="display:none;color:var(--red);font-family:'Share Tech Mono',monospace;font-size:11px;margin-top:12px;"></div>
+        <div style="display:flex;gap:10px;margin-top:20px;">
+          <button type="button" class="btn sm" style="flex:1;padding:10px;" onclick="closeAddLightModal()">Cancel</button>
+          <button type="submit" class="btn sm primary" style="flex:1;padding:10px;">Add Street Light</button>
+        </div>
+      </form>
     </div>
 
     <!-- Right column -->
@@ -2965,9 +3037,11 @@ let osmLightMapInstance = null;
 function buildOsmLightPopup(node){
   const label = LIGHT_STATUS_LABEL[node.s] || node.s;
   const color = LIGHT_STATUS_COLOR[node.s] || '#888';
+  const extra = [node.type, node.notes].filter(Boolean).join(' · ');
   return `<div class="osm-light-popup">
     <div class="olp-id" style="color:${color};">${node.id}</div>
     <div class="olp-meta">${label} · Zone ${node.z} · ${node.lat.toFixed(4)}, ${node.lon.toFixed(4)}</div>
+    ${extra ? `<div class="olp-meta">${extra}</div>` : ''}
     <div class="olp-actions">
       <button class="olp-btn call" onclick="callAboutFault('${node.id}')">📞 Call</button>
       <button class="olp-btn msg" onclick="messageAboutFault('${node.id}')">💬 Msg</button>
@@ -3022,6 +3096,102 @@ function initHomeOsmMap(){
     });
   }
 }
+
+// ══ ADD NEW STREET LIGHT ══
+function nextLightId(){
+  let max = 0;
+  LIGHT_NODES.forEach(n => {
+    const m = /SL-(\d+)/.exec(n.id);
+    if(m) max = Math.max(max, parseInt(m[1], 10));
+  });
+  return 'SL-' + String(max + 1).padStart(3, '0');
+}
+
+function openAddLightModal(){
+  document.getElementById('al-form').reset();
+  document.getElementById('al-error').style.display = 'none';
+  document.getElementById('al-id').value = nextLightId();
+  document.getElementById('al-overlay').style.display = 'block';
+  document.getElementById('al-modal').style.display = 'block';
+  setTimeout(() => document.getElementById('al-id').focus(), 50);
+}
+
+function closeAddLightModal(){
+  document.getElementById('al-overlay').style.display = 'none';
+  document.getElementById('al-modal').style.display = 'none';
+}
+
+function updateHomeKpisAfterAdd(status){
+  const totalEl = document.getElementById('kpi-total-lights');
+  const onlineEl = document.getElementById('kpi-online-count');
+  const faultEl = document.getElementById('kpi-fault-count');
+  const dimEl = document.getElementById('kpi-dim-count');
+  const deltaEl = document.getElementById('kpi-total-delta');
+  if(totalEl) totalEl.textContent = (parseInt(totalEl.textContent, 10) || 0) + 1;
+  if(status === 'online' && onlineEl) onlineEl.textContent = (parseInt(onlineEl.textContent, 10) || 0) + 1;
+  if(status === 'fault' && faultEl) faultEl.textContent = (parseInt(faultEl.textContent, 10) || 0) + 1;
+  if(status === 'dim' && dimEl) dimEl.textContent = (parseInt(dimEl.textContent, 10) || 0) + 1;
+  if(deltaEl){
+    const n = LIGHT_NODES.length;
+    deltaEl.textContent = '↑ ' + n + ' new this session';
+  }
+}
+
+function addLightNodeToMap(node){
+  // Add to the OpenStreetMap live map (with correct status colour)
+  if(osmLightMapInstance){
+    const color = LIGHT_STATUS_COLOR[node.s] || '#888';
+    const marker = L.circleMarker([node.lat, node.lon], {
+      radius: 8,
+      color: '#fff',
+      weight: 2,
+      fillColor: color,
+      fillOpacity: 0.95
+    }).addTo(osmLightMapInstance);
+    marker.bindPopup(buildOsmLightPopup(node));
+    window.osmMarkers[node.id] = { marker, status: node.s };
+    osmLightMapInstance.panTo([node.lat, node.lon]);
+    setTimeout(() => marker.openPopup(), 350);
+  }
+}
+
+function handleAddLightSubmit(event){
+  event.preventDefault();
+  const errEl = document.getElementById('al-error');
+  errEl.style.display = 'none';
+
+  let id = document.getElementById('al-id').value.trim().toUpperCase();
+  const lat = parseFloat(document.getElementById('al-lat').value);
+  const lon = parseFloat(document.getElementById('al-lon').value);
+  const zone = document.getElementById('al-zone').value;
+  const status = document.getElementById('al-status').value;
+  const fixtureType = document.getElementById('al-type').value.trim();
+  const notes = document.getElementById('al-notes').value.trim();
+
+  if(!id){ errEl.textContent = 'Please enter a street light number / ID.'; errEl.style.display = 'block'; return false; }
+  if(isNaN(lat) || lat < -90 || lat > 90){ errEl.textContent = 'Please enter a valid latitude (-90 to 90).'; errEl.style.display = 'block'; return false; }
+  if(isNaN(lon) || lon < -180 || lon > 180){ errEl.textContent = 'Please enter a valid longitude (-180 to 180).'; errEl.style.display = 'block'; return false; }
+  if(LIGHT_NODES.some(n => n.id === id)){ errEl.textContent = 'A street light with ID "' + id + '" already exists.'; errEl.style.display = 'block'; return false; }
+
+  const node = { id, s: status, z: zone, lat, lon, type: fixtureType || undefined, notes: notes || undefined };
+  LIGHT_NODES.push(node);
+
+  // Make sure the Live Map is visible so the new node is immediately seen
+  setHomeMapView('osm');
+  setTimeout(() => addLightNodeToMap(node), osmLightMapInstance ? 0 : 150);
+
+  updateHomeKpisAfterAdd(status);
+  closeAddLightModal();
+
+  const statusLabel = LIGHT_STATUS_LABEL[status] || status;
+  const color = LIGHT_STATUS_COLOR[status] || '#00e5ff';
+  if(window.showToast) showToast(id + ' added — ' + statusLabel + ' · Zone ' + zone, color);
+
+  return false;
+}
+window.openAddLightModal = openAddLightModal;
+window.closeAddLightModal = closeAddLightModal;
+window.handleAddLightSubmit = handleAddLightSubmit;
 
 let patrolMapInstance = null;
 let patrolStreetLayer = null;
