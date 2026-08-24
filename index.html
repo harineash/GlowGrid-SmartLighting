@@ -1116,30 +1116,30 @@ function logoutApp(){
     <div class="card" style="padding:16px;">
       <div class="card-accent cyan"></div>
       <div style="font-size:20px;margin-bottom:8px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg></div>
-      <div class="kpi-num" id="kpi-total-lights" style="color:var(--cyan);font-size:24px;">248</div>
+      <div class="kpi-num" id="kpi-total-lights" style="color:var(--cyan);font-size:24px;">10</div>
       <div class="kpi-lbl">Total Lights</div>
-      <div class="kpi-delta up" id="kpi-total-delta">↑ 3 new this month</div>
+      <div class="kpi-delta up" id="kpi-total-delta">BIT Sathy Campus</div>
     </div>
     <div class="card" style="padding:16px;">
       <div class="card-accent green"></div>
       <div style="font-size:20px;margin-bottom:8px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-      <div class="kpi-num" id="kpi-online-count" style="color:var(--green);font-size:24px;">231</div>
+      <div class="kpi-num" id="kpi-online-count" style="color:var(--green);font-size:24px;">7</div>
       <div class="kpi-lbl">ON</div>
-      <div class="kpi-delta up">↑ 93.1% uptime</div>
+      <div class="kpi-delta up">↑ 70% uptime</div>
     </div>
     <div class="card" style="padding:16px;">
       <div class="card-accent red"></div>
       <div style="font-size:20px;margin-bottom:8px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" fill="currentColor" stroke="none"/></svg></div>
-      <div class="kpi-num" id="kpi-fault-count" style="color:var(--red);font-size:24px;">11</div>
+      <div class="kpi-num" id="kpi-fault-count" style="color:var(--red);font-size:24px;">2</div>
       <div class="kpi-lbl">Faults</div>
-      <div class="kpi-delta down">↑ 2 since yesterday</div>
+      <div class="kpi-delta down">Academic Block I, Cafeteria</div>
     </div>
     <div class="card" style="padding:16px;">
       <div class="card-accent amber"></div>
       <div style="font-size:20px;margin-bottom:8px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
-      <div class="kpi-num" id="kpi-dim-count" style="color:var(--amber);font-size:24px;">6</div>
+      <div class="kpi-num" id="kpi-dim-count" style="color:var(--amber);font-size:24px;">1</div>
       <div class="kpi-lbl">Dim / Low</div>
-      <div class="kpi-delta warn"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Low voltage</div>
+      <div class="kpi-delta warn"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Boys Hostel</div>
     </div>
     <div class="card" style="padding:16px;">
       <div class="card-accent purple"></div>
@@ -1171,7 +1171,11 @@ function logoutApp(){
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Add Light
         </button>
-        <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);" id="map-coord">LAT: 11.0168 · LON: 76.9558</span>
+        <button class="btn sm" id="manage-light-btn" onclick="openManageLightsModal()" style="display:flex;align-items:center;gap:5px;">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          Manage
+        </button>
+        <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);" id="map-coord">LAT: 11.4986 · LON: 77.2743</span>
       </div>
       <div id="osm-light-map"></div>
       <svg class="map-svg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" id="mainMap">
@@ -1215,38 +1219,8 @@ function logoutApp(){
         <line x1="310" y1="0" x2="310" y2="340" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="10,8"/>
         <line x1="427" y1="0" x2="427" y2="340" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="10,8"/>
         <line x1="574" y1="0" x2="574" y2="340" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="10,8"/>
-        <!-- Street light nodes -->
+        <!-- Street light nodes are rendered dynamically from LIGHT_NODES (see renderSeedGridNodes()) -->
         <!-- Online = green, Fault = red, Dim = amber -->
-        <circle class="mnode" cx="30" cy="98" r="7" fill="#00e676" filter="url(#lg)" data-id="SL-001" data-s="online" data-z="A"/>
-        <circle class="mnode" cx="130" cy="98" r="7" fill="#00e676" filter="url(#lg)" data-id="SL-002" data-s="online" data-z="A"/>
-        <circle class="mnode" cx="230" cy="98" r="7" fill="#ff3b5c" filter="url(#lg)" data-id="SL-003" data-s="fault" data-z="D"/>
-        <circle class="mnode" cx="298" cy="98" r="7" fill="#00e676" filter="url(#lg)" data-id="SL-004" data-s="online" data-z="A"/>
-        <circle class="mnode" cx="390" cy="98" r="7" fill="#ffb300" filter="url(#lg)" data-id="SL-005" data-s="dim" data-z="C"/>
-        <circle class="mnode" cx="415" cy="98" r="7" fill="#00e676" filter="url(#lg)" data-id="SL-006" data-s="online" data-z="A"/>
-        <circle class="mnode" cx="500" cy="98" r="7" fill="#00e676" filter="url(#lg)" data-id="SL-007" data-s="online" data-z="A"/>
-        <circle class="mnode" cx="562" cy="98" r="7" fill="#ff3b5c" filter="url(#lg)" data-id="SL-008" data-s="fault" data-z="D"/>
-        <circle class="mnode" cx="660" cy="98" r="7" fill="#00e676" filter="url(#lg)" data-id="SL-009" data-s="online" data-z="B"/>
-        <circle class="mnode" cx="30" cy="238" r="7" fill="#00e676" filter="url(#lg)" data-id="SL-010" data-s="online" data-z="B"/>
-        <circle class="mnode" cx="130" cy="238" r="7" fill="#ffb300" filter="url(#lg)" data-id="SL-011" data-s="dim" data-z="C"/>
-        <circle class="mnode" cx="220" cy="238" r="7" fill="#00e676" filter="url(#lg)" data-id="SL-012" data-s="online" data-z="B"/>
-        <circle class="mnode" cx="298" cy="238" r="7" fill="#ff3b5c" filter="url(#lg)" data-id="SL-013" data-s="fault" data-z="D"/>
-        <circle class="mnode" cx="380" cy="238" r="7" fill="#00e676" filter="url(#lg)" data-id="SL-014" data-s="online" data-z="B"/>
-        <circle class="mnode" cx="415" cy="238" r="7" fill="#00e676" filter="url(#lg)" data-id="SL-015" data-s="online" data-z="E"/>
-        <circle class="mnode" cx="510" cy="238" r="7" fill="#ffb300" filter="url(#lg)" data-id="SL-016" data-s="dim" data-z="C"/>
-        <circle class="mnode" cx="562" cy="238" r="7" fill="#00e676" filter="url(#lg)" data-id="SL-017" data-s="online" data-z="E"/>
-        <circle class="mnode" cx="650" cy="238" r="7" fill="#ff3b5c" filter="url(#lg)" data-id="SL-018" data-s="fault" data-z="D"/>
-        <!-- Column -->
-        <circle class="mnode" cx="130" cy="50" r="7" fill="#00e676" filter="url(#lg)" data-id="SL-019" data-s="online" data-z="F"/>
-        <circle class="mnode" cx="130" cy="190" r="7" fill="#ff3b5c" filter="url(#lg)" data-id="SL-020" data-s="fault" data-z="D"/>
-        <circle class="mnode" cx="130" cy="295" r="7" fill="#00e676" filter="url(#lg)" data-id="SL-021" data-s="online" data-z="F"/>
-        <circle class="mnode" cx="298" cy="50" r="7" fill="#00e676" filter="url(#lg)" data-id="SL-022" data-s="online" data-z="A"/>
-        <circle class="mnode" cx="298" cy="190" r="7" fill="#ffb300" filter="url(#lg)" data-id="SL-023" data-s="dim" data-z="C"/>
-        <circle class="mnode" cx="298" cy="300" r="7" fill="#00e676" filter="url(#lg)" data-id="SL-024" data-s="online" data-z="A"/>
-        <circle class="mnode" cx="415" cy="50" r="7" fill="#ff3b5c" filter="url(#lg)" data-id="SL-025" data-s="fault" data-z="D"/>
-        <circle class="mnode" cx="415" cy="190" r="7" fill="#00e676" filter="url(#lg)" data-id="SL-026" data-s="online" data-z="B"/>
-        <circle class="mnode" cx="562" cy="50" r="7" fill="#00e676" filter="url(#lg)" data-id="SL-027" data-s="online" data-z="B"/>
-        <circle class="mnode" cx="562" cy="190" r="7" fill="#00e676" filter="url(#lg)" data-id="SL-028" data-s="online" data-z="B"/>
-        <circle class="mnode" cx="562" cy="300" r="7" fill="#ff3b5c" filter="url(#lg)" data-id="SL-029" data-s="fault" data-z="D"/>
         <!-- Zone labels -->
         <text x="75" y="135" fill="#ffffff" font-size="11" font-weight="700" font-family="'Share Tech Mono',monospace" style="text-shadow:0 0 8px #fff;">ZONE A</text>
         <text x="350" y="135" fill="#00f07a" font-size="11" font-weight="700" font-family="'Share Tech Mono',monospace" style="text-shadow:0 0 8px #00f07a;">ZONE B</text>
@@ -1338,6 +1312,29 @@ function logoutApp(){
           <button type="submit" class="btn sm primary" style="flex:1;padding:10px;">Add Street Light</button>
         </div>
       </form>
+    </div>
+
+    <!-- Manage / Remove Street Lights Modal -->
+    <div id="ml-overlay" onclick="closeManageLightsModal()" style="display:none;position:fixed;inset:0;z-index:900;background:rgba(2,6,12,0.65);backdrop-filter:blur(2px);"></div>
+    <div id="ml-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:901;width:440px;max-width:92vw;max-height:80vh;flex-direction:column;background:var(--surface);border:1px solid var(--border2);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.55),0 0 40px var(--glow-c);animation:loginIn .2s ease;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px 14px;border-bottom:1px solid var(--border);flex-shrink:0;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:34px;height:34px;border-radius:9px;border:1px solid var(--cyan);display:flex;align-items:center;justify-content:center;color:var(--cyan);box-shadow:0 0 14px var(--glow-c);">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          </div>
+          <div>
+            <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--text);letter-spacing:0.5px;">Manage Street Lights</div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:9.5px;color:var(--muted);letter-spacing:1px;" id="ml-count">0 total</div>
+          </div>
+        </div>
+        <button onclick="closeManageLightsModal()" style="background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;" title="Close">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div style="padding:12px 20px;border-bottom:1px solid var(--border);flex-shrink:0;">
+        <input class="login-input" type="text" id="ml-search" placeholder="Search by ID or zone…" oninput="renderManageLightsList()" style="padding:8px 12px;font-size:13px;">
+      </div>
+      <div id="ml-body" style="overflow-y:auto;flex:1;"></div>
     </div>
 
     <!-- Right column -->
@@ -2997,42 +2994,30 @@ function filterMap(btn, type){
 // ══ OPENSTREETMAP — LIVE LIGHT MONITORING MAP ══
 // Real GPS coordinates for every street light node, derived from the
 // grid layout, centred on Coimbatore.
+// ══ BIT SATHY CAMPUS STREET LIGHTS ══
+// Bannari Amman Institute of Technology (BIT Sathy), Sathyamangalam, Erode.
+// Real campus centre: 11.4986°N, 77.2743°E. All nodes below are placed
+// within the ~181-acre campus footprint around that point.
 const LIGHT_NODES = [
-  {id:'SL-001',s:'online',z:'A',lat:11.02266,lon:76.94794},
-  {id:'SL-002',s:'online',z:'A',lat:11.02266,lon:76.95109},
-  {id:'SL-003',s:'fault',z:'D',lat:11.02266,lon:76.95423},
-  {id:'SL-004',s:'online',z:'A',lat:11.02266,lon:76.95637},
-  {id:'SL-005',s:'dim',z:'C',lat:11.02266,lon:76.95926},
-  {id:'SL-006',s:'online',z:'A',lat:11.02266,lon:76.96004},
-  {id:'SL-007',s:'online',z:'A',lat:11.02266,lon:76.96271},
-  {id:'SL-008',s:'fault',z:'D',lat:11.02266,lon:76.96466},
-  {id:'SL-009',s:'online',z:'B',lat:11.02266,lon:76.96774},
-  {id:'SL-010',s:'online',z:'B',lat:11.01360,lon:76.94794},
-  {id:'SL-011',s:'dim',z:'C',lat:11.01360,lon:76.95109},
-  {id:'SL-012',s:'online',z:'B',lat:11.01360,lon:76.95391},
-  {id:'SL-013',s:'fault',z:'D',lat:11.01360,lon:76.95637},
-  {id:'SL-014',s:'online',z:'B',lat:11.01360,lon:76.95894},
-  {id:'SL-015',s:'online',z:'E',lat:11.01360,lon:76.96004},
-  {id:'SL-016',s:'dim',z:'C',lat:11.01360,lon:76.96303},
-  {id:'SL-017',s:'online',z:'E',lat:11.01360,lon:76.96466},
-  {id:'SL-018',s:'fault',z:'D',lat:11.01360,lon:76.96743},
-  {id:'SL-019',s:'online',z:'F',lat:11.02576,lon:76.95109},
-  {id:'SL-020',s:'fault',z:'D',lat:11.01671,lon:76.95109},
-  {id:'SL-021',s:'online',z:'F',lat:11.00991,lon:76.95109},
-  {id:'SL-022',s:'online',z:'A',lat:11.02576,lon:76.95637},
-  {id:'SL-023',s:'dim',z:'C',lat:11.01671,lon:76.95637},
-  {id:'SL-024',s:'online',z:'A',lat:11.00959,lon:76.95637},
-  {id:'SL-025',s:'fault',z:'D',lat:11.02576,lon:76.96004},
-  {id:'SL-026',s:'online',z:'B',lat:11.01671,lon:76.96004},
-  {id:'SL-027',s:'online',z:'B',lat:11.02576,lon:76.96466},
-  {id:'SL-028',s:'online',z:'B',lat:11.01671,lon:76.96466},
-  {id:'SL-029',s:'fault',z:'D',lat:11.00959,lon:76.96466},
+  {id:'SL-001',s:'online',z:'A',lat:11.4956,lon:77.2728,type:'LED 40W',notes:'Main Gate'},
+  {id:'SL-002',s:'online',z:'A',lat:11.4968,lon:77.2738,type:'LED 60W',notes:'Admin Block'},
+  {id:'SL-003',s:'online',z:'B',lat:11.4978,lon:77.2749,type:'LED 60W',notes:'Central Library'},
+  {id:'SL-004',s:'fault', z:'B',lat:11.4992,lon:77.2757,type:'LED 40W',notes:'Academic Block I'},
+  {id:'SL-005',s:'online',z:'B',lat:11.5002,lon:77.2745,type:'LED 40W',notes:'Academic Block II'},
+  {id:'SL-006',s:'dim',   z:'C',lat:11.5012,lon:77.2731,type:'LED 30W',notes:'Boys Hostel'},
+  {id:'SL-007',s:'online',z:'C',lat:11.4998,lon:77.2721,type:'LED 30W',notes:'Girls Hostel'},
+  {id:'SL-008',s:'online',z:'D',lat:11.4980,lon:77.2717,type:'High Mast 150W',notes:'Sports Ground'},
+  {id:'SL-009',s:'fault', z:'D',lat:11.4966,lon:77.2753,type:'LED 40W',notes:'Cafeteria / Food Court'},
+  {id:'SL-010',s:'online',z:'E',lat:11.4988,lon:77.2737,type:'LED 60W',notes:'Auditorium'},
 ];
 const LIGHT_STATUS_COLOR = { online:'#00e676', fault:'#ff3b5c', dim:'#ffb300' };
 const LIGHT_STATUS_LABEL = { online:'Online', fault:'Fault', dim:'Dim / Low' };
+const ZONE_COLORS = { A:'#ffffff', B:'#00f07a', C:'#ff6688', D:'#00e5ff', E:'#bf80ff', F:'#ffc200' };
+function zoneColor(z){ return ZONE_COLORS[z] || '#00e5ff'; }
 
 window.osmMarkers = {};
 let osmLightMapInstance = null;
+let zoneOverlayLayer = null;
 
 function buildOsmLightPopup(node){
   const label = LIGHT_STATUS_LABEL[node.s] || node.s;
@@ -3045,20 +3030,65 @@ function buildOsmLightPopup(node){
     <div class="olp-actions">
       <button class="olp-btn call" onclick="callAboutFault('${node.id}')">📞 Call</button>
       <button class="olp-btn msg" onclick="messageAboutFault('${node.id}')">💬 Msg</button>
+      <button class="olp-btn" style="color:#ff3b5c;border-color:rgba(255,59,92,0.35);" onclick="removeStreetLight('${node.id}')">🗑 Remove</button>
     </div>
   </div>`;
 }
+
+// Groups the current LIGHT_NODES by zone and draws a dashed boundary
+// box + label for each zone on the Live Map, so zones are visually
+// split out instead of all nodes blending together.
+function renderZoneOverlays(){
+  if(!osmLightMapInstance) return;
+  if(zoneOverlayLayer){ osmLightMapInstance.removeLayer(zoneOverlayLayer); }
+  zoneOverlayLayer = L.layerGroup().addTo(osmLightMapInstance);
+
+  const byZone = {};
+  LIGHT_NODES.forEach(n => { (byZone[n.z] = byZone[n.z] || []).push(n); });
+
+  Object.keys(byZone).sort().forEach(z => {
+    const nodes = byZone[z];
+    const color = zoneColor(z);
+    const pad = 0.0016;
+    let minLat = Math.min(...nodes.map(n => n.lat)) - pad;
+    let maxLat = Math.max(...nodes.map(n => n.lat)) + pad;
+    let minLon = Math.min(...nodes.map(n => n.lon)) - pad;
+    let maxLon = Math.max(...nodes.map(n => n.lon)) + pad;
+
+    L.rectangle([[minLat, minLon], [maxLat, maxLon]], {
+      color: color,
+      weight: 1.5,
+      dashArray: '5,5',
+      fillColor: color,
+      fillOpacity: 0.06,
+      interactive: false
+    }).addTo(zoneOverlayLayer);
+
+    const label = L.divIcon({
+      className: 'zone-label-icon',
+      html: `<div style="font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;color:${color};
+        background:rgba(2,10,18,0.85);border:1px solid ${color};border-radius:5px;padding:2px 7px;
+        white-space:nowrap;box-shadow:0 0 8px ${color}55;">ZONE ${z} · ${nodes.length}</div>`,
+      iconSize: [90, 20],
+      iconAnchor: [-4, 24]
+    });
+    L.marker([maxLat, minLon], { icon: label, interactive: false }).addTo(zoneOverlayLayer);
+  });
+}
+window.renderZoneOverlays = renderZoneOverlays;
 
 function initHomeOsmMap(){
   const el = document.getElementById('osm-light-map');
   if(!el || osmLightMapInstance || typeof L === 'undefined') return;
 
-  osmLightMapInstance = L.map(el, { zoomControl:true, attributionControl:true }).setView([11.0168, 76.9558], 15);
+  osmLightMapInstance = L.map(el, { zoomControl:true, attributionControl:true }).setView([11.4986, 77.2743], 17);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(osmLightMapInstance);
+
+  renderZoneOverlays();
 
   LIGHT_NODES.forEach(node => {
     const color = LIGHT_STATUS_COLOR[node.s] || '#888';
@@ -3152,16 +3182,18 @@ function addLightNodeToMap(node){
     window.osmMarkers[node.id] = { marker, status: node.s };
     osmLightMapInstance.panTo([node.lat, node.lon]);
     setTimeout(() => marker.openPopup(), 350);
+    renderZoneOverlays();
   }
 }
 
-// Convert a lat/lon into the schematic Grid map's SVG coordinate space,
-// using the same lat/lon <-> pixel relationship the Grid map already
-// uses for its live coordinate readout (top-left = 11.0100,76.9480,
-// spanning 0.02 deg over the 700x340 viewBox).
+// Convert a lat/lon into the schematic Grid map's SVG coordinate space.
+// Bounds are set to the BIT Sathy campus footprint (~1km x 1km around
+// the 11.4986°N, 77.2743°E campus centre) so every light — seeded or
+// newly added — lands inside the visible viewBox.
+const GRID_BOUNDS = { latMin: 11.4930, latMax: 11.5030, lonMin: 77.2690, lonMax: 77.2790 };
 function latLonToGridXY(lat, lon){
-  const x = ((lon - 76.9480) / 0.02) * 700;
-  const y = ((lat - 11.0100) / 0.02) * 340;
+  const x = ((lon - GRID_BOUNDS.lonMin) / (GRID_BOUNDS.lonMax - GRID_BOUNDS.lonMin)) * 700;
+  const y = ((lat - GRID_BOUNDS.latMin) / (GRID_BOUNDS.latMax - GRID_BOUNDS.latMin)) * 340;
   return {
     x: Math.min(685, Math.max(15, x)),
     y: Math.min(325, Math.max(15, y))
@@ -3185,9 +3217,17 @@ function addLightNodeToGrid(node){
   circle.setAttribute('data-id', node.id);
   circle.setAttribute('data-s', node.s);
   circle.setAttribute('data-z', node.z);
-  circle.setAttribute('data-added', 'true');
   svg.appendChild(circle);
-  if(window.attachMnodeTooltip) attachMnodeTooltip(circle);
+  attachMnodeTooltip(circle);
+}
+
+// Draws every node currently in LIGHT_NODES onto the Grid map. Called once
+// on load, and can be re-run any time the underlying data is replaced.
+function renderSeedGridNodes(){
+  const svg = document.getElementById('mainMap');
+  if(!svg) return;
+  svg.querySelectorAll('.mnode').forEach(n => n.remove());
+  LIGHT_NODES.forEach(addLightNodeToGrid);
 }
 
 function addLightNodeToCoverageMap(node){
@@ -3254,6 +3294,95 @@ function handleAddLightSubmit(event){
 window.openAddLightModal = openAddLightModal;
 window.closeAddLightModal = closeAddLightModal;
 window.handleAddLightSubmit = handleAddLightSubmit;
+
+// ══ REMOVE STREET LIGHT ══
+function updateHomeKpisAfterRemove(status){
+  const totalEl = document.getElementById('kpi-total-lights');
+  const onlineEl = document.getElementById('kpi-online-count');
+  const faultEl = document.getElementById('kpi-fault-count');
+  const dimEl = document.getElementById('kpi-dim-count');
+  if(totalEl) totalEl.textContent = Math.max(0, (parseInt(totalEl.textContent, 10) || 0) - 1);
+  if(status === 'online' && onlineEl) onlineEl.textContent = Math.max(0, (parseInt(onlineEl.textContent, 10) || 0) - 1);
+  if(status === 'fault' && faultEl) faultEl.textContent = Math.max(0, (parseInt(faultEl.textContent, 10) || 0) - 1);
+  if(status === 'dim' && dimEl) dimEl.textContent = Math.max(0, (parseInt(dimEl.textContent, 10) || 0) - 1);
+}
+
+function removeStreetLight(id, opts){
+  const skipConfirm = opts && opts.skipConfirm;
+  const idx = LIGHT_NODES.findIndex(n => n.id === id);
+  if(idx === -1) return;
+  if(!skipConfirm && !window.confirm('Remove ' + id + ' from the system? This cannot be undone.')) return;
+
+  const node = LIGHT_NODES[idx];
+  LIGHT_NODES.splice(idx, 1);
+
+  // Remove from OSM live map
+  if(window.osmMarkers && window.osmMarkers[id]){
+    if(osmLightMapInstance) osmLightMapInstance.removeLayer(window.osmMarkers[id].marker);
+    delete window.osmMarkers[id];
+  }
+  // Remove from Coverage map
+  if(window.coverageMarkers && window.coverageMarkers[id]){
+    if(homeCoverageMapInstance) homeCoverageMapInstance.removeLayer(window.coverageMarkers[id].marker);
+    delete window.coverageMarkers[id];
+  }
+  // Remove from Grid SVG
+  const gridNode = document.querySelector(`.mnode[data-id="${id}"]`);
+  if(gridNode) gridNode.remove();
+
+  renderZoneOverlays();
+  updateHomeKpisAfterRemove(node.s);
+  if(window.renderManageLightsList) renderManageLightsList();
+  if(window.showToast) showToast(id + ' removed from the system', '#ff3b5c');
+}
+window.removeStreetLight = removeStreetLight;
+
+// ══ MANAGE / REMOVE PANEL ══
+function openManageLightsModal(){
+  renderManageLightsList();
+  document.getElementById('ml-overlay').style.display = 'block';
+  document.getElementById('ml-modal').style.display = 'flex';
+}
+function closeManageLightsModal(){
+  document.getElementById('ml-overlay').style.display = 'none';
+  document.getElementById('ml-modal').style.display = 'none';
+}
+function renderManageLightsList(filter){
+  const body = document.getElementById('ml-body');
+  if(!body) return;
+  const q = (filter !== undefined ? filter : (document.getElementById('ml-search') ? document.getElementById('ml-search').value : '')).trim().toUpperCase();
+  const rows = LIGHT_NODES
+    .filter(n => !q || n.id.includes(q) || n.z.toUpperCase().includes(q))
+    .slice()
+    .sort((a,b) => a.id.localeCompare(b.id));
+
+  document.getElementById('ml-count').textContent = LIGHT_NODES.length + ' total';
+
+  if(!rows.length){
+    body.innerHTML = '<div style="padding:24px;text-align:center;color:var(--muted);font-family:\'Share Tech Mono\',monospace;font-size:12px;">No street lights match.</div>';
+    return;
+  }
+
+  body.innerHTML = rows.map(n => {
+    const color = LIGHT_STATUS_COLOR[n.s] || '#888';
+    const label = LIGHT_STATUS_LABEL[n.s] || n.s;
+    return `
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);">
+      <div style="width:9px;height:9px;border-radius:50%;background:${color};box-shadow:0 0 6px ${color};flex-shrink:0;"></div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:700;color:var(--text);">${n.id} <span style="color:${color};font-weight:600;">· ${label}</span></div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);">Zone ${n.z} · ${n.lat.toFixed(4)}, ${n.lon.toFixed(4)}${n.type ? ' · ' + n.type : ''}</div>
+      </div>
+      <button class="btn sm danger" onclick="removeStreetLight('${n.id}')" title="Remove ${n.id}" style="flex-shrink:0;display:flex;align-items:center;gap:4px;">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" style="width:13px;height:13px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        Remove
+      </button>
+    </div>`;
+  }).join('');
+}
+window.openManageLightsModal = openManageLightsModal;
+window.closeManageLightsModal = closeManageLightsModal;
+window.renderManageLightsList = renderManageLightsList;
 
 let patrolMapInstance = null;
 let patrolStreetLayer = null;
@@ -3374,6 +3503,9 @@ function initHomeCoverageMap(){
   });
   if (bounds.length > 1) homeCoverageMapInstance.fitBounds(bounds, { padding: [40, 40] });
 
+  // Plot the current street-light network (kept in sync with the Live Map / Grid map)
+  LIGHT_NODES.forEach(node => addLightNodeToCoverageMap(node));
+
   setTimeout(() => { if(homeCoverageMapInstance) homeCoverageMapInstance.invalidateSize(); }, 60);
 }
 window.initHomeCoverageMap = initHomeCoverageMap;
@@ -3443,7 +3575,7 @@ function attachMnodeTooltip(n){
     n.setAttribute('stroke-width','3');
   });
 }
-document.querySelectorAll('.mnode').forEach(attachMnodeTooltip);
+renderSeedGridNodes();
 window.attachMnodeTooltip = attachMnodeTooltip;
 
 // ── Map coord ──
