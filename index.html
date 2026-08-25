@@ -3070,7 +3070,18 @@ function applyLiveTelemetry(data){
     const node = LIGHT_NODES.find(n => n.id === id);
     if(!node) return; // telemetry for a light not currently on the map — ignore
 
-    const newStatus = reading.status === 'FAULT' ? 'fault' : 'online';
+    const current = Number(reading.current) || 0;
+
+    let newStatus;
+    if (current <= 0.04) {
+      newStatus = 'fault';
+    } else if (current < 0.20) {
+      newStatus = 'dim';
+    } else if (current <= 0.90) {
+      newStatus = 'online';
+    } else {
+      newStatus = 'fault';
+    }
     if(node.s !== newStatus){
       node.s = newStatus;
       anyStatusChanged = true;
