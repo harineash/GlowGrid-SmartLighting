@@ -7,7 +7,7 @@
 
 <!-- ══ PWA META ══ -->
 <meta name="application-name" content="GlowGrid">
-<meta name="description" content="Smart Street Light Monitoring System for Coimbatore">
+<meta name="description" content="Smart Street Light Monitoring System for BIT Sathy Campus, Sathyamangalam">
 <meta name="theme-color" content="#00e5ff" id="meta-theme-color">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -22,7 +22,7 @@
 <!-- ══ INLINE MANIFEST ══ -->
 <script>
 (function(){
-  const m={name:"GlowGrid — Smart Street Light & SOS System",short_name:"GlowGrid",description:"Smart Street Light & SOS Monitoring System for Coimbatore",start_url:"./",display:"standalone",orientation:"portrait-primary",background_color:"#020a12",theme_color:"#00e5ff",categories:["utilities","productivity"],icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='80' fill='%23020a12'/%3E%3Ccircle cx='256' cy='190' r='75' fill='none' stroke='%2300e5ff' stroke-width='14'/%3E%3Cline x1='256' y1='265' x2='256' y2='370' stroke='%2300e5ff' stroke-width='14' stroke-linecap='round'/%3E%3Cline x1='180' y1='370' x2='332' y2='370' stroke='%2300e5ff' stroke-width='14' stroke-linecap='round'/%3E%3Ccircle cx='256' cy='190' r='30' fill='%2300e5ff'/%3E%3C/svg%3E",sizes:"512x512",type:"image/svg+xml",purpose:"any maskable"}]};
+  const m={name:"GlowGrid — Smart Street Light & SOS System",short_name:"GlowGrid",description:"Smart Street Light & SOS Monitoring System for BIT Sathy Campus",start_url:"./",display:"standalone",orientation:"portrait-primary",background_color:"#020a12",theme_color:"#00e5ff",categories:["utilities","productivity"],icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='80' fill='%23020a12'/%3E%3Ccircle cx='256' cy='190' r='75' fill='none' stroke='%2300e5ff' stroke-width='14'/%3E%3Cline x1='256' y1='265' x2='256' y2='370' stroke='%2300e5ff' stroke-width='14' stroke-linecap='round'/%3E%3Cline x1='180' y1='370' x2='332' y2='370' stroke='%2300e5ff' stroke-width='14' stroke-linecap='round'/%3E%3Ccircle cx='256' cy='190' r='30' fill='%2300e5ff'/%3E%3C/svg%3E",sizes:"512x512",type:"image/svg+xml",purpose:"any maskable"}]};
   const b=new Blob([JSON.stringify(m)],{type:'application/json'});
   const l=document.createElement('link');
   l.rel='manifest';l.href=URL.createObjectURL(b);
@@ -1268,15 +1268,15 @@ function logoutApp(){
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
           <div class="login-field" style="grid-column:1 / -1;margin-bottom:0;">
             <label class="login-label">Street Light Number / ID</label>
-            <input class="login-input" type="text" id="al-id" placeholder="e.g. SL-030" required>
+            <input class="login-input" type="text" id="al-id" placeholder="e.g. SL-011" required>
           </div>
           <div class="login-field" style="margin-bottom:0;">
             <label class="login-label">Latitude</label>
-            <input class="login-input" type="number" step="any" id="al-lat" placeholder="11.02266" required>
+            <input class="login-input" type="number" step="any" id="al-lat" placeholder="11.4986" required>
           </div>
           <div class="login-field" style="margin-bottom:0;">
             <label class="login-label">Longitude</label>
-            <input class="login-input" type="number" step="any" id="al-lon" placeholder="76.95109" required>
+            <input class="login-input" type="number" step="any" id="al-lon" placeholder="77.2743" required>
           </div>
           <div class="login-field" style="margin-bottom:0;">
             <label class="login-label">Zone</label>
@@ -1344,28 +1344,24 @@ function logoutApp(){
         <div class="card-accent red"></div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
           <div style="font-size:14px;font-weight:700;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Live Alerts</div>
-          <span class="badge red">5 Active</span>
+          <span class="badge red">2 Active</span>
         </div>
         <div id="alerts-feed" style="display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;">
           <div class="alert-row" style="display:flex;align-items:flex-start;gap:8px;padding:8px;border-radius:8px;background:rgba(255,59,92,0.06);border:1px solid rgba(255,59,92,0.12);cursor:pointer;" onclick="showPage('fault',document.querySelectorAll('.hnav-btn')[1])">
             <span class="bdot red" style="margin-top:4px;flex-shrink:0;"></span>
-            <div style="flex:1;"><div style="font-size:12px;font-weight:700;">SL-003 — Lamp Failure</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Zone D · No current · 8m ago</div></div>
+            <div style="flex:1;"><div style="font-size:12px;font-weight:700;">SL-004 — Lamp Failure</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Zone B · Academic Block I · 8m ago</div></div>
           </div>
           <div class="alert-row" style="display:flex;align-items:flex-start;gap:8px;padding:8px;border-radius:8px;background:rgba(255,179,0,0.06);border:1px solid rgba(255,179,0,0.12);cursor:pointer;">
             <span class="bdot amber" style="margin-top:4px;flex-shrink:0;"></span>
-            <div style="flex:1;"><div style="font-size:12px;font-weight:700;">SL-011 — Low Voltage</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Zone C · 172V · 15m ago</div></div>
+            <div style="flex:1;"><div style="font-size:12px;font-weight:700;">SL-006 — Low Voltage</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Zone C · Boys Hostel · 172V · 15m ago</div></div>
           </div>
-          <div class="alert-row" style="display:flex;align-items:flex-start;gap:8px;padding:8px;border-radius:8px;background:rgba(255,59,92,0.06);border:1px solid rgba(255,59,92,0.12);cursor:pointer;">
+          <div class="alert-row" style="display:flex;align-items:flex-start;gap:8px;padding:8px;border-radius:8px;background:rgba(255,59,92,0.06);border:1px solid rgba(255,59,92,0.12);cursor:pointer;" onclick="showPage('fault',document.querySelectorAll('.hnav-btn')[1])">
             <span class="bdot red" style="margin-top:4px;flex-shrink:0;"></span>
-            <div style="flex:1;"><div style="font-size:12px;font-weight:700;">SL-020 — Comm Lost</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Zone D · No response · 22m ago</div></div>
-          </div>
-          <div class="alert-row" style="display:flex;align-items:flex-start;gap:8px;padding:8px;border-radius:8px;background:rgba(255,59,92,0.06);border:1px solid rgba(255,59,92,0.12);cursor:pointer;">
-            <span class="bdot red" style="margin-top:4px;flex-shrink:0;"></span>
-            <div style="flex:1;"><div style="font-size:12px;font-weight:700;">SL-025 — Overtemp</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Zone D · 74°C · 37m ago</div></div>
+            <div style="flex:1;"><div style="font-size:12px;font-weight:700;">SL-009 — Power Surge</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Zone D · Cafeteria / Food Court · 22m ago</div></div>
           </div>
           <div class="alert-row" style="display:flex;align-items:flex-start;gap:8px;padding:8px;border-radius:8px;background:rgba(0,230,118,0.06);border:1px solid rgba(0,230,118,0.12);">
             <span class="bdot green" style="margin-top:4px;flex-shrink:0;"></span>
-            <div style="flex:1;"><div style="font-size:12px;font-weight:700;">SL-041 — Restored</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Zone E · Back online · 52m ago</div></div>
+            <div style="flex:1;"><div style="font-size:12px;font-weight:700;">SL-002 — Restored</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Zone A · Admin Block · Back online · 52m ago</div></div>
           </div>
         </div>
       </div>
@@ -1426,11 +1422,11 @@ function logoutApp(){
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
     <div class="card" style="padding:14px;display:flex;align-items:center;gap:12px;">
       <div style="font-size:24px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" fill="currentColor" stroke="none"/></svg></div>
-      <div><div class="kpi-num" style="color:var(--red);font-size:22px;">11</div><div class="kpi-lbl">Active Faults</div></div>
+      <div><div class="kpi-num" style="color:var(--red);font-size:22px;">2</div><div class="kpi-lbl">Active Faults</div></div>
     </div>
     <div class="card" style="padding:14px;display:flex;align-items:center;gap:12px;">
       <div style="font-size:24px;">⏱️</div>
-      <div><div class="kpi-num" style="color:var(--amber);font-size:22px;">4.2h</div><div class="kpi-lbl">Avg Response Time</div></div>
+      <div><div class="kpi-num" style="color:var(--amber);font-size:22px;">40m</div><div class="kpi-lbl">Avg Response Time</div></div>
     </div>
     <div class="card" style="padding:14px;display:flex;align-items:center;gap:12px;">
       <div style="font-size:24px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg></div>
@@ -1438,7 +1434,7 @@ function logoutApp(){
     </div>
     <div class="card" style="padding:14px;display:flex;align-items:center;gap:12px;">
       <div style="font-size:24px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-      <div><div class="kpi-num" style="color:var(--green);font-size:22px;">8</div><div class="kpi-lbl">Resolved Today</div></div>
+      <div><div class="kpi-num" style="color:var(--green);font-size:22px;">1</div><div class="kpi-lbl">Resolved Today</div></div>
     </div>
   </div>
 
@@ -1465,60 +1461,20 @@ function logoutApp(){
         </thead>
         <tbody>
           <tr>
-            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-003</span></td>
-            <td><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text2);">11.0142, 76.9621</span></td>
+            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-004</span></td>
+            <td><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text2);">11.4992, 77.2757</span></td>
             <td><span class="badge red"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Lamp Failure</span></td>
             <td><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--red);">8m</span></td>
             <td><span class="badge red">HIGH</span></td>
-            <td><div class="contact-actions"><button class="btn sm primary" onclick="assignTech('SL-003')">Assign Tech</button><button class="icon-act-btn call" onclick="callAboutFault('SL-003')" title="Call site contact: +91 63804 70158"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageAboutFault('SL-003')" title="Message site contact: +91 63804 70158"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td>
+            <td><div class="contact-actions"><button class="btn sm primary" onclick="assignTech('SL-004')">Assign Tech</button><button class="icon-act-btn call" onclick="callAboutFault('SL-004')" title="Call site contact: +91 63804 70158"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageAboutFault('SL-004')" title="Message site contact: +91 63804 70158"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td>
           </tr>
           <tr>
-            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-008</span></td>
-            <td><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text2);">11.0178, 76.9580</span></td>
+            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-009</span></td>
+            <td><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text2);">11.4966, 77.2753</span></td>
             <td><span class="badge amber"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Power Surge</span></td>
             <td><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--amber);">1.2h</span></td>
             <td><span class="badge amber">MED</span></td>
-            <td><div class="contact-actions"><button class="btn sm primary" onclick="assignTech('SL-008')">Assign Tech</button><button class="icon-act-btn call" onclick="callAboutFault('SL-008')" title="Call site contact: +91 99657 15356"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageAboutFault('SL-008')" title="Message site contact: +91 99657 15356"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td>
-          </tr>
-          <tr>
-            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-013</span></td>
-            <td><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text2);">11.0132, 76.9544</span></td>
-            <td><span class="badge red"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.25a6 6 0 0 1 0-8.49M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14"/></svg> Comm Failure</span></td>
-            <td><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--red);">2.7h</span></td>
-            <td><span class="badge red">HIGH</span></td>
-            <td><div class="contact-actions"><button class="btn sm primary" onclick="assignTech('SL-013')">Assign Tech</button><button class="icon-act-btn call" onclick="callAboutFault('SL-013')" title="Call site contact: +91 91501 61647"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageAboutFault('SL-013')" title="Message site contact: +91 91501 61647"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td>
-          </tr>
-          <tr>
-            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-018</span></td>
-            <td><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text2);">11.0165, 76.9611</span></td>
-            <td><span class="badge red"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg> Overtemperature</span></td>
-            <td><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--red);">37m</span></td>
-            <td><span class="badge red">HIGH</span></td>
-            <td><div class="contact-actions"><button class="btn sm primary" onclick="assignTech('SL-018')">Assign Tech</button><button class="icon-act-btn call" onclick="callAboutFault('SL-018')" title="Call site contact: +91 93618 36970"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageAboutFault('SL-018')" title="Message site contact: +91 93618 36970"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td>
-          </tr>
-          <tr>
-            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-020</span></td>
-            <td><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text2);">11.0150, 76.9557</span></td>
-            <td><span class="badge amber"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.25a6 6 0 0 1 0-8.49M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14"/></svg> Comm Failure</span></td>
-            <td><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--amber);">22m</span></td>
-            <td><span class="badge amber">MED</span></td>
-            <td><div class="contact-actions"><button class="btn sm primary" onclick="assignTech('SL-020')">Assign Tech</button><button class="icon-act-btn call" onclick="callAboutFault('SL-020')" title="Call technician / supervisor"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageAboutFault('SL-020')" title="Message technician / supervisor"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td>
-          </tr>
-          <tr>
-            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-025</span></td>
-            <td><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text2);">11.0188, 76.9535</span></td>
-            <td><span class="badge red"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg> Overtemperature</span></td>
-            <td><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--red);">37m</span></td>
-            <td><span class="badge red">HIGH</span></td>
-            <td><div class="contact-actions"><button class="btn sm primary" onclick="assignTech('SL-025')">Assign Tech</button><button class="icon-act-btn call" onclick="callAboutFault('SL-025')" title="Call technician / supervisor"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageAboutFault('SL-025')" title="Message technician / supervisor"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td>
-          </tr>
-          <tr>
-            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-029</span></td>
-            <td><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text2);">11.0112, 76.9598</span></td>
-            <td><span class="badge amber"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2.05V17h6v-.25c0-.85.4-1.55 1-2.05A7 7 0 0 0 12 2z"/></svg> Driver Fault</span></td>
-            <td><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--amber);">3.1h</span></td>
-            <td><span class="badge amber">MED</span></td>
-            <td><div class="contact-actions"><button class="btn sm primary" onclick="assignTech('SL-029')">Assign Tech</button><button class="icon-act-btn call" onclick="callAboutFault('SL-029')" title="Call technician / supervisor"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageAboutFault('SL-029')" title="Message technician / supervisor"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td>
+            <td><div class="contact-actions"><button class="btn sm primary" onclick="assignTech('SL-009')">Assign Tech</button><button class="icon-act-btn call" onclick="callAboutFault('SL-009')" title="Call site contact: +91 99657 15356"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageAboutFault('SL-009')" title="Message site contact: +91 99657 15356"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td>
           </tr>
         </tbody>
       </table>
@@ -1532,32 +1488,30 @@ function logoutApp(){
         <div style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.6;">Model: <span style="color:var(--cyan);">LightNet v2.3</span> · Accuracy: <span style="color:var(--green);">94.1%</span><br>Last trained: <span style="font-family:'Share Tech Mono',monospace;color:var(--muted);">2026-03-10</span></div>
         <div class="sec-label">Fault Distribution</div>
         <div style="display:flex;flex-direction:column;gap:7px;">
-          <div class="pbar-wrap"><div class="pbar-top"><span style="font-size:12px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Lamp Failure</span><span style="color:var(--red);">38%</span></div><div class="pbar"><div class="pbar-fill red" style="width:38%;"></div></div></div>
-          <div class="pbar-wrap"><div class="pbar-top"><span style="font-size:12px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.25a6 6 0 0 1 0-8.49M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14"/></svg> Comm Failure</span><span style="color:var(--amber);">27%</span></div><div class="pbar"><div class="pbar-fill amber" style="width:27%;"></div></div></div>
-          <div class="pbar-wrap"><div class="pbar-top"><span style="font-size:12px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg> Overtemperature</span><span style="color:var(--purple);">21%</span></div><div class="pbar"><div class="pbar-fill purple" style="width:21%;"></div></div></div>
-          <div class="pbar-wrap"><div class="pbar-top"><span style="font-size:12px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Power Surge</span><span style="color:var(--cyan);">14%</span></div><div class="pbar"><div class="pbar-fill cyan" style="width:14%;"></div></div></div>
+          <div class="pbar-wrap"><div class="pbar-top"><span style="font-size:12px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Lamp Failure</span><span style="color:var(--red);">50%</span></div><div class="pbar"><div class="pbar-fill red" style="width:50%;"></div></div></div>
+          <div class="pbar-wrap"><div class="pbar-top"><span style="font-size:12px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Power Surge</span><span style="color:var(--amber);">50%</span></div><div class="pbar"><div class="pbar-fill amber" style="width:50%;"></div></div></div>
         </div>
       </div>
 
       <div class="card">
         <div class="card-accent amber"></div>
-        <div style="font-size:14px;font-weight:700;margin-bottom:12px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Fault Zones Heatmap</div>
+        <div style="font-size:14px;font-weight:700;margin-bottom:12px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Fault Zones — BIT Sathy Campus</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
           <div style="background:rgba(255,59,92,0.12);border:1px solid rgba(255,59,92,0.25);border-radius:8px;padding:10px;text-align:center;">
             <div style="font-family:'Orbitron',monospace;font-size:16px;color:var(--red);">Zone D</div>
-            <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);">5 FAULTS · CRITICAL</div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);">1 FAULT · Cafeteria</div>
           </div>
           <div style="background:rgba(255,179,0,0.10);border:1px solid rgba(255,179,0,0.25);border-radius:8px;padding:10px;text-align:center;">
-            <div style="font-family:'Orbitron',monospace;font-size:16px;color:var(--amber);">Zone C</div>
-            <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);">3 FAULTS · WARNING</div>
+            <div style="font-family:'Orbitron',monospace;font-size:16px;color:var(--amber);">Zone B</div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);">1 FAULT · Academic Block I</div>
           </div>
           <div style="background:rgba(0,210,255,0.06);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;">
-            <div style="font-family:'Orbitron',monospace;font-size:16px;color:var(--text2);">Zone A</div>
-            <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);">1 FAULT · LOW</div>
+            <div style="font-family:'Orbitron',monospace;font-size:16px;color:var(--text2);">Zone C</div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);">1 DIM · Boys Hostel</div>
           </div>
           <div style="background:rgba(0,210,255,0.06);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;">
-            <div style="font-family:'Orbitron',monospace;font-size:16px;color:var(--text2);">Zone F</div>
-            <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);">2 FAULTS · LOW</div>
+            <div style="font-family:'Orbitron',monospace;font-size:16px;color:var(--text2);">Zone A / E</div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);">ALL ONLINE</div>
           </div>
         </div>
       </div>
@@ -1611,11 +1565,11 @@ function logoutApp(){
       <table class="tbl">
         <thead><tr><th>Light ID</th><th>Zone</th><th>Predicted Fault</th><th>Confidence</th><th>Days Left</th><th>Action</th></tr></thead>
         <tbody>
-          <tr><td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-047</span></td><td>Zone D</td><td><span class="badge red">Lamp Failure</span></td><td><div class="pbar" style="width:80px"><div class="pbar-fill red" style="width:91%;"></div></div><span style="font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--red);margin-left:5px;">91%</span></td><td><span style="color:var(--red);font-weight:700;font-family:'Share Tech Mono',monospace;">~2d</span></td><td><button class="btn sm warn">Schedule</button></td></tr>
-          <tr><td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-112</span></td><td>Zone C</td><td><span class="badge amber">Driver Fault</span></td><td><div class="pbar" style="width:80px"><div class="pbar-fill amber" style="width:84%;"></div></div><span style="font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--amber);margin-left:5px;">84%</span></td><td><span style="color:var(--amber);font-weight:700;font-family:'Share Tech Mono',monospace;">~4d</span></td><td><button class="btn sm warn">Schedule</button></td></tr>
-          <tr><td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-089</span></td><td>Zone D</td><td><span class="badge red">Overtemp</span></td><td><div class="pbar" style="width:80px"><div class="pbar-fill red" style="width:78%;"></div></div><span style="font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--red);margin-left:5px;">78%</span></td><td><span style="color:var(--red);font-weight:700;font-family:'Share Tech Mono',monospace;">~5d</span></td><td><button class="btn sm warn">Schedule</button></td></tr>
-          <tr><td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-055</span></td><td>Zone A</td><td><span class="badge amber">Comm Fault</span></td><td><div class="pbar" style="width:80px"><div class="pbar-fill amber" style="width:72%;"></div></div><span style="font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--amber);margin-left:5px;">72%</span></td><td><span style="color:var(--amber);font-weight:700;font-family:'Share Tech Mono',monospace;">~6d</span></td><td><button class="btn sm warn">Schedule</button></td></tr>
-          <tr><td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-201</span></td><td>Zone F</td><td><span class="badge amber">Low Voltage</span></td><td><div class="pbar" style="width:80px"><div class="pbar-fill amber" style="width:68%;"></div></div><span style="font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--amber);margin-left:5px;">68%</span></td><td><span style="color:var(--amber);font-weight:700;font-family:'Share Tech Mono',monospace;">~7d</span></td><td><button class="btn sm warn">Schedule</button></td></tr>
+          <tr><td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-002</span></td><td>Zone A</td><td><span class="badge red">Lamp Failure</span></td><td><div class="pbar" style="width:80px"><div class="pbar-fill red" style="width:91%;"></div></div><span style="font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--red);margin-left:5px;">91%</span></td><td><span style="color:var(--red);font-weight:700;font-family:'Share Tech Mono',monospace;">~2d</span></td><td><button class="btn sm warn">Schedule</button></td></tr>
+          <tr><td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-005</span></td><td>Zone B</td><td><span class="badge amber">Driver Fault</span></td><td><div class="pbar" style="width:80px"><div class="pbar-fill amber" style="width:84%;"></div></div><span style="font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--amber);margin-left:5px;">84%</span></td><td><span style="color:var(--amber);font-weight:700;font-family:'Share Tech Mono',monospace;">~4d</span></td><td><button class="btn sm warn">Schedule</button></td></tr>
+          <tr><td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-008</span></td><td>Zone D</td><td><span class="badge red">Overtemp</span></td><td><div class="pbar" style="width:80px"><div class="pbar-fill red" style="width:78%;"></div></div><span style="font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--red);margin-left:5px;">78%</span></td><td><span style="color:var(--red);font-weight:700;font-family:'Share Tech Mono',monospace;">~5d</span></td><td><button class="btn sm warn">Schedule</button></td></tr>
+          <tr><td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-007</span></td><td>Zone C</td><td><span class="badge amber">Comm Fault</span></td><td><div class="pbar" style="width:80px"><div class="pbar-fill amber" style="width:72%;"></div></div><span style="font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--amber);margin-left:5px;">72%</span></td><td><span style="color:var(--amber);font-weight:700;font-family:'Share Tech Mono',monospace;">~6d</span></td><td><button class="btn sm warn">Schedule</button></td></tr>
+          <tr><td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-010</span></td><td>Zone E</td><td><span class="badge amber">Low Voltage</span></td><td><div class="pbar" style="width:80px"><div class="pbar-fill amber" style="width:68%;"></div></div><span style="font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--amber);margin-left:5px;">68%</span></td><td><span style="color:var(--amber);font-weight:700;font-family:'Share Tech Mono',monospace;">~7d</span></td><td><button class="btn sm warn">Schedule</button></td></tr>
         </tbody>
       </table>
     </div>
@@ -1697,15 +1651,15 @@ function logoutApp(){
       <div style="display:flex;flex-direction:column;gap:10px;">
         <div style="background:rgba(255,59,92,0.07);border:1px solid rgba(255,59,92,0.2);border-radius:8px;padding:12px;">
           <div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:4px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Immediate Action Required</div>
-          <div style="font-size:12px;color:var(--text2);line-height:1.5;">Replace lamp drivers in Zone D (SL-047, SL-089). Predicted failure within 48 hours with 91% confidence.</div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.5;">Replace lamp driver in Zone A (SL-002, Admin Block). Predicted failure within 48 hours with 91% confidence.</div>
         </div>
         <div style="background:rgba(255,179,0,0.07);border:1px solid rgba(255,179,0,0.2);border-radius:8px;padding:12px;">
           <div style="font-size:12px;font-weight:700;color:var(--amber);margin-bottom:4px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> Preventive Maintenance</div>
-          <div style="font-size:12px;color:var(--text2);line-height:1.5;">Schedule heat-sink cleaning for 12 lights in Zone C. Overheating pattern detected in last 14 days.</div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.5;">Schedule heat-sink cleaning for SL-007 (Girls Hostel, Zone C). Overheating pattern detected in last 14 days.</div>
         </div>
         <div style="background:rgba(0,210,255,0.07);border:1px solid rgba(0,210,255,0.15);border-radius:8px;padding:12px;">
           <div style="font-size:12px;font-weight:700;color:var(--cyan);margin-bottom:4px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2.05V17h6v-.25c0-.85.4-1.55 1-2.05A7 7 0 0 0 12 2z"/></svg> Efficiency Tip</div>
-          <div style="font-size:12px;color:var(--text2);line-height:1.5;">Reducing brightness by 10% in Zone A between 01:00–04:00 AM would save ₹820/month with no safety impact.</div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.5;">Reducing brightness by 10% on the Sports Ground &amp; Auditorium lights (Zones D/E) between 01:00–04:00 AM would save ₹820/month with no safety impact.</div>
         </div>
       </div>
     </div>
@@ -1925,52 +1879,52 @@ function logoutApp(){
         <tbody>
           <tr>
             <td><div style="font-weight:700;">Ravi Kumar</div><div style="font-size:10px;color:var(--muted);">Tech #T01</div></td>
-            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-003</span></td>
+            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-004</span></td>
             <td><span class="badge red">Lamp Failure</span></td>
-            <td><span style="font-size:11px;color:var(--text2);">Zone D, Block 4</span></td>
+            <td><span style="font-size:11px;color:var(--text2);">Zone B, Academic Block I</span></td>
             <td><span class="badge amber"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M5 17h1a2 2 0 1 0 4 0h4a2 2 0 1 0 4 0h1a1 1 0 0 0 1-1v-3.28a1 1 0 0 0-.27-.68l-2.7-2.9A2 2 0 0 0 15.55 8H13V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1z"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="16.5" cy="17.5" r="1.5"/></svg> En Route</span></td>
             <td><span style="font-family:'Share Tech Mono',monospace;color:var(--amber);">12 min</span></td>
-          <td><div class="contact-actions"><button class="icon-act-btn call" onclick="callTechnician('Ravi Kumar','SL-003')" title="Call Ravi Kumar: +91 63804 70158"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageTechnician('Ravi Kumar','SL-003')" title="Message Ravi Kumar: +91 63804 70158"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td></tr>
+          <td><div class="contact-actions"><button class="icon-act-btn call" onclick="callTechnician('Ravi Kumar','SL-004')" title="Call Ravi Kumar: +91 63804 70158"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageTechnician('Ravi Kumar','SL-004')" title="Message Ravi Kumar: +91 63804 70158"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td></tr>
           <tr>
             <td><div style="font-weight:700;">Priya Selvan</div><div style="font-size:10px;color:var(--muted);">Tech #T02</div></td>
-            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-013</span></td>
-            <td><span class="badge amber">Comm Fault</span></td>
-            <td><span style="font-size:11px;color:var(--text2);">Zone D, Block 7</span></td>
+            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-009</span></td>
+            <td><span class="badge amber">Power Surge</span></td>
+            <td><span style="font-size:11px;color:var(--text2);">Zone D, Cafeteria / Food Court</span></td>
             <td><span class="badge red"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> On Site</span></td>
             <td><span style="font-family:'Share Tech Mono',monospace;color:var(--green);">Active</span></td>
-          <td><div class="contact-actions"><button class="icon-act-btn call" onclick="callTechnician('Priya Selvan','SL-013')" title="Call Priya Selvan: +91 99653 15356"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageTechnician('Priya Selvan','SL-013')" title="Message Priya Selvan: +91 99653 15356"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td></tr>
+          <td><div class="contact-actions"><button class="icon-act-btn call" onclick="callTechnician('Priya Selvan','SL-009')" title="Call Priya Selvan: +91 99653 15356"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageTechnician('Priya Selvan','SL-009')" title="Message Priya Selvan: +91 99653 15356"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td></tr>
           <tr>
             <td><div style="font-weight:700;">Arjun Nair</div><div style="font-size:10px;color:var(--muted);">Tech #T03</div></td>
-            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-025</span></td>
-            <td><span class="badge red">Overtemp</span></td>
-            <td><span style="font-size:11px;color:var(--text2);">Zone D, Block 2</span></td>
+            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-006</span></td>
+            <td><span class="badge red">Low Voltage</span></td>
+            <td><span style="font-size:11px;color:var(--text2);">Zone C, Boys Hostel</span></td>
             <td><span class="badge amber"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M5 17h1a2 2 0 1 0 4 0h4a2 2 0 1 0 4 0h1a1 1 0 0 0 1-1v-3.28a1 1 0 0 0-.27-.68l-2.7-2.9A2 2 0 0 0 15.55 8H13V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1z"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="16.5" cy="17.5" r="1.5"/></svg> En Route</span></td>
             <td><span style="font-family:'Share Tech Mono',monospace;color:var(--amber);">28 min</span></td>
-          <td><div class="contact-actions"><button class="icon-act-btn call" onclick="callTechnician('Arjun Nair','SL-025')" title="Call Arjun Nair: +91 91501 61647"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageTechnician('Arjun Nair','SL-025')" title="Message Arjun Nair: +91 91501 61647"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td></tr>
+          <td><div class="contact-actions"><button class="icon-act-btn call" onclick="callTechnician('Arjun Nair','SL-006')" title="Call Arjun Nair: +91 91501 61647"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageTechnician('Arjun Nair','SL-006')" title="Message Arjun Nair: +91 91501 61647"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td></tr>
           <tr>
             <td><div style="font-weight:700;">Suresh Raj</div><div style="font-size:10px;color:var(--muted);">Tech #T04</div></td>
-            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-047*</span></td>
+            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-002*</span></td>
             <td><span class="badge purple">Preventive</span></td>
-            <td><span style="font-size:11px;color:var(--text2);">Zone D, Block 6</span></td>
+            <td><span style="font-size:11px;color:var(--text2);">Zone A, Admin Block</span></td>
             <td><span class="badge cyan"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Scheduled</span></td>
             <td><span style="font-family:'Share Tech Mono',monospace;color:var(--muted);">Tomorrow</span></td>
-          <td><div class="contact-actions"><button class="icon-act-btn call" onclick="callTechnician('Suresh Raj','SL-047')" title="Call Suresh Raj: +91 93618 36970"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageTechnician('Suresh Raj','SL-047')" title="Message Suresh Raj: +91 93618 36970"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td></tr>
+          <td><div class="contact-actions"><button class="icon-act-btn call" onclick="callTechnician('Suresh Raj','SL-002')" title="Call Suresh Raj: +91 93618 36970"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageTechnician('Suresh Raj','SL-002')" title="Message Suresh Raj: +91 93618 36970"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td></tr>
           <tr>
             <td><div style="font-weight:700;">Meena Devi</div><div style="font-size:10px;color:var(--muted);">Tech #T05</div></td>
-            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-029</span></td>
-            <td><span class="badge amber">Driver Fault</span></td>
-            <td><span style="font-size:11px;color:var(--text2);">Zone F, Block 1</span></td>
+            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-001</span></td>
+            <td><span class="badge amber">Lamp Replaced</span></td>
+            <td><span style="font-size:11px;color:var(--text2);">Zone A, Main Gate</span></td>
             <td><span class="badge green"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Completed</span></td>
             <td><span style="font-family:'Share Tech Mono',monospace;color:var(--green);">Done</span></td>
           <td><div class="contact-actions"><button class="icon-act-btn call disabled" title="Job completed"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg disabled" title="Job completed"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td></tr>
           <tr>
             <td><div style="font-weight:700;">Kiran Babu</div><div style="font-size:10px;color:var(--muted);">Tech #T06</div></td>
-            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-018</span></td>
+            <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-010</span></td>
             <td><span class="badge red">Overtemp</span></td>
-            <td><span style="font-size:11px;color:var(--text2);">Zone D, Block 5</span></td>
+            <td><span style="font-size:11px;color:var(--text2);">Zone E, Auditorium</span></td>
             <td><span class="badge amber"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M5 17h1a2 2 0 1 0 4 0h4a2 2 0 1 0 4 0h1a1 1 0 0 0 1-1v-3.28a1 1 0 0 0-.27-.68l-2.7-2.9A2 2 0 0 0 15.55 8H13V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1z"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="16.5" cy="17.5" r="1.5"/></svg> En Route</span></td>
             <td><span style="font-family:'Share Tech Mono',monospace;color:var(--amber);">18 min</span></td>
-          <td><div class="contact-actions"><button class="icon-act-btn call" onclick="callTechnician('Kiran Babu','SL-018')" title="Call Kiran Babu"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageTechnician('Kiran Babu','SL-018')" title="Message Kiran Babu"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td></tr>
+          <td><div class="contact-actions"><button class="icon-act-btn call" onclick="callTechnician('Kiran Babu','SL-010')" title="Call Kiran Babu"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageTechnician('Kiran Babu','SL-010')" title="Message Kiran Babu"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td></tr>
         </tbody>
       </table>
     </div>
@@ -1992,7 +1946,7 @@ function logoutApp(){
         <div id="routeMap" style="width:100%;height:260px;z-index:1;position:relative;background:#060e1a;"></div>
         <div style="padding:10px 14px;background:var(--surface);border-top:1px solid var(--border);">
           <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Sathyamangalam, Tamil Nadu · AI Route: 8.2km · Est. 42min · 5 faults
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> BIT Sathy Campus, Sathyamangalam · AI Route: 3.1km · Est. 14min · 2 faults
           </div>
           <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--green);margin-top:3px;">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg> AI saved 3.4km vs manual routing · Fuel saved: ₹124
@@ -2006,19 +1960,19 @@ function logoutApp(){
         <div style="font-size:14px;font-weight:700;margin-bottom:12px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Recent Repair History</div>
         <div style="display:flex;flex-direction:column;gap:7px;max-height:180px;overflow-y:auto;">
           <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(0,230,118,0.05);border:1px solid rgba(0,230,118,0.12);border-radius:7px;">
-            <div><div style="font-size:12px;font-weight:700;">SL-041 — Lamp Replaced</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Meena Devi · 52min repair</div></div>
+            <div><div style="font-size:12px;font-weight:700;">SL-001 — Lamp Replaced</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Meena Devi · 52min repair</div></div>
             <span class="badge green"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Done</span>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(0,230,118,0.05);border:1px solid rgba(0,230,118,0.12);border-radius:7px;">
-            <div><div style="font-size:12px;font-weight:700;">SL-076 — Driver Fixed</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Ravi Kumar · 1.4h repair</div></div>
+            <div><div style="font-size:12px;font-weight:700;">SL-010 — Driver Fixed</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Ravi Kumar · 1.4h repair</div></div>
             <span class="badge green"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Done</span>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(0,230,118,0.05);border:1px solid rgba(0,230,118,0.12);border-radius:7px;">
-            <div><div style="font-size:12px;font-weight:700;">SL-102 — Comm Module</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Arjun Nair · 2.1h repair</div></div>
+            <div><div style="font-size:12px;font-weight:700;">SL-005 — Comm Module</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Arjun Nair · 2.1h repair</div></div>
             <span class="badge green"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Done</span>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(0,230,118,0.05);border:1px solid rgba(0,230,118,0.12);border-radius:7px;">
-            <div><div style="font-size:12px;font-weight:700;">SL-055 — Heatsink Clean</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Kiran Babu · 45min</div></div>
+            <div><div style="font-size:12px;font-weight:700;">SL-007 — Heatsink Clean</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Kiran Babu · 45min</div></div>
             <span class="badge green"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Done</span>
           </div>
         </div>
@@ -2993,7 +2947,7 @@ function filterMap(btn, type){
 
 // ══ OPENSTREETMAP — LIVE LIGHT MONITORING MAP ══
 // Real GPS coordinates for every street light node, derived from the
-// grid layout, centred on Coimbatore.
+// grid layout, centred on the BIT Sathy campus, Sathyamangalam.
 // ══ BIT SATHY CAMPUS STREET LIGHTS ══
 // Bannari Amman Institute of Technology (BIT Sathy), Sathyamangalam, Erode.
 // Real campus centre: 11.4986°N, 77.2743°E. All nodes below are placed
@@ -3583,8 +3537,8 @@ const mapSvg=document.getElementById('mainMap');
 if(mapSvg){
   mapSvg.addEventListener('mousemove',e=>{
     const r=e.currentTarget.getBoundingClientRect();
-    const lat=(11.0100+(e.clientY-r.top)/r.height*0.02).toFixed(4);
-    const lon=(76.9480+(e.clientX-r.left)/r.width*0.02).toFixed(4);
+    const lat=(GRID_BOUNDS.latMin+(e.clientY-r.top)/r.height*(GRID_BOUNDS.latMax-GRID_BOUNDS.latMin)).toFixed(4);
+    const lon=(GRID_BOUNDS.lonMin+(e.clientX-r.left)/r.width*(GRID_BOUNDS.lonMax-GRID_BOUNDS.lonMin)).toFixed(4);
     document.getElementById('map-coord').textContent='LAT: '+lat+' · LON: '+lon;
   });
 }
@@ -3613,10 +3567,8 @@ const DUTY_SUPERVISOR = { name:'Duty Supervisor', phone:'+914224200100' };
 // the assigned-technician lookup below. Add a lightId → phone entry here
 // to give a fault its own dedicated call/SMS number.
 const FAULT_LIGHT_CONTACTS = {
-  'SL-003': '+916380470158',
-  'SL-008': '+919965715356',
-  'SL-013': '+919150161647',
-  'SL-018': '+919361836970'
+  'SL-004': '+916380470158',
+  'SL-009': '+919965715356'
 };
 
 function getContact(techName, lightId){
@@ -3663,42 +3615,33 @@ function exportCSV(type='all'){
     csv = [
       ['GlowGrid — Fault Analysis Report'],
       ['Generated: ' + dateStr + ' ' + timeStr],
-      ['Location: Coimbatore, Tamil Nadu'],
+      ['Location: BIT Sathy Campus, Sathyamangalam, Erode'],
       [],
       ['ACTIVE FAULTS'],
       ['Light ID','GPS Latitude','GPS Longitude','Zone','Fault Type','Time Down','Risk Level','Status'],
-      ['SL-003','11.0142','76.9621','Zone D','Lamp Failure','8 min','HIGH','Open'],
-      ['SL-008','11.0178','76.9580','Zone D','Power Surge','1.2 hr','MEDIUM','Assigned'],
-      ['SL-013','11.0132','76.9544','Zone D','Comm Failure','2.7 hr','HIGH','On Site'],
-      ['SL-018','11.0165','76.9611','Zone D','Overtemperature','37 min','HIGH','Open'],
-      ['SL-020','11.0150','76.9557','Zone D','Comm Failure','22 min','MEDIUM','Assigned'],
-      ['SL-025','11.0188','76.9535','Zone D','Overtemperature','37 min','HIGH','Open'],
-      ['SL-029','11.0112','76.9598','Zone F','Driver Fault','3.1 hr','MEDIUM','Open'],
-      ['SL-034','11.0095','76.9622','Zone D','Short Circuit','5.4 hr','HIGH','Open'],
-      ['SL-041','11.0200','76.9645','Zone E','Capacitor Fault','6.1 hr','MEDIUM','Open'],
+      ['SL-004','11.4992','77.2757','Zone B','Lamp Failure','8 min','HIGH','Open'],
+      ['SL-009','11.4966','77.2753','Zone D','Power Surge','1.2 hr','MEDIUM','Assigned'],
       [],
       ['FAULT SUMMARY'],
       ['Metric','Value'],
-      ['Total Active Faults','11'],
-      ['High Risk','6'],
-      ['Medium Risk','5'],
-      ['Avg Response Time','4.2 hr'],
-      ['Resolved Today','8'],
+      ['Total Active Faults','2'],
+      ['High Risk','1'],
+      ['Medium Risk','1'],
+      ['Avg Response Time','40 min'],
+      ['Resolved Today','1'],
       ['AI Model Accuracy','94.1%'],
       [],
       ['FAULT TYPE DISTRIBUTION'],
       ['Fault Type','Count','Percentage'],
-      ['Lamp Failure','4','38%'],
-      ['Comm Failure','3','27%'],
-      ['Overtemperature','2','21%'],
-      ['Power Surge / Short Circuit','2','14%'],
+      ['Lamp Failure','1','50%'],
+      ['Power Surge','1','50%'],
       [],
       ['ZONE FAULT HEATMAP'],
       ['Zone','Fault Count','Risk Level'],
-      ['Zone D (Highway)','5','CRITICAL'],
-      ['Zone C (Residential)','3','WARNING'],
-      ['Zone A (CBD)','1','LOW'],
-      ['Zone F','2','LOW'],
+      ['Zone B (Academic Block I)','1','WARNING'],
+      ['Zone D (Cafeteria / Food Court)','1','WARNING'],
+      ['Zone C (Boys Hostel)','0 faults, 1 dim','LOW'],
+      ['Zone A / E','0','LOW'],
     ].map(r=>r.join(',')).join('\n');
 
   } else if(type==='energy'){
@@ -3706,7 +3649,7 @@ function exportCSV(type='all'){
     csv = [
       ['GlowGrid — Energy Management Report'],
       ['Generated: ' + dateStr + ' ' + timeStr],
-      ['Location: Coimbatore, Tamil Nadu'],
+      ['Location: BIT Sathy Campus, Sathyamangalam, Erode'],
       [],
       ['KPI SUMMARY'],
       ['Metric','Value','Unit'],
@@ -3749,15 +3692,15 @@ function exportCSV(type='all'){
     csv = [
       ['GlowGrid — Monthly Summary Report — March 2026'],
       ['Generated: ' + dateStr + ' ' + timeStr],
-      ['Location: Coimbatore, Tamil Nadu'],
+      ['Location: BIT Sathy Campus, Sathyamangalam, Erode'],
       [],
       ['SYSTEM OVERVIEW'],
       ['Metric','Value'],
-      ['Total Street Lights','248'],
-      ['Online / Working','231'],
-      ['System Uptime','93.1%'],
-      ['Active Faults','11'],
-      ['Dim / Low Voltage','6'],
+      ['Total Street Lights','10'],
+      ['Online / Working','7'],
+      ['System Uptime','70%'],
+      ['Active Faults','2'],
+      ['Dim / Low Voltage','1'],
       [],
       ['FAULT STATISTICS — OCT 2025 TO MAR 2026'],
       ['Month','Faults','Change','Resolved'],
@@ -3809,13 +3752,13 @@ function exportCSV(type='all'){
     csv = [
       ['GlowGrid — Complete System Report — March 2026'],
       ['Generated: ' + dateStr + ' ' + timeStr],
-      ['Coimbatore Corporation · Tamil Nadu'],
+      ['Bannari Amman Institute of Technology · Sathyamangalam'],
       [],
       ['=== KPI SUMMARY ==='],
       ['Metric','Value'],
-      ['Total Lights','248'],['Online','231'],['Faults','11'],['Dim','6'],
+      ['Total Lights','10'],['Online','7'],['Faults','2'],['Dim','1'],
       ['Energy Today','187.4 kWh'],['Savings','₹3,214'],['AI Accuracy','94.1%'],
-      ['Uptime','93.1%'],['CO2 Saved','2.4T/yr'],['Response Time','2.1 hr'],
+      ['Uptime','70%'],['CO2 Saved','2.4T/yr'],['Response Time','40 min'],
       [],
       ['=== MONTHLY FAULT STATS ==='],
       ['Month','Faults'],
@@ -3823,12 +3766,8 @@ function exportCSV(type='all'){
       [],
       ['=== ACTIVE FAULTS ==='],
       ['ID','Zone','Fault','Time Down','Risk'],
-      ['SL-003','Zone D','Lamp Failure','8 min','HIGH'],
-      ['SL-013','Zone D','Comm Failure','2.7 hr','HIGH'],
-      ['SL-018','Zone D','Overtemperature','37 min','HIGH'],
-      ['SL-020','Zone D','Comm Failure','22 min','MEDIUM'],
-      ['SL-025','Zone D','Overtemperature','37 min','HIGH'],
-      ['SL-029','Zone F','Driver Fault','3.1 hr','MEDIUM'],
+      ['SL-004','Zone B','Lamp Failure','8 min','HIGH'],
+      ['SL-009','Zone D','Power Surge','1.2 hr','MEDIUM'],
       [],
       ['=== COST SAVINGS ==='],
       ['Category','INR'],
@@ -3884,17 +3823,17 @@ function exportPDF(){
 <body>
 <div class="header">
   <h1><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> GLOWGRID — SMART STREET LIGHT REPORT</h1>
-  <p>COIMBATORE CORPORATION · TAMIL NADU · MARCH 2026</p>
+  <p>BANNARI AMMAN INSTITUTE OF TECHNOLOGY · SATHYAMANGALAM · MARCH 2026</p>
   <div class="meta" style="color:#6ab0d0;">Generated: ${dateStr} at ${timeStr}</div>
 </div>
 
 <h2><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> SYSTEM KPI OVERVIEW</h2>
 <div class="kpi-grid">
-  <div class="kpi"><div class="kpi-val">248</div><div class="kpi-lbl">Total Lights</div></div>
-  <div class="kpi"><div class="kpi-val" style="color:#007a3d;">231</div><div class="kpi-lbl">Online / Working</div></div>
-  <div class="kpi"><div class="kpi-val" style="color:#c0002a;">11</div><div class="kpi-lbl">Active Faults</div></div>
-  <div class="kpi"><div class="kpi-val" style="color:#8a5700;">6</div><div class="kpi-lbl">Dim / Low Voltage</div></div>
-  <div class="kpi"><div class="kpi-val">93.1%</div><div class="kpi-lbl">System Uptime</div></div>
+  <div class="kpi"><div class="kpi-val">10</div><div class="kpi-lbl">Total Lights</div></div>
+  <div class="kpi"><div class="kpi-val" style="color:#007a3d;">7</div><div class="kpi-lbl">Online / Working</div></div>
+  <div class="kpi"><div class="kpi-val" style="color:#c0002a;">2</div><div class="kpi-lbl">Active Faults</div></div>
+  <div class="kpi"><div class="kpi-val" style="color:#8a5700;">1</div><div class="kpi-lbl">Dim / Low Voltage</div></div>
+  <div class="kpi"><div class="kpi-val">70%</div><div class="kpi-lbl">System Uptime</div></div>
   <div class="kpi"><div class="kpi-val" style="color:#6a00cc;">94.1%</div><div class="kpi-lbl">AI Accuracy</div></div>
 </div>
 
@@ -3902,14 +3841,8 @@ function exportPDF(){
 <table>
   <thead><tr><th>Light ID</th><th>Zone</th><th>AI Fault Type</th><th>Time Down</th><th>Risk</th></tr></thead>
   <tbody>
-    <tr><td>SL-003</td><td>Zone D</td><td>Lamp Failure</td><td>8 min</td><td><span class="tag r">HIGH</span></td></tr>
-    <tr><td>SL-008</td><td>Zone D</td><td>Power Surge</td><td>1.2 hr</td><td><span class="tag a">MEDIUM</span></td></tr>
-    <tr><td>SL-013</td><td>Zone D</td><td>Comm Failure</td><td>2.7 hr</td><td><span class="tag r">HIGH</span></td></tr>
-    <tr><td>SL-018</td><td>Zone D</td><td>Overtemperature</td><td>37 min</td><td><span class="tag r">HIGH</span></td></tr>
-    <tr><td>SL-020</td><td>Zone D</td><td>Comm Failure</td><td>22 min</td><td><span class="tag a">MEDIUM</span></td></tr>
-    <tr><td>SL-025</td><td>Zone D</td><td>Overtemperature</td><td>37 min</td><td><span class="tag r">HIGH</span></td></tr>
-    <tr><td>SL-029</td><td>Zone F</td><td>Driver Fault</td><td>3.1 hr</td><td><span class="tag a">MEDIUM</span></td></tr>
-    <tr><td>SL-034</td><td>Zone D</td><td>Short Circuit</td><td>5.4 hr</td><td><span class="tag r">HIGH</span></td></tr>
+    <tr><td>SL-004</td><td>Zone B</td><td>Lamp Failure</td><td>8 min</td><td><span class="tag r">HIGH</span></td></tr>
+    <tr><td>SL-009</td><td>Zone D</td><td>Power Surge</td><td>1.2 hr</td><td><span class="tag a">MEDIUM</span></td></tr>
   </tbody>
 </table>
 
@@ -3917,12 +3850,12 @@ function exportPDF(){
 <table>
   <thead><tr><th>Month</th><th>Total Faults</th><th>Resolved</th><th>Unresolved</th><th>Trend</th></tr></thead>
   <tbody>
-    <tr><td>October 2025</td><td>118</td><td>109</td><td>9</td><td>—</td></tr>
-    <tr><td>November 2025</td><td>128</td><td>121</td><td>7</td><td>↑ +8.5%</td></tr>
-    <tr><td>December 2025</td><td>110</td><td>105</td><td>5</td><td>↓ -14%</td></tr>
-    <tr><td>January 2026</td><td>122</td><td>113</td><td>9</td><td>↑ +10.9%</td></tr>
-    <tr><td>February 2026</td><td>107</td><td>99</td><td>8</td><td>↓ -12.3%</td></tr>
-    <tr><td><b>March 2026</b></td><td><b>87</b></td><td><b>76</b></td><td><b>11</b></td><td><span class="tag g">↓ -18.7%</span></td></tr>
+    <tr><td>October 2025</td><td>5</td><td>5</td><td>0</td><td>—</td></tr>
+    <tr><td>November 2025</td><td>6</td><td>5</td><td>1</td><td>↑ +20%</td></tr>
+    <tr><td>December 2025</td><td>4</td><td>4</td><td>0</td><td>↓ -33%</td></tr>
+    <tr><td>January 2026</td><td>5</td><td>4</td><td>1</td><td>↑ +25%</td></tr>
+    <tr><td>February 2026</td><td>3</td><td>3</td><td>0</td><td>↓ -40%</td></tr>
+    <tr><td><b>March 2026</b></td><td><b>3</b></td><td><b>1</b></td><td><b>2</b></td><td><span class="tag g">↓ -0%</span></td></tr>
   </tbody>
 </table>
 
@@ -3937,12 +3870,12 @@ function exportPDF(){
 <table>
   <thead><tr><th>Technician</th><th>ID</th><th>Assigned Light</th><th>Fault Type</th><th>Status</th><th>ETA</th></tr></thead>
   <tbody>
-    <tr><td>Ravi Kumar</td><td>T01</td><td>SL-003</td><td>Lamp Failure</td><td><span class="tag a">En Route</span></td><td>12 min</td></tr>
-    <tr><td>Priya Selvan</td><td>T02</td><td>SL-013</td><td>Comm Fault</td><td><span class="tag r">On Site</span></td><td>Active</td></tr>
-    <tr><td>Arjun Nair</td><td>T03</td><td>SL-025</td><td>Overtemp</td><td><span class="tag a">En Route</span></td><td>28 min</td></tr>
-    <tr><td>Suresh Raj</td><td>T04</td><td>SL-047</td><td>Preventive</td><td><span class="tag g">Scheduled</span></td><td>Tomorrow</td></tr>
-    <tr><td>Meena Devi</td><td>T05</td><td>SL-029</td><td>Driver Fault</td><td><span class="tag g">Completed</span></td><td>Done</td></tr>
-    <tr><td>Kiran Babu</td><td>T06</td><td>SL-018</td><td>Overtemp</td><td><span class="tag a">En Route</span></td><td>18 min</td></tr>
+    <tr><td>Ravi Kumar</td><td>T01</td><td>SL-004</td><td>Lamp Failure</td><td><span class="tag a">En Route</span></td><td>12 min</td></tr>
+    <tr><td>Priya Selvan</td><td>T02</td><td>SL-009</td><td>Power Surge</td><td><span class="tag r">On Site</span></td><td>Active</td></tr>
+    <tr><td>Arjun Nair</td><td>T03</td><td>SL-006</td><td>Low Voltage</td><td><span class="tag a">En Route</span></td><td>28 min</td></tr>
+    <tr><td>Suresh Raj</td><td>T04</td><td>SL-002</td><td>Preventive</td><td><span class="tag g">Scheduled</span></td><td>Tomorrow</td></tr>
+    <tr><td>Meena Devi</td><td>T05</td><td>SL-001</td><td>Lamp Replaced</td><td><span class="tag g">Completed</span></td><td>Done</td></tr>
+    <tr><td>Kiran Babu</td><td>T06</td><td>SL-010</td><td>Overtemp</td><td><span class="tag a">En Route</span></td><td>18 min</td></tr>
   </tbody>
 </table>
 
@@ -3958,7 +3891,7 @@ function exportPDF(){
   </tbody>
 </table>
 
-<div class="footer">GlowGrid Smart Street Light Monitoring System · Coimbatore Corporation · Tamil Nadu · Report auto-generated ${dateStr}</div>
+<div class="footer">GlowGrid Smart Street Light Monitoring System · BIT Sathy Campus · Sathyamangalam · Report auto-generated ${dateStr}</div>
 </body>
 </html>`;
 
@@ -3996,14 +3929,11 @@ function showToast(msg, color='#00e5ff', duration=3000){
 // Sathyamangalam Town Centre + Bannari Amman Institute of Technology.
 // ══════════════════════════════════════════════════════════════════
 
-// Fault locations in Sathyamangalam town (real GPS coords)
+// Fault locations on the BIT Sathy campus (real GPS coords, matches LIGHT_NODES)
 const faultLocations = [
   { id:'T1 (Depot)',  lat:11.5040, lng:77.2410, type:'depot',  color:'#00d2ff', label:'T1' },
-  { id:'SL-003',      lat:11.5088, lng:77.2438, type:'fault',  color:'#ff3b5c', label:'F1', fault:'Lamp Failure' },
-  { id:'SL-013',      lat:11.5115, lng:77.2478, type:'fault',  color:'#ff3b5c', label:'F2', fault:'Comm Failure' },
-  { id:'SL-018',      lat:11.5070, lng:77.2496, type:'fault',  color:'#ffb300', label:'F3', fault:'Overtemperature' },
-  { id:'SL-025',      lat:11.5032, lng:77.2518, type:'fault',  color:'#ff3b5c', label:'F4', fault:'Overtemperature' },
-  { id:'SL-029',      lat:11.4998, lng:77.2483, type:'fault',  color:'#ffb300', label:'F5', fault:'Driver Fault' },
+  { id:'SL-004',      lat:11.4992, lng:77.2757, type:'fault',  color:'#ff3b5c', label:'F1', fault:'Lamp Failure' },
+  { id:'SL-009',      lat:11.4966, lng:77.2753, type:'fault',  color:'#ffb300', label:'F2', fault:'Power Surge' },
 ];
 
 // Landmark reference points (real, verified GPS coords) — shown on the
@@ -4183,23 +4113,23 @@ if ('serviceWorker' in navigator) {
 
 const NOTIFS = [
   // FAULTS
-  { id:1,  type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" fill="currentColor" stroke="none"/></svg>', bg:'rgba(255,68,102,0.12)', bc:'rgba(255,68,102,0.25)', nc:'#ff4466', msg:'SL-003 — Lamp Failure detected in Zone D', meta:'Zone D · No current flow detected', time:'2 min ago', unread:true },
-  { id:2,  type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>', bg:'rgba(255,194,0,0.10)',  bc:'rgba(255,194,0,0.22)',  nc:'#ffc200', msg:'SL-025 — Overtemperature alert (74°C)', meta:'Zone D · Threshold: 65°C', time:'8 min ago', unread:true },
-  { id:3,  type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.25a6 6 0 0 1 0-8.49M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14"/></svg>', bg:'rgba(255,68,102,0.12)', bc:'rgba(255,68,102,0.25)', nc:'#ff4466', msg:'SL-020 — Communication signal lost', meta:'Zone D · No response for 22 min', time:'22 min ago', unread:true },
-  { id:4,  type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>', bg:'rgba(255,194,0,0.10)',  bc:'rgba(255,194,0,0.22)',  nc:'#ffc200', msg:'SL-011 — Low voltage warning (172V)', meta:'Zone C · Min threshold: 190V', time:'35 min ago', unread:false },
-  { id:5,  type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>', bg:'rgba(255,68,102,0.12)', bc:'rgba(255,68,102,0.25)', nc:'#ff4466', msg:'SL-034 — Short circuit detected', meta:'Zone D · Circuit breaker tripped', time:'1 hr ago', unread:false },
+  { id:1,  type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" fill="currentColor" stroke="none"/></svg>', bg:'rgba(255,68,102,0.12)', bc:'rgba(255,68,102,0.25)', nc:'#ff4466', msg:'SL-004 — Lamp Failure detected in Zone B', meta:'Zone B · Academic Block I · No current flow detected', time:'2 min ago', unread:true },
+  { id:2,  type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>', bg:'rgba(255,194,0,0.10)',  bc:'rgba(255,194,0,0.22)',  nc:'#ffc200', msg:'SL-009 — Power Surge detected in Zone D', meta:'Zone D · Cafeteria / Food Court · Voltage spike detected', time:'8 min ago', unread:true },
+  { id:3,  type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.25a6 6 0 0 1 0-8.49M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14"/></svg>', bg:'rgba(255,68,102,0.12)', bc:'rgba(255,68,102,0.25)', nc:'#ff4466', msg:'SL-006 — Low voltage warning (172V)', meta:'Zone C · Boys Hostel · Min threshold: 190V', time:'22 min ago', unread:true },
+  { id:4,  type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>', bg:'rgba(255,194,0,0.10)',  bc:'rgba(255,194,0,0.22)',  nc:'#ffc200', msg:'SL-004 — AI confirms Lamp Failure', meta:'Zone B · LightNet v2.3 · 91% confidence', time:'35 min ago', unread:false },
+  { id:5,  type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>', bg:'rgba(255,68,102,0.12)', bc:'rgba(255,68,102,0.25)', nc:'#ff4466', msg:'SL-002 — Preventive maintenance scheduled', meta:'Zone A · Admin Block · Scheduled for tomorrow', time:'1 hr ago', unread:false },
   // REPAIRS
-  { id:6,  type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', bg:'rgba(0,240,122,0.10)',  bc:'rgba(0,240,122,0.22)',  nc:'#00f07a', msg:'Ravi Kumar replaced bulb on SL-041', meta:'Zone E · LED 45W replaced · Repair: 52 min', time:'45 min ago', unread:true },
-  { id:7,  type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>', bg:'rgba(0,229,255,0.08)',  bc:'rgba(0,229,255,0.2)',   nc:'#00e5ff', msg:'Priya Selvan fixed comm module on SL-076', meta:'Zone C · Module #CM-12 replaced · 1.4 hr', time:'1 hr ago', unread:true },
-  { id:8,  type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', bg:'rgba(0,240,122,0.10)',  bc:'rgba(0,240,122,0.22)',  nc:'#00f07a', msg:'Arjun Nair renewed lamp driver on SL-102', meta:'Zone B · Driver #LD-07 installed · 2.1 hr', time:'2 hr ago', unread:false },
-  { id:9,  type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>', bg:'rgba(0,229,255,0.08)',  bc:'rgba(0,229,255,0.2)',   nc:'#00e5ff', msg:'Kiran Babu cleaned heatsink on SL-055', meta:'Zone A · Preventive maintenance done · 45 min', time:'3 hr ago', unread:false },
-  { id:10, type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', bg:'rgba(0,240,122,0.10)',  bc:'rgba(0,240,122,0.22)',  nc:'#00f07a', msg:'Suresh Raj replaced bulb on SL-089', meta:'Zone D · LED 50W replaced · Repair: 1.2 hr', time:'4 hr ago', unread:false },
-  { id:11, type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>', bg:'rgba(191,128,255,0.10)',bc:'rgba(191,128,255,0.22)',nc:'#bf80ff', msg:'Meena Devi renewed 3 bulbs on SL-112, SL-113, SL-114', meta:'Zone C · Batch replacement · Total: 2.5 hr', time:'5 hr ago', unread:false },
+  { id:6,  type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', bg:'rgba(0,240,122,0.10)',  bc:'rgba(0,240,122,0.22)',  nc:'#00f07a', msg:'Meena Devi replaced bulb on SL-001', meta:'Zone A · Main Gate · LED 40W replaced · Repair: 52 min', time:'45 min ago', unread:true },
+  { id:7,  type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>', bg:'rgba(0,229,255,0.08)',  bc:'rgba(0,229,255,0.2)',   nc:'#00e5ff', msg:'Ravi Kumar fixed driver module on SL-010', meta:'Zone E · Auditorium · Module #LD-09 replaced · 1.4 hr', time:'1 hr ago', unread:true },
+  { id:8,  type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', bg:'rgba(0,240,122,0.10)',  bc:'rgba(0,240,122,0.22)',  nc:'#00f07a', msg:'Arjun Nair renewed lamp driver on SL-005', meta:'Zone B · Academic Block II · Driver #LD-07 installed · 2.1 hr', time:'2 hr ago', unread:false },
+  { id:9,  type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>', bg:'rgba(0,229,255,0.08)',  bc:'rgba(0,229,255,0.2)',   nc:'#00e5ff', msg:'Kiran Babu cleaned heatsink on SL-007', meta:'Zone C · Girls Hostel · Preventive maintenance done · 45 min', time:'3 hr ago', unread:false },
+  { id:10, type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', bg:'rgba(0,240,122,0.10)',  bc:'rgba(0,240,122,0.22)',  nc:'#00f07a', msg:'Suresh Raj replaced bulb on SL-008', meta:'Zone D · Sports Ground · High Mast 150W replaced · Repair: 1.2 hr', time:'4 hr ago', unread:false },
+  { id:11, type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>', bg:'rgba(191,128,255,0.10)',bc:'rgba(191,128,255,0.22)',nc:'#bf80ff', msg:'Meena Devi completed routine check on SL-003', meta:'Zone B · Central Library · Preventive maintenance · Total: 2.5 hr', time:'5 hr ago', unread:false },
   // SYSTEM
   { id:12, type:'system', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>', bg:'rgba(0,229,255,0.08)',  bc:'rgba(0,229,255,0.18)',  nc:'#00e5ff', msg:'AI model LightNet v2.3 prediction run complete', meta:'18 lights flagged at-risk in next 7 days', time:'10 min ago', unread:true },
   { id:13, type:'system', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>', bg:'rgba(191,128,255,0.10)',bc:'rgba(191,128,255,0.22)',nc:'#bf80ff', msg:'Energy saving schedule applied for tonight', meta:'AI brightness plan activated · Saves ₹280 tonight', time:'18:00 today', unread:false },
   { id:14, type:'system', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>', bg:'rgba(0,240,122,0.08)',  bc:'rgba(0,240,122,0.18)',  nc:'#00f07a', msg:'Monthly report generated — March 2026', meta:'87 faults · ₹42,180 saved · 94.1% AI accuracy', time:'Today 09:00', unread:false },
-  { id:15, type:'system', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>', bg:'rgba(0,229,255,0.08)',  bc:'rgba(0,229,255,0.18)',  nc:'#00e5ff', msg:'System sync complete — all 248 lights checked', meta:'231 online · 11 faults · 6 dim · 93.1% uptime', time:'Today 06:00', unread:false },
+  { id:15, type:'system', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>', bg:'rgba(0,229,255,0.08)',  bc:'rgba(0,229,255,0.18)',  nc:'#00e5ff', msg:'System sync complete — all 10 lights checked', meta:'7 online · 2 faults · 1 dim · 70% uptime', time:'Today 06:00', unread:false },
 ];
 
 let activeFilter = 'all';
@@ -4277,10 +4207,10 @@ document.head.appendChild(bellStyle);
 
 // Simulate a new notification arriving every 45 seconds
 const liveAlerts = [
-  { type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" fill="currentColor" stroke="none"/></svg>', bg:'rgba(255,68,102,0.12)', bc:'rgba(255,68,102,0.25)', nc:'#ff4466', msg:'SL-018 — Overtemperature spike (71°C)', meta:'Zone D · Sudden temp rise detected', time:'Just now' },
-  { type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', bg:'rgba(0,240,122,0.10)',  bc:'rgba(0,240,122,0.22)',  nc:'#00f07a', msg:'Ravi Kumar renewed bulb on SL-007', meta:'Zone A · LED 40W installed · 38 min', time:'Just now' },
+  { type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" fill="currentColor" stroke="none"/></svg>', bg:'rgba(255,68,102,0.12)', bc:'rgba(255,68,102,0.25)', nc:'#ff4466', msg:'SL-004 — Lamp Failure ongoing', meta:'Zone B · Academic Block I · Technician en route', time:'Just now' },
+  { type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', bg:'rgba(0,240,122,0.10)',  bc:'rgba(0,240,122,0.22)',  nc:'#00f07a', msg:'Ravi Kumar renewed bulb on SL-001', meta:'Zone A · Main Gate · LED 40W installed · 38 min', time:'Just now' },
   { type:'system', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>', bg:'rgba(191,128,255,0.10)',bc:'rgba(191,128,255,0.22)',nc:'#bf80ff', msg:'AI dimming activated for Zone A (02:00)', meta:'Brightness reduced to 30% · Saving ₹38/hr', time:'Just now' },
-  { type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.25a6 6 0 0 1 0-8.49M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14"/></svg>', bg:'rgba(255,194,0,0.10)',  bc:'rgba(255,194,0,0.22)',  nc:'#ffc200', msg:'SL-055 — Intermittent comm signal', meta:'Zone A · Signal drops every ~5 min', time:'Just now' },
+  { type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.25a6 6 0 0 1 0-8.49M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14"/></svg>', bg:'rgba(255,194,0,0.10)',  bc:'rgba(255,194,0,0.22)',  nc:'#ffc200', msg:'SL-006 — Voltage still low', meta:'Zone C · Boys Hostel · Reading 172V', time:'Just now' },
 ];
 let liveIdx = 0;
 setInterval(() => {
