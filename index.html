@@ -865,6 +865,10 @@ function logoutApp(){
 
   <div class="hright">
     <div class="live-pill"><span class="ldot"></span>LIVE</div>
+    <div id="hdr-mqtt-badge" style="font-family:'Share Tech Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:0.5px;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:5px;background:rgba(255,179,0,0.1);border:1px solid rgba(255,179,0,0.3);color:var(--amber);white-space:nowrap;" title="ESP32 MQTT connection (broker.hivemq.com)">
+      <span id="hdr-mqtt-dot" style="width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 6px currentColor;flex-shrink:0;"></span>
+      <span id="hdr-mqtt-text">MQTT: Connecting…</span>
+    </div>
     <div id="hclock">--:--:--</div>
     <div class="hbtn" id="notif-bell" onclick="toggleNotifPanel()"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-dot" id="notif-count">5</span></div>
     <div class="hbtn" id="settings-btn" onclick="toggleSettingsPanel()"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
@@ -1190,49 +1194,20 @@ function logoutApp(){
             <stop offset="0%" stop-color="rgba(0,210,255,0.04)"/>
             <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
           </radialGradient>
+          <pattern id="gridDots" width="28" height="28" patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r="1" fill="rgba(0,210,255,0.08)"/>
+          </pattern>
         </defs>
         <rect width="700" height="340" fill="#060e1a"/>
+        <rect width="700" height="340" fill="url(#gridDots)"/>
         <rect width="700" height="340" fill="url(#mapBg)"/>
-        <!-- Blocks -->
-        <rect x="30" y="30" width="90" height="55" rx="4" fill="#0a1828" stroke="rgba(0,210,255,0.07)" stroke-width="1"/>
-        <rect x="160" y="30" width="110" height="55" rx="4" fill="#0a1828" stroke="rgba(0,210,255,0.07)" stroke-width="1"/>
-        <rect x="320" y="30" width="75" height="55" rx="4" fill="#0a1828" stroke="rgba(0,210,255,0.07)" stroke-width="1"/>
-        <rect x="440" y="30" width="90" height="55" rx="4" fill="#0a1828" stroke="rgba(0,210,255,0.07)" stroke-width="1"/>
-        <rect x="580" y="30" width="90" height="55" rx="4" fill="#0a1828" stroke="rgba(0,210,255,0.07)" stroke-width="1"/>
-        <rect x="30" y="155" width="80" height="70" rx="4" fill="#0a1828" stroke="rgba(0,210,255,0.07)" stroke-width="1"/>
-        <rect x="160" y="155" width="110" height="70" rx="4" fill="#0a1828" stroke="rgba(0,210,255,0.07)" stroke-width="1"/>
-        <rect x="320" y="155" width="75" height="70" rx="4" fill="#0a1828" stroke="rgba(0,210,255,0.07)" stroke-width="1"/>
-        <rect x="440" y="155" width="90" height="70" rx="4" fill="#0a1828" stroke="rgba(0,210,255,0.07)" stroke-width="1"/>
-        <rect x="580" y="155" width="90" height="70" rx="4" fill="#0a1828" stroke="rgba(0,210,255,0.07)" stroke-width="1"/>
-        <rect x="30" y="270" width="90" height="50" rx="4" fill="#0a1828" stroke="rgba(0,210,255,0.07)" stroke-width="1"/>
-        <rect x="160" y="270" width="110" height="50" rx="4" fill="#0a1828" stroke="rgba(0,210,255,0.07)" stroke-width="1"/>
-        <rect x="320" y="270" width="75" height="50" rx="4" fill="#0a1828" stroke="rgba(0,210,255,0.07)" stroke-width="1"/>
-        <rect x="440" y="270" width="90" height="50" rx="4" fill="#0a1828" stroke="rgba(0,210,255,0.07)" stroke-width="1"/>
-        <rect x="580" y="270" width="90" height="50" rx="4" fill="#0a1828" stroke="rgba(0,210,255,0.07)" stroke-width="1"/>
-        <!-- Roads H -->
-        <rect x="0" y="98" width="700" height="44" fill="#0c1e30"/>
-        <rect x="0" y="238" width="700" height="44" fill="#0c1e30"/>
-        <!-- Roads V -->
-        <rect x="130" y="0" width="24" height="340" fill="#0c1e30"/>
-        <rect x="298" y="0" width="24" height="340" fill="#0c1e30"/>
-        <rect x="415" y="0" width="24" height="340" fill="#0c1e30"/>
-        <rect x="562" y="0" width="24" height="340" fill="#0c1e30"/>
-        <!-- Dashed center lines -->
-        <line x1="0" y1="120" x2="700" y2="120" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="10,8"/>
-        <line x1="0" y1="260" x2="700" y2="260" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="10,8"/>
-        <line x1="142" y1="0" x2="142" y2="340" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="10,8"/>
-        <line x1="310" y1="0" x2="310" y2="340" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="10,8"/>
-        <line x1="427" y1="0" x2="427" y2="340" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="10,8"/>
-        <line x1="574" y1="0" x2="574" y2="340" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="10,8"/>
+        <!-- Zone regions + building outlines are rendered dynamically from -->
+        <!-- LIGHT_NODES real lat/lon (see renderGridZoneOverlays() / renderSeedGridNodes()), -->
+        <!-- using the same coordinate mapping as the Live Map so both views align. -->
+        <g id="grid-zone-layer"></g>
+        <g id="grid-building-layer"></g>
         <!-- Street light nodes are rendered dynamically from LIGHT_NODES (see renderSeedGridNodes()) -->
         <!-- Online = green, Fault = red, Dim = amber -->
-        <!-- Zone labels -->
-        <text x="75" y="135" fill="#ffffff" font-size="11" font-weight="700" font-family="'Share Tech Mono',monospace" style="text-shadow:0 0 8px #fff;">ZONE A</text>
-        <text x="350" y="135" fill="#00f07a" font-size="11" font-weight="700" font-family="'Share Tech Mono',monospace" style="text-shadow:0 0 8px #00f07a;">ZONE B</text>
-        <text x="590" y="135" fill="#ffc200" font-size="11" font-weight="700" font-family="'Share Tech Mono',monospace" style="text-shadow:0 0 8px #ffc200;">ZONE F</text>
-        <text x="75" y="275" fill="#ff6688" font-size="11" font-weight="700" font-family="'Share Tech Mono',monospace" style="text-shadow:0 0 8px #ff6688;">ZONE C</text>
-        <text x="350" y="275" fill="#00e5ff" font-size="11" font-weight="700" font-family="'Share Tech Mono',monospace" style="text-shadow:0 0 8px #00e5ff;">ZONE D</text>
-        <text x="590" y="275" fill="#bf80ff" font-size="11" font-weight="700" font-family="'Share Tech Mono',monospace" style="text-shadow:0 0 8px #bf80ff;">ZONE E</text>
         <!-- Legend -->
         <circle cx="16" cy="326" r="5" fill="#00e676" filter="url(#lg)"/>
         <text x="26" y="330" fill="#6a9ab8" font-size="9" font-family="'Share Tech Mono',monospace">ON</text>
@@ -2993,20 +2968,33 @@ let mqttLastEspStatus = null;
 
 function setMqttStatusBadge(state){
   // state: 'connecting' | 'connected' | 'disconnected' | 'error'
-  const badge = document.getElementById('mqtt-status-badge');
-  const text = document.getElementById('mqtt-status-text');
-  if(!badge || !text) return;
   const styles = {
-    connecting:   { color:'var(--amber)', bg:'rgba(255,179,0,0.1)',  bd:'rgba(255,179,0,0.3)',  label:'Connecting…' },
-    connected:    { color:'var(--green)', bg:'rgba(0,230,118,0.1)',  bd:'rgba(0,230,118,0.3)',  label:'Live Data · Connected' },
-    disconnected: { color:'var(--muted)', bg:'rgba(150,170,190,0.08)', bd:'rgba(150,170,190,0.2)', label:'Live Data · Offline' },
-    error:        { color:'var(--red)',   bg:'rgba(255,59,92,0.1)',  bd:'rgba(255,59,92,0.3)',  label:'Connection Error' },
+    connecting:   { color:'var(--amber)', bg:'rgba(255,179,0,0.1)',  bd:'rgba(255,179,0,0.3)',  label:'Connecting…',            hdrLabel:'MQTT: Connecting…' },
+    connected:    { color:'var(--green)', bg:'rgba(0,230,118,0.1)',  bd:'rgba(0,230,118,0.3)',  label:'Live Data · Connected',  hdrLabel:'MQTT: Live' },
+    disconnected: { color:'var(--muted)', bg:'rgba(150,170,190,0.08)', bd:'rgba(150,170,190,0.2)', label:'Live Data · Offline',  hdrLabel:'MQTT: Offline' },
+    error:        { color:'var(--red)',   bg:'rgba(255,59,92,0.1)',  bd:'rgba(255,59,92,0.3)',  label:'Connection Error',       hdrLabel:'MQTT: Error' },
   };
   const s = styles[state] || styles.disconnected;
-  badge.style.background = s.bg;
-  badge.style.borderColor = s.bd;
-  badge.style.color = s.color;
-  text.textContent = s.label;
+
+  // Map-toolbar badge (Home page)
+  const badge = document.getElementById('mqtt-status-badge');
+  const text = document.getElementById('mqtt-status-text');
+  if(badge && text){
+    badge.style.background = s.bg;
+    badge.style.borderColor = s.bd;
+    badge.style.color = s.color;
+    text.textContent = s.label;
+  }
+
+  // Global header badge (visible on every page)
+  const hdrBadge = document.getElementById('hdr-mqtt-badge');
+  const hdrText = document.getElementById('hdr-mqtt-text');
+  if(hdrBadge && hdrText){
+    hdrBadge.style.background = s.bg;
+    hdrBadge.style.borderColor = s.bd;
+    hdrBadge.style.color = s.color;
+    hdrText.textContent = s.hdrLabel;
+  }
 }
 
 function initMqttLive(){
@@ -3070,18 +3058,7 @@ function applyLiveTelemetry(data){
     const node = LIGHT_NODES.find(n => n.id === id);
     if(!node) return; // telemetry for a light not currently on the map — ignore
 
-    const current = Number(reading.current) || 0;
-
-    let newStatus;
-    if (current <= 0.04) {
-      newStatus = 'fault';
-    } else if (current < 0.20) {
-      newStatus = 'dim';
-    } else if (current <= 0.90) {
-      newStatus = 'online';
-    } else {
-      newStatus = 'fault';
-    }
+    const newStatus = reading.status === 'FAULT' ? 'fault' : 'online';
     if(node.s !== newStatus){
       node.s = newStatus;
       anyStatusChanged = true;
@@ -3241,6 +3218,25 @@ function liveAgoLabel(ts){
   return Math.round(secs / 60) + 'm ago';
 }
 
+// Shared zone-bounding-box math used by BOTH the Live Map (Leaflet) and
+// the Grid map (SVG), so the two views always show the exact same zone
+// regions — just rendered in different coordinate systems.
+const ZONE_BOX_PAD = 0.0016;
+function computeZoneBoxes(){
+  const byZone = {};
+  LIGHT_NODES.forEach(n => { (byZone[n.z] = byZone[n.z] || []).push(n); });
+
+  return Object.keys(byZone).sort().map(z => {
+    const nodes = byZone[z];
+    const color = zoneColor(z);
+    const minLat = Math.min(...nodes.map(n => n.lat)) - ZONE_BOX_PAD;
+    const maxLat = Math.max(...nodes.map(n => n.lat)) + ZONE_BOX_PAD;
+    const minLon = Math.min(...nodes.map(n => n.lon)) - ZONE_BOX_PAD;
+    const maxLon = Math.max(...nodes.map(n => n.lon)) + ZONE_BOX_PAD;
+    return { zone: z, color, count: nodes.length, minLat, maxLat, minLon, maxLon };
+  });
+}
+
 // Groups the current LIGHT_NODES by zone and draws a dashed boundary
 // box + label for each zone on the Live Map, so zones are visually
 // split out instead of all nodes blending together.
@@ -3249,18 +3245,7 @@ function renderZoneOverlays(){
   if(zoneOverlayLayer){ osmLightMapInstance.removeLayer(zoneOverlayLayer); }
   zoneOverlayLayer = L.layerGroup().addTo(osmLightMapInstance);
 
-  const byZone = {};
-  LIGHT_NODES.forEach(n => { (byZone[n.z] = byZone[n.z] || []).push(n); });
-
-  Object.keys(byZone).sort().forEach(z => {
-    const nodes = byZone[z];
-    const color = zoneColor(z);
-    const pad = 0.0016;
-    let minLat = Math.min(...nodes.map(n => n.lat)) - pad;
-    let maxLat = Math.max(...nodes.map(n => n.lat)) + pad;
-    let minLon = Math.min(...nodes.map(n => n.lon)) - pad;
-    let maxLon = Math.max(...nodes.map(n => n.lon)) + pad;
-
+  computeZoneBoxes().forEach(({ zone, color, count, minLat, maxLat, minLon, maxLon }) => {
     L.rectangle([[minLat, minLon], [maxLat, maxLon]], {
       color: color,
       weight: 1.5,
@@ -3274,7 +3259,7 @@ function renderZoneOverlays(){
       className: 'zone-label-icon',
       html: `<div style="font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;color:${color};
         background:rgba(2,10,18,0.85);border:1px solid ${color};border-radius:5px;padding:2px 7px;
-        white-space:nowrap;box-shadow:0 0 8px ${color}55;">ZONE ${z} · ${nodes.length}</div>`,
+        white-space:nowrap;box-shadow:0 0 8px ${color}55;">ZONE ${zone} · ${count}</div>`,
       iconSize: [90, 20],
       iconAnchor: [-4, 24]
     });
@@ -3427,13 +3412,88 @@ function addLightNodeToGrid(node){
   attachMnodeTooltip(circle);
 }
 
+// Small location-name label under each node (e.g. "Main Gate"), so the
+// Grid reads like an actual campus map rather than anonymous dots.
+function renderGridBuildingLabels(){
+  const layer = document.getElementById('grid-building-layer');
+  if(!layer) return;
+  layer.innerHTML = '';
+  const ns = 'http://www.w3.org/2000/svg';
+
+  LIGHT_NODES.forEach(node => {
+    if(!node.notes) return;
+    const { x, y } = latLonToGridXY(node.lat, node.lon);
+    const color = zoneColor(node.z);
+    const label = document.createElementNS(ns, 'text');
+    label.setAttribute('x', x);
+    label.setAttribute('y', y + 20);
+    label.setAttribute('text-anchor', 'middle');
+    label.setAttribute('fill', color);
+    label.setAttribute('font-size', '8.5');
+    label.setAttribute('font-family', "'Share Tech Mono',monospace");
+    label.setAttribute('opacity', '0.85');
+    label.setAttribute('pointer-events', 'none');
+    label.textContent = node.notes;
+    layer.appendChild(label);
+  });
+}
+
+// Draws the same zone bounding boxes as the Live Map (see
+// computeZoneBoxes()), just converted into Grid-SVG pixel space via
+// latLonToGridXY, so the Grid and Live Map always show aligned zones.
+function renderGridZoneOverlays(){
+  const layer = document.getElementById('grid-zone-layer');
+  if(!layer) return;
+  layer.innerHTML = '';
+  const ns = 'http://www.w3.org/2000/svg';
+
+  computeZoneBoxes().forEach(({ zone, color, count, minLat, maxLat, minLon, maxLon }) => {
+    // lat increases downward in this grid's convention (matches latLonToGridXY),
+    // so the "top" corner in pixel space comes from maxLat.
+    const topLeft = latLonToGridXY(maxLat, minLon);
+    const bottomRight = latLonToGridXY(minLat, maxLon);
+    const rectX = Math.min(topLeft.x, bottomRight.x);
+    const rectY = Math.min(topLeft.y, bottomRight.y);
+    const rectW = Math.max(30, Math.abs(bottomRight.x - topLeft.x));
+    const rectH = Math.max(30, Math.abs(bottomRight.y - topLeft.y));
+
+    const rect = document.createElementNS(ns, 'rect');
+    rect.setAttribute('x', rectX);
+    rect.setAttribute('y', rectY);
+    rect.setAttribute('width', rectW);
+    rect.setAttribute('height', rectH);
+    rect.setAttribute('rx', 6);
+    rect.setAttribute('fill', color);
+    rect.setAttribute('fill-opacity', '0.05');
+    rect.setAttribute('stroke', color);
+    rect.setAttribute('stroke-width', '1.3');
+    rect.setAttribute('stroke-dasharray', '5,5');
+    rect.setAttribute('pointer-events', 'none');
+    layer.appendChild(rect);
+
+    const label = document.createElementNS(ns, 'text');
+    label.setAttribute('x', rectX + 6);
+    label.setAttribute('y', rectY + 13);
+    label.setAttribute('fill', color);
+    label.setAttribute('font-size', '9.5');
+    label.setAttribute('font-weight', '700');
+    label.setAttribute('font-family', "'Share Tech Mono',monospace");
+    label.setAttribute('pointer-events', 'none');
+    label.style.textShadow = `0 0 6px ${color}`;
+    label.textContent = `ZONE ${zone} · ${count}`;
+    layer.appendChild(label);
+  });
+}
+
 // Draws every node currently in LIGHT_NODES onto the Grid map. Called once
 // on load, and can be re-run any time the underlying data is replaced.
 function renderSeedGridNodes(){
   const svg = document.getElementById('mainMap');
   if(!svg) return;
   svg.querySelectorAll('.mnode').forEach(n => n.remove());
+  renderGridZoneOverlays();
   LIGHT_NODES.forEach(addLightNodeToGrid);
+  renderGridBuildingLabels();
 }
 
 function addLightNodeToCoverageMap(node){
@@ -3475,6 +3535,8 @@ function handleAddLightSubmit(event){
 
   // Grid map (schematic SVG) — always add immediately
   addLightNodeToGrid(node);
+  renderGridZoneOverlays();
+  renderGridBuildingLabels();
 
   // Coverage map — add if it's already initialised, otherwise wait for it
   if(homeCoverageMapInstance){
@@ -3537,6 +3599,8 @@ function removeStreetLight(id, opts){
   if(gridNode) gridNode.remove();
 
   renderZoneOverlays();
+  renderGridZoneOverlays();
+  renderGridBuildingLabels();
   updateHomeKpisAfterRemove(node.s);
   if(window.renderManageLightsList) renderManageLightsList();
   if(window.showToast) showToast(id + ' removed from the system', '#ff3b5c');
