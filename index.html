@@ -876,6 +876,32 @@ function logoutApp(){
   </div>
 </header>
 
+<!-- ══ GLOBAL SOS SIREN OVERLAY ══ -->
+<!-- Activated when a panic-button MQTT signal is received (see -->
+<!-- MQTT_SOS_TOPIC in the live-data script). Placed here, outside any -->
+<!-- .page container, so it stays visible above every page (not just -->
+<!-- Home/Patrol) — a real emergency should never be missed just -->
+<!-- because staff happen to be looking at a different tab. -->
+<style>
+  @keyframes sirenFlashRing{
+    0%,100%{ box-shadow: inset 0 0 0 6px rgba(255,20,60,0.85), inset 0 0 120px rgba(255,20,60,0.35); }
+    50%{ box-shadow: inset 0 0 0 6px rgba(255,20,60,0.15), inset 0 0 60px rgba(255,20,60,0.1); }
+  }
+  @keyframes sirenPulseDot{ 0%,100%{opacity:1; transform:scale(1);} 50%{opacity:0.4; transform:scale(0.85);} }
+  #siren-overlay{ animation: sirenFlashRing 0.9s ease-in-out infinite; }
+  #siren-banner .siren-dot{ animation: sirenPulseDot 0.6s ease-in-out infinite; }
+</style>
+<div id="siren-overlay" style="display:none;position:fixed;inset:0;z-index:2000;pointer-events:none;"></div>
+<div id="siren-banner" style="display:none;position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:2001;background:linear-gradient(135deg,#c41c4e,#8a1436);color:#fff;padding:12px 18px;border-radius:14px;box-shadow:0 10px 32px rgba(196,28,78,0.5);align-items:center;gap:12px;font-family:'Rajdhani',sans-serif;max-width:92vw;">
+  <span class="siren-dot" style="width:10px;height:10px;border-radius:50%;background:#fff;flex-shrink:0;"></span>
+  <div>
+    <div style="font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:0.5px;">🚨 SOS BUTTON PRESSED</div>
+    <div style="font-size:12px;opacity:0.92;" id="siren-banner-detail">Signal received — locating source…</div>
+  </div>
+  <button onclick="goToPatrolSos()" style="background:rgba(255,255,255,0.18);border:none;color:#fff;font-weight:700;font-size:12px;padding:8px 14px;border-radius:9px;cursor:pointer;white-space:nowrap;">View on Patrol</button>
+  <button onclick="stopSiren()" title="Acknowledge & silence" style="background:none;border:1px solid rgba(255,255,255,0.4);color:#fff;font-size:12px;padding:8px 10px;border-radius:9px;cursor:pointer;white-space:nowrap;">Silence</button>
+</div>
+
 <!-- ══ USER PROFILE PANEL ══ -->
 <div id="user-overlay" onclick="toggleUserPanel()" style="display:none;position:fixed;inset:0;z-index:498;"></div>
 <div id="user-panel" style="
@@ -1252,14 +1278,14 @@ function logoutApp(){
           </div>
           <div class="login-field" style="margin-bottom:0;">
             <label class="login-label">Latitude</label>
-            <input class="login-input" type="number" step="any" id="al-lat" placeholder="11.4986" required>
+            <input class="login-input" type="number" step="any" id="al-lat" placeholder="11.4986" oninput="autoSuggestZone()" required>
           </div>
           <div class="login-field" style="margin-bottom:0;">
             <label class="login-label">Longitude</label>
-            <input class="login-input" type="number" step="any" id="al-lon" placeholder="77.2743" required>
+            <input class="login-input" type="number" step="any" id="al-lon" placeholder="77.2743" oninput="autoSuggestZone()" required>
           </div>
           <div class="login-field" style="margin-bottom:0;">
-            <label class="login-label">Zone</label>
+            <label class="login-label">Zone <span style="font-weight:400;color:var(--muted);font-size:9px;">(auto-suggested from GPS)</span></label>
             <select class="login-input" id="al-zone" style="cursor:pointer;">
               <option value="A">Zone A</option>
               <option value="B">Zone B</option>
@@ -1395,19 +1421,19 @@ function logoutApp(){
         <div id="alerts-feed" style="display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;">
           <div class="alert-row" style="display:flex;align-items:flex-start;gap:8px;padding:8px;border-radius:8px;background:rgba(255,59,92,0.06);border:1px solid rgba(255,59,92,0.12);cursor:pointer;" onclick="showPage('fault',document.querySelectorAll('.hnav-btn')[1])">
             <span class="bdot red" style="margin-top:4px;flex-shrink:0;"></span>
-            <div style="flex:1;"><div style="font-size:12px;font-weight:700;">SL-04 — Lamp Failure</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Zone B · Academic Block I · 8m ago</div></div>
+            <div style="flex:1;"><div style="font-size:12px;font-weight:700;">SL-04 — Lamp Failure</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Zone F · Academic Block I · 8m ago</div></div>
           </div>
           <div class="alert-row" style="display:flex;align-items:flex-start;gap:8px;padding:8px;border-radius:8px;background:rgba(255,179,0,0.06);border:1px solid rgba(255,179,0,0.12);cursor:pointer;">
             <span class="bdot amber" style="margin-top:4px;flex-shrink:0;"></span>
-            <div style="flex:1;"><div style="font-size:12px;font-weight:700;">SL-06 — Low Voltage</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Zone C · Boys Hostel · 172V · 15m ago</div></div>
+            <div style="flex:1;"><div style="font-size:12px;font-weight:700;">SL-06 — Low Voltage</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Zone E · Boys Hostel · 172V · 15m ago</div></div>
           </div>
           <div class="alert-row" style="display:flex;align-items:flex-start;gap:8px;padding:8px;border-radius:8px;background:rgba(255,59,92,0.06);border:1px solid rgba(255,59,92,0.12);cursor:pointer;" onclick="showPage('fault',document.querySelectorAll('.hnav-btn')[1])">
             <span class="bdot red" style="margin-top:4px;flex-shrink:0;"></span>
-            <div style="flex:1;"><div style="font-size:12px;font-weight:700;">SL-09 — Power Surge</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Zone D · Cafeteria / Food Court · 22m ago</div></div>
+            <div style="flex:1;"><div style="font-size:12px;font-weight:700;">SL-09 — Power Surge</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Zone C · Cafeteria / Food Court · 22m ago</div></div>
           </div>
           <div class="alert-row" style="display:flex;align-items:flex-start;gap:8px;padding:8px;border-radius:8px;background:rgba(0,230,118,0.06);border:1px solid rgba(0,230,118,0.12);">
             <span class="bdot green" style="margin-top:4px;flex-shrink:0;"></span>
-            <div style="flex:1;"><div style="font-size:12px;font-weight:700;">SL-02 — Restored</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Zone A · Admin Block · Back online · 52m ago</div></div>
+            <div style="flex:1;"><div style="font-size:12px;font-weight:700;">SL-02 — Restored</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Zone B · Admin Block · Back online · 52m ago</div></div>
           </div>
         </div>
       </div>
@@ -1544,19 +1570,19 @@ function logoutApp(){
         <div style="font-size:14px;font-weight:700;margin-bottom:12px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Fault Zones — BIT Sathy Campus</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
           <div style="background:rgba(255,59,92,0.12);border:1px solid rgba(255,59,92,0.25);border-radius:8px;padding:10px;text-align:center;">
-            <div style="font-family:'Orbitron',monospace;font-size:16px;color:var(--red);">Zone D</div>
+            <div style="font-family:'Orbitron',monospace;font-size:16px;color:var(--red);">Zone C</div>
             <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);">1 FAULT · Cafeteria</div>
           </div>
           <div style="background:rgba(255,179,0,0.10);border:1px solid rgba(255,179,0,0.25);border-radius:8px;padding:10px;text-align:center;">
-            <div style="font-family:'Orbitron',monospace;font-size:16px;color:var(--amber);">Zone B</div>
+            <div style="font-family:'Orbitron',monospace;font-size:16px;color:var(--amber);">Zone F</div>
             <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);">1 FAULT · Academic Block I</div>
           </div>
           <div style="background:rgba(0,210,255,0.06);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;">
-            <div style="font-family:'Orbitron',monospace;font-size:16px;color:var(--text2);">Zone C</div>
+            <div style="font-family:'Orbitron',monospace;font-size:16px;color:var(--text2);">Zone E</div>
             <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);">1 DIM · Boys Hostel</div>
           </div>
           <div style="background:rgba(0,210,255,0.06);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;">
-            <div style="font-family:'Orbitron',monospace;font-size:16px;color:var(--text2);">Zone A / E</div>
+            <div style="font-family:'Orbitron',monospace;font-size:16px;color:var(--text2);">Zone A / B / D</div>
             <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);">ALL ONLINE</div>
           </div>
         </div>
@@ -1611,10 +1637,10 @@ function logoutApp(){
       <table class="tbl">
         <thead><tr><th>Light ID</th><th>Zone</th><th>Predicted Fault</th><th>Confidence</th><th>Days Left</th><th>Action</th></tr></thead>
         <tbody>
-          <tr><td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-02</span></td><td>Zone A</td><td><span class="badge red">Lamp Failure</span></td><td><div class="pbar" style="width:80px"><div class="pbar-fill red" style="width:91%;"></div></div><span style="font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--red);margin-left:5px;">91%</span></td><td><span style="color:var(--red);font-weight:700;font-family:'Share Tech Mono',monospace;">~2d</span></td><td><button class="btn sm warn">Schedule</button></td></tr>
-          <tr><td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-05</span></td><td>Zone B</td><td><span class="badge amber">Driver Fault</span></td><td><div class="pbar" style="width:80px"><div class="pbar-fill amber" style="width:84%;"></div></div><span style="font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--amber);margin-left:5px;">84%</span></td><td><span style="color:var(--amber);font-weight:700;font-family:'Share Tech Mono',monospace;">~4d</span></td><td><button class="btn sm warn">Schedule</button></td></tr>
-          <tr><td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-08</span></td><td>Zone D</td><td><span class="badge red">Overtemp</span></td><td><div class="pbar" style="width:80px"><div class="pbar-fill red" style="width:78%;"></div></div><span style="font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--red);margin-left:5px;">78%</span></td><td><span style="color:var(--red);font-weight:700;font-family:'Share Tech Mono',monospace;">~5d</span></td><td><button class="btn sm warn">Schedule</button></td></tr>
-          <tr><td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-07</span></td><td>Zone C</td><td><span class="badge amber">Comm Fault</span></td><td><div class="pbar" style="width:80px"><div class="pbar-fill amber" style="width:72%;"></div></div><span style="font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--amber);margin-left:5px;">72%</span></td><td><span style="color:var(--amber);font-weight:700;font-family:'Share Tech Mono',monospace;">~6d</span></td><td><button class="btn sm warn">Schedule</button></td></tr>
+          <tr><td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-02</span></td><td>Zone B</td><td><span class="badge red">Lamp Failure</span></td><td><div class="pbar" style="width:80px"><div class="pbar-fill red" style="width:91%;"></div></div><span style="font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--red);margin-left:5px;">91%</span></td><td><span style="color:var(--red);font-weight:700;font-family:'Share Tech Mono',monospace;">~2d</span></td><td><button class="btn sm warn">Schedule</button></td></tr>
+          <tr><td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-05</span></td><td>Zone E</td><td><span class="badge amber">Driver Fault</span></td><td><div class="pbar" style="width:80px"><div class="pbar-fill amber" style="width:84%;"></div></div><span style="font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--amber);margin-left:5px;">84%</span></td><td><span style="color:var(--amber);font-weight:700;font-family:'Share Tech Mono',monospace;">~4d</span></td><td><button class="btn sm warn">Schedule</button></td></tr>
+          <tr><td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-08</span></td><td>Zone A</td><td><span class="badge red">Overtemp</span></td><td><div class="pbar" style="width:80px"><div class="pbar-fill red" style="width:78%;"></div></div><span style="font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--red);margin-left:5px;">78%</span></td><td><span style="color:var(--red);font-weight:700;font-family:'Share Tech Mono',monospace;">~5d</span></td><td><button class="btn sm warn">Schedule</button></td></tr>
+          <tr><td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-07</span></td><td>Zone D</td><td><span class="badge amber">Comm Fault</span></td><td><div class="pbar" style="width:80px"><div class="pbar-fill amber" style="width:72%;"></div></div><span style="font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--amber);margin-left:5px;">72%</span></td><td><span style="color:var(--amber);font-weight:700;font-family:'Share Tech Mono',monospace;">~6d</span></td><td><button class="btn sm warn">Schedule</button></td></tr>
           <tr><td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-10</span></td><td>Zone E</td><td><span class="badge amber">Low Voltage</span></td><td><div class="pbar" style="width:80px"><div class="pbar-fill amber" style="width:68%;"></div></div><span style="font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--amber);margin-left:5px;">68%</span></td><td><span style="color:var(--amber);font-weight:700;font-family:'Share Tech Mono',monospace;">~7d</span></td><td><button class="btn sm warn">Schedule</button></td></tr>
         </tbody>
       </table>
@@ -1697,11 +1723,11 @@ function logoutApp(){
       <div style="display:flex;flex-direction:column;gap:10px;">
         <div style="background:rgba(255,59,92,0.07);border:1px solid rgba(255,59,92,0.2);border-radius:8px;padding:12px;">
           <div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:4px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Immediate Action Required</div>
-          <div style="font-size:12px;color:var(--text2);line-height:1.5;">Replace lamp driver in Zone A (SL-02, Admin Block). Predicted failure within 48 hours with 91% confidence.</div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.5;">Replace lamp driver in Zone B (SL-02, Admin Block). Predicted failure within 48 hours with 91% confidence.</div>
         </div>
         <div style="background:rgba(255,179,0,0.07);border:1px solid rgba(255,179,0,0.2);border-radius:8px;padding:12px;">
           <div style="font-size:12px;font-weight:700;color:var(--amber);margin-bottom:4px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> Preventive Maintenance</div>
-          <div style="font-size:12px;color:var(--text2);line-height:1.5;">Schedule heat-sink cleaning for SL-07 (Girls Hostel, Zone C). Overheating pattern detected in last 14 days.</div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.5;">Schedule heat-sink cleaning for SL-07 (Girls Hostel, Zone D). Overheating pattern detected in last 14 days.</div>
         </div>
         <div style="background:rgba(0,210,255,0.07);border:1px solid rgba(0,210,255,0.15);border-radius:8px;padding:12px;">
           <div style="font-size:12px;font-weight:700;color:var(--cyan);margin-bottom:4px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2.05V17h6v-.25c0-.85.4-1.55 1-2.05A7 7 0 0 0 12 2z"/></svg> Efficiency Tip</div>
@@ -1927,7 +1953,7 @@ function logoutApp(){
             <td><div style="font-weight:700;">Ravi Kumar</div><div style="font-size:10px;color:var(--muted);">Tech #T01</div></td>
             <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-04</span></td>
             <td><span class="badge red">Lamp Failure</span></td>
-            <td><span style="font-size:11px;color:var(--text2);">Zone B, Academic Block I</span></td>
+            <td><span style="font-size:11px;color:var(--text2);">Zone F, Academic Block I</span></td>
             <td><span class="badge amber"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M5 17h1a2 2 0 1 0 4 0h4a2 2 0 1 0 4 0h1a1 1 0 0 0 1-1v-3.28a1 1 0 0 0-.27-.68l-2.7-2.9A2 2 0 0 0 15.55 8H13V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1z"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="16.5" cy="17.5" r="1.5"/></svg> En Route</span></td>
             <td><span style="font-family:'Share Tech Mono',monospace;color:var(--amber);">12 min</span></td>
           <td><div class="contact-actions"><button class="icon-act-btn call" onclick="callTechnician('Ravi Kumar','SL-04')" title="Call Ravi Kumar: +91 63804 70158"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageTechnician('Ravi Kumar','SL-04')" title="Message Ravi Kumar: +91 63804 70158"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td></tr>
@@ -1935,7 +1961,7 @@ function logoutApp(){
             <td><div style="font-weight:700;">Priya Selvan</div><div style="font-size:10px;color:var(--muted);">Tech #T02</div></td>
             <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-09</span></td>
             <td><span class="badge amber">Power Surge</span></td>
-            <td><span style="font-size:11px;color:var(--text2);">Zone D, Cafeteria / Food Court</span></td>
+            <td><span style="font-size:11px;color:var(--text2);">Zone C, Cafeteria / Food Court</span></td>
             <td><span class="badge red"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> On Site</span></td>
             <td><span style="font-family:'Share Tech Mono',monospace;color:var(--green);">Active</span></td>
           <td><div class="contact-actions"><button class="icon-act-btn call" onclick="callTechnician('Priya Selvan','SL-09')" title="Call Priya Selvan: +91 99653 15356"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageTechnician('Priya Selvan','SL-09')" title="Message Priya Selvan: +91 99653 15356"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td></tr>
@@ -1943,7 +1969,7 @@ function logoutApp(){
             <td><div style="font-weight:700;">Arjun Nair</div><div style="font-size:10px;color:var(--muted);">Tech #T03</div></td>
             <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-06</span></td>
             <td><span class="badge red">Low Voltage</span></td>
-            <td><span style="font-size:11px;color:var(--text2);">Zone C, Boys Hostel</span></td>
+            <td><span style="font-size:11px;color:var(--text2);">Zone E, Boys Hostel</span></td>
             <td><span class="badge amber"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M5 17h1a2 2 0 1 0 4 0h4a2 2 0 1 0 4 0h1a1 1 0 0 0 1-1v-3.28a1 1 0 0 0-.27-.68l-2.7-2.9A2 2 0 0 0 15.55 8H13V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1z"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="16.5" cy="17.5" r="1.5"/></svg> En Route</span></td>
             <td><span style="font-family:'Share Tech Mono',monospace;color:var(--amber);">28 min</span></td>
           <td><div class="contact-actions"><button class="icon-act-btn call" onclick="callTechnician('Arjun Nair','SL-06')" title="Call Arjun Nair: +91 91501 61647"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageTechnician('Arjun Nair','SL-06')" title="Message Arjun Nair: +91 91501 61647"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td></tr>
@@ -1951,7 +1977,7 @@ function logoutApp(){
             <td><div style="font-weight:700;">Suresh Raj</div><div style="font-size:10px;color:var(--muted);">Tech #T04</div></td>
             <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-02*</span></td>
             <td><span class="badge purple">Preventive</span></td>
-            <td><span style="font-size:11px;color:var(--text2);">Zone A, Admin Block</span></td>
+            <td><span style="font-size:11px;color:var(--text2);">Zone B, Admin Block</span></td>
             <td><span class="badge cyan"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Scheduled</span></td>
             <td><span style="font-family:'Share Tech Mono',monospace;color:var(--muted);">Tomorrow</span></td>
           <td><div class="contact-actions"><button class="icon-act-btn call" onclick="callTechnician('Suresh Raj','SL-02')" title="Call Suresh Raj: +91 93618 36970"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg" onclick="messageTechnician('Suresh Raj','SL-02')" title="Message Suresh Raj: +91 93618 36970"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td></tr>
@@ -1959,7 +1985,7 @@ function logoutApp(){
             <td><div style="font-weight:700;">Meena Devi</div><div style="font-size:10px;color:var(--muted);">Tech #T05</div></td>
             <td><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan);">SL-01</span></td>
             <td><span class="badge amber">Lamp Replaced</span></td>
-            <td><span style="font-size:11px;color:var(--text2);">Zone A, Main Gate</span></td>
+            <td><span style="font-size:11px;color:var(--text2);">Zone B, Main Gate</span></td>
             <td><span class="badge green"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Completed</span></td>
             <td><span style="font-family:'Share Tech Mono',monospace;color:var(--green);">Done</span></td>
           <td><div class="contact-actions"><button class="icon-act-btn call disabled" title="Job completed"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><button class="icon-act-btn msg disabled" title="Job completed"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div></td></tr>
@@ -2528,6 +2554,9 @@ function logoutApp(){
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Message
           </button>
         </div>
+        <button class="pp-dispatch-btn" style="background:rgba(255,255,255,0.12);color:#fff;width:100%;margin-top:8px;border:1px dashed rgba(255,255,255,0.4);font-size:12px;" onclick="triggerSosSiren('SL-06','Boys Hostel (Zone E) — manual test')" title="Simulates a physical panic-button press over MQTT for testing, without needing real hardware">
+          🔊 Test Siren (simulate button press)
+        </button>
       </div>
     </div>
 
@@ -2999,15 +3028,15 @@ function filterMap(btn, type){
 // Real campus centre: 11.4986°N, 77.2743°E. All nodes below are placed
 // within the ~181-acre campus footprint around that point.
 const LIGHT_NODES = [
-  {id:'SL-01',s:'online',z:'A',lat:11.4956,lon:77.2728,type:'LED 40W',notes:'Main Gate'},
-  {id:'SL-02',s:'online',z:'A',lat:11.4968,lon:77.2738,type:'LED 60W',notes:'Admin Block'},
-  {id:'SL-03',s:'online',z:'B',lat:11.4978,lon:77.2749,type:'LED 60W',notes:'Central Library'},
-  {id:'SL-04',s:'fault', z:'B',lat:11.4992,lon:77.2757,type:'LED 40W',notes:'Academic Block I'},
-  {id:'SL-05',s:'online',z:'B',lat:11.5002,lon:77.2745,type:'LED 40W',notes:'Academic Block II'},
-  {id:'SL-06',s:'dim',   z:'C',lat:11.5012,lon:77.2731,type:'LED 30W',notes:'Boys Hostel'},
-  {id:'SL-07',s:'online',z:'C',lat:11.4998,lon:77.2721,type:'LED 30W',notes:'Girls Hostel'},
-  {id:'SL-08',s:'online',z:'D',lat:11.4980,lon:77.2717,type:'High Mast 150W',notes:'Sports Ground'},
-  {id:'SL-09',s:'fault', z:'D',lat:11.4966,lon:77.2753,type:'LED 40W',notes:'Cafeteria / Food Court'},
+  {id:'SL-01',s:'online',z:'B',lat:11.4956,lon:77.2728,type:'LED 40W',notes:'Main Gate'},
+  {id:'SL-02',s:'online',z:'B',lat:11.4968,lon:77.2738,type:'LED 60W',notes:'Admin Block'},
+  {id:'SL-03',s:'online',z:'C',lat:11.4978,lon:77.2749,type:'LED 60W',notes:'Central Library'},
+  {id:'SL-04',s:'fault', z:'F',lat:11.4992,lon:77.2757,type:'LED 40W',notes:'Academic Block I'},
+  {id:'SL-05',s:'online',z:'E',lat:11.5002,lon:77.2745,type:'LED 40W',notes:'Academic Block II'},
+  {id:'SL-06',s:'dim',   z:'E',lat:11.5012,lon:77.2731,type:'LED 30W',notes:'Boys Hostel'},
+  {id:'SL-07',s:'online',z:'D',lat:11.4998,lon:77.2721,type:'LED 30W',notes:'Girls Hostel'},
+  {id:'SL-08',s:'online',z:'A',lat:11.4980,lon:77.2717,type:'High Mast 150W',notes:'Sports Ground'},
+  {id:'SL-09',s:'fault', z:'C',lat:11.4966,lon:77.2753,type:'LED 40W',notes:'Cafeteria / Food Court'},
   {id:'SL-10',s:'online',z:'E',lat:11.4988,lon:77.2737,type:'LED 60W',notes:'Auditorium'},
 ];
 const LIGHT_STATUS_COLOR = { online:'#00e676', fault:'#ff3b5c', dim:'#ffb300' };
@@ -3022,10 +3051,15 @@ function zoneColor(z){ return ZONE_COLORS[z] || '#00e5ff'; }
 // using the mqtt.js browser bundle loaded above.
 //   Topic "streetlights/data"   → JSON: {"SL-01":{voltage,current,power,pf,status}, ...}
 //   Topic "streetlights/status" → plain text: "ESP32 ONLINE"
+//   Topic "streetlights/sos"    → panic-button press signal (see handleSosSignal()
+//                                  below for the accepted payload shapes). Wire your
+//                                  hardware button to publish here to trigger the
+//                                  Patrol page's siren + Emergency Lighting protocol.
 // ══════════════════════════════════════════════════════════════════
 const MQTT_WS_URL = 'wss://broker.hivemq.com:8884/mqtt';
 const MQTT_DATA_TOPIC = 'streetlights/data';
 const MQTT_STATUS_TOPIC = 'streetlights/status';
+const MQTT_SOS_TOPIC = 'streetlights/sos';
 
 // Latest telemetry per light ID: { voltage, current, power, pf, ts }
 const LIGHT_LIVE_DATA = {};
@@ -3081,7 +3115,7 @@ function initMqttLive(){
 
   mqttLiveClient.on('connect', () => {
     setMqttStatusBadge('connected');
-    mqttLiveClient.subscribe([MQTT_DATA_TOPIC, MQTT_STATUS_TOPIC], (err) => {
+    mqttLiveClient.subscribe([MQTT_DATA_TOPIC, MQTT_STATUS_TOPIC, MQTT_SOS_TOPIC], (err) => {
       if(err) console.warn('MQTT subscribe failed', err);
     });
   });
@@ -3101,9 +3135,120 @@ function initMqttLive(){
       let data;
       try { data = JSON.parse(text); } catch(e){ console.warn('Bad MQTT JSON', e); return; }
       applyLiveTelemetry(data);
+      return;
+    }
+    if(topic === MQTT_SOS_TOPIC){
+      handleSosSignal(text);
     }
   });
 }
+
+// ══════════════════════════════════════════════════════════════════
+// SOS PANIC BUTTON → SIREN + EMERGENCY LIGHTING DISPATCH
+// A physical button (e.g. wired to an ESP32 on a light pole) publishes
+// to MQTT_SOS_TOPIC when pressed. Accepted payloads:
+//   '{"light":"SL-04","location":"Near Boys Hostel gate"}'  (preferred — JSON)
+//   'SL-04'                                                  (just a light id)
+//   'PRESSED' / anything else                                (generic trigger,
+//                                                              no location known)
+// ══════════════════════════════════════════════════════════════════
+let sirenAudioCtx = null;
+let sirenOscillator = null;
+let sirenGain = null;
+let sirenToneTimer = null;
+let sirenActive = false;
+
+function handleSosSignal(text){
+  let payload = {};
+  try { payload = JSON.parse(text); } catch(e){ /* not JSON — fall through to plain-text handling */ }
+
+  let lightId = payload.light || payload.id;
+  if(!lightId && text && LIGHT_NODES.some(n => n.id === text.trim())) lightId = text.trim();
+  lightId = lightId || 'SOS-BTN';
+
+  const node = LIGHT_NODES.find(n => n.id === lightId);
+  const location = payload.location
+    || (node ? `${node.notes || 'Unknown building'} (Zone ${node.z})` : 'Unknown location — nearest panic button');
+
+  triggerSosSiren(lightId, location);
+}
+window.handleSosSignal = handleSosSignal;
+
+// Starts the audible + visual siren and kicks off the Patrol page's
+// Emergency Lighting protocol automatically — this is the "pressing a
+// physical button should activate the siren on the patrol side" path.
+function triggerSosSiren(lightId, location){
+  startSiren();
+
+  document.getElementById('siren-banner-detail').textContent = `${lightId} · ${location}`;
+
+  if(window.showToast) showToast('🚨 SOS button pressed — ' + lightId, '#ff3b5c', 6000);
+
+  // Drive the existing Emergency Lighting Mode pipeline on the Patrol
+  // page automatically, exactly as if staff had clicked "Activate
+  // Emergency Lighting Protocol" — works even from another tab, since
+  // that function and its state live in the same global script scope.
+  if(typeof activateEmergencyLighting === 'function' && !ppelRunning){
+    activateEmergencyLighting(lightId, location);
+  }
+}
+window.triggerSosSiren = triggerSosSiren;
+
+function goToPatrolSos(){
+  const patrolBtn = Array.from(document.querySelectorAll('.hnav-btn')).find(b => /patrol/i.test(b.textContent));
+  if(typeof showPage === 'function') showPage('patrol', patrolBtn);
+}
+window.goToPatrolSos = goToPatrolSos;
+
+// Classic two-tone emergency siren, synthesized with the Web Audio API
+// (no external audio file needed) — alternates between two frequencies
+// every 500ms until stopSiren() is called.
+function startSiren(){
+  if(sirenActive) return; // already sounding — don't stack oscillators
+  sirenActive = true;
+
+  document.getElementById('siren-overlay').style.display = 'block';
+  document.getElementById('siren-banner').style.display = 'flex';
+
+  try{
+    sirenAudioCtx = sirenAudioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if(sirenAudioCtx.state === 'suspended') sirenAudioCtx.resume();
+
+    sirenOscillator = sirenAudioCtx.createOscillator();
+    sirenGain = sirenAudioCtx.createGain();
+    sirenOscillator.type = 'sine';
+    sirenGain.gain.value = 0.12; // kept moderate — this plays in a browser tab, not a real siren speaker
+    sirenOscillator.connect(sirenGain);
+    sirenGain.connect(sirenAudioCtx.destination);
+    sirenOscillator.start();
+
+    let high = true;
+    sirenOscillator.frequency.setValueAtTime(880, sirenAudioCtx.currentTime);
+    sirenToneTimer = setInterval(() => {
+      if(!sirenOscillator) return;
+      high = !high;
+      sirenOscillator.frequency.setTargetAtTime(high ? 880 : 660, sirenAudioCtx.currentTime, 0.05);
+    }, 500);
+  } catch(e){
+    console.warn('Web Audio siren unavailable (autoplay may be blocked until the user interacts with the page):', e);
+  }
+}
+window.startSiren = startSiren;
+
+function stopSiren(){
+  sirenActive = false;
+  document.getElementById('siren-overlay').style.display = 'none';
+  document.getElementById('siren-banner').style.display = 'none';
+
+  if(sirenToneTimer){ clearInterval(sirenToneTimer); sirenToneTimer = null; }
+  if(sirenOscillator){
+    try { sirenOscillator.stop(); } catch(e){}
+    sirenOscillator.disconnect();
+    sirenOscillator = null;
+  }
+  if(sirenGain){ sirenGain.disconnect(); sirenGain = null; }
+}
+window.stopSiren = stopSiren;
 
 // data looks like: {"SL-01":{"voltage":230.1,"current":1.24,"power":278.3,"pf":0.93,"status":"ON"}, ...}
 function applyLiveTelemetry(data){
@@ -3326,79 +3471,81 @@ function liveAgoLabel(ts){
 }
 
 // Shared zone-region math used by BOTH the Live Map (Leaflet) and the
-// Grid map (SVG). Rather than a padded bounding box per zone (which
-// overlaps as soon as two zones' points are geographically close), we
-// compute a bounded Voronoi partition over each zone's centroid — this
-// tiles the whole campus with NON-OVERLAPPING cells by construction,
-// and both maps render from the exact same cell math so they align.
-function polygonClipHalfPlane(poly, D, M){
-  // Keeps only the part of `poly` on the side where D·(p-M) <= 0
-  const g = (p) => D.lat * (p.lat - M.lat) + D.lon * (p.lon - M.lon);
-  const out = [];
-  const n = poly.length;
-  for(let i = 0; i < n; i++){
-    const curr = poly[i];
-    const prev = poly[(i - 1 + n) % n];
-    const gCurr = g(curr), gPrev = g(prev);
-    const currIn = gCurr <= 0, prevIn = gPrev <= 0;
-    if(currIn){
-      if(!prevIn){
-        const t = gPrev / (gPrev - gCurr);
-        out.push({ lat: prev.lat + t * (curr.lat - prev.lat), lon: prev.lon + t * (curr.lon - prev.lon) });
+// Grid map (SVG). Zones are fixed axis-aligned rectangular cells cut
+// from a 2-row × 3-column grid over the campus bounding box — this
+// guarantees clean, non-overlapping SQUARE/RECTANGLE zone regions by
+// construction (no bounding-box-around-points math that can overlap).
+const ZONE_GRID_BOUNDS = { latMin: 11.4948, latMax: 11.5020, lonMin: 77.2709, lonMax: 77.2765 };
+const ZONE_GRID_ROWS = 2;
+const ZONE_GRID_COLS = 3;
+const ZONE_GRID_LETTERS = [['A', 'B', 'C'], ['D', 'E', 'F']];
+const ZONE_CELL_GAP = 0.08; // fraction of cell size left as a visual gap between adjacent zones
+
+function zoneForLatLon(lat, lon){
+  const b = ZONE_GRID_BOUNDS;
+  const rowH = (b.latMax - b.latMin) / ZONE_GRID_ROWS;
+  const colW = (b.lonMax - b.lonMin) / ZONE_GRID_COLS;
+  let row = Math.floor((lat - b.latMin) / rowH);
+  let col = Math.floor((lon - b.lonMin) / colW);
+  row = Math.max(0, Math.min(ZONE_GRID_ROWS - 1, row));
+  col = Math.max(0, Math.min(ZONE_GRID_COLS - 1, col));
+  return ZONE_GRID_LETTERS[row][col];
+}
+window.zoneForLatLon = zoneForLatLon;
+
+function zoneCellBounds(zone){
+  const b = ZONE_GRID_BOUNDS;
+  const rowH = (b.latMax - b.latMin) / ZONE_GRID_ROWS;
+  const colW = (b.lonMax - b.lonMin) / ZONE_GRID_COLS;
+  for(let row = 0; row < ZONE_GRID_ROWS; row++){
+    for(let col = 0; col < ZONE_GRID_COLS; col++){
+      if(ZONE_GRID_LETTERS[row][col] === zone){
+        const latMin = b.latMin + row * rowH;
+        const latMax = latMin + rowH;
+        const lonMin = b.lonMin + col * colW;
+        const lonMax = lonMin + colW;
+        // Inset slightly so adjacent rectangles have a visible gap
+        // instead of sharing a hairline edge.
+        const gapLat = rowH * ZONE_CELL_GAP / 2;
+        const gapLon = colW * ZONE_CELL_GAP / 2;
+        return {
+          latMin: latMin + gapLat, latMax: latMax - gapLat,
+          lonMin: lonMin + gapLon, lonMax: lonMax - gapLon,
+        };
       }
-      out.push(curr);
-    } else if(prevIn){
-      const t = gPrev / (gPrev - gCurr);
-      out.push({ lat: prev.lat + t * (curr.lat - prev.lat), lon: prev.lon + t * (curr.lon - prev.lon) });
     }
   }
-  return out;
+  return null;
 }
 
-function computeZoneVoronoiCells(){
+// Returns one rectangle per zone that currently has at least one light —
+// each rectangle is a fixed grid cell, so by construction no two zones'
+// rectangles can ever overlap, regardless of how many lights are in them.
+function computeZoneRectangles(){
   const byZone = {};
   LIGHT_NODES.forEach(n => { (byZone[n.z] = byZone[n.z] || []).push(n); });
-  const zoneKeys = Object.keys(byZone);
-  if(!zoneKeys.length) return [];
 
-  const sites = zoneKeys.map(z => {
-    const nodes = byZone[z];
-    const lat = nodes.reduce((s, n) => s + n.lat, 0) / nodes.length;
-    const lon = nodes.reduce((s, n) => s + n.lon, 0) / nodes.length;
-    return { zone: z, lat, lon, count: nodes.length, color: zoneColor(z) };
-  });
-
-  const b = GRID_BOUNDS;
-  const boundingPoly = [
-    { lat: b.latMin, lon: b.lonMin }, { lat: b.latMin, lon: b.lonMax },
-    { lat: b.latMax, lon: b.lonMax }, { lat: b.latMax, lon: b.lonMin },
-  ];
-
-  return sites.map(site => {
-    let poly = boundingPoly.slice();
-    sites.forEach(other => {
-      if(other.zone === site.zone || poly.length === 0) return;
-      const D = { lat: other.lat - site.lat, lon: other.lon - site.lon };
-      const M = { lat: (site.lat + other.lat) / 2, lon: (site.lon + other.lon) / 2 };
-      poly = polygonClipHalfPlane(poly, D, M);
-    });
-    return { zone: site.zone, color: site.color, count: site.count, centroid: { lat: site.lat, lon: site.lon }, poly };
-  });
+  return Object.keys(byZone).sort().map(zone => {
+    const bounds = zoneCellBounds(zone);
+    if(!bounds) return null;
+    return { zone, color: zoneColor(zone), count: byZone[zone].length, ...bounds };
+  }).filter(Boolean);
 }
 
-// Draws each zone's Voronoi cell as a dashed boundary + label on the
-// Live Map — guaranteed non-overlapping since cells tile the campus.
+// Draws each zone's rectangular cell as a dashed square/rectangle +
+// label on the Live Map — guaranteed non-overlapping since cells tile
+// a fixed grid over the campus.
 function renderZoneOverlays(){
   if(!osmLightMapInstance) return;
   if(zoneOverlayLayer){ osmLightMapInstance.removeLayer(zoneOverlayLayer); }
   zoneOverlayLayer = L.layerGroup().addTo(osmLightMapInstance);
 
-  computeZoneVoronoiCells().forEach(({ zone, color, count, centroid, poly }) => {
-    if(poly.length < 3) return;
-    L.polygon(poly.map(p => [p.lat, p.lon]), {
+  computeZoneRectangles().forEach(({ zone, color, count, latMin, latMax, lonMin, lonMax }) => {
+    L.rectangle([[latMin, lonMin], [latMax, lonMax]], {
       color, weight: 1.5, dashArray: '5,5', fillColor: color, fillOpacity: 0.07, interactive: false
     }).addTo(zoneOverlayLayer);
 
+    const centerLat = (latMin + latMax) / 2;
     const label = L.divIcon({
       className: 'zone-label-icon',
       html: `<div style="font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;color:${color};
@@ -3407,7 +3554,7 @@ function renderZoneOverlays(){
       iconSize: [90, 20],
       iconAnchor: [45, 10]
     });
-    L.marker([centroid.lat, centroid.lon], { icon: label, interactive: false }).addTo(zoneOverlayLayer);
+    L.marker([centerLat, lonMin], { icon: label, interactive: false }).addTo(zoneOverlayLayer);
   });
 }
 window.renderZoneOverlays = renderZoneOverlays;
@@ -3471,6 +3618,18 @@ function nextLightId(){
   });
   return 'SL-' + String(max + 1).padStart(2, '0');
 }
+
+// Auto-fills the Zone dropdown from whatever lat/lon the person has typed
+// so far, using the same fixed-grid partition the maps render from —
+// keeps newly added lights consistent with the non-overlapping zones.
+function autoSuggestZone(){
+  const latVal = parseFloat(document.getElementById('al-lat').value);
+  const lonVal = parseFloat(document.getElementById('al-lon').value);
+  if(isNaN(latVal) || isNaN(lonVal)) return;
+  const zoneSelect = document.getElementById('al-zone');
+  if(zoneSelect) zoneSelect.value = zoneForLatLon(latVal, lonVal);
+}
+window.autoSuggestZone = autoSuggestZone;
 
 function openAddLightModal(){
   document.getElementById('al-form').reset();
@@ -3582,35 +3741,42 @@ function renderGridBuildingLabels(){
   });
 }
 
-// Draws the same Voronoi zone cells as the Live Map (see
-// computeZoneVoronoiCells()), converted into Grid-SVG pixel space via
+// Draws the same fixed-grid rectangular zone cells as the Live Map (see
+// computeZoneRectangles()), converted into Grid-SVG pixel space via
 // latLonToGridXY, so the Grid and Live Map always show aligned,
-// non-overlapping zones.
+// non-overlapping square/rectangle zones.
 function renderGridZoneOverlays(){
   const layer = document.getElementById('grid-zone-layer');
   if(!layer) return;
   layer.innerHTML = '';
   const ns = 'http://www.w3.org/2000/svg';
 
-  computeZoneVoronoiCells().forEach(({ zone, color, count, centroid, poly }) => {
-    if(poly.length < 3) return;
-    const pts = poly.map(p => { const c = latLonToGridXY(p.lat, p.lon); return `${c.x},${c.y}`; }).join(' ');
+  computeZoneRectangles().forEach(({ zone, color, count, latMin, latMax, lonMin, lonMax }) => {
+    // lat increases downward in this grid's convention (matches latLonToGridXY)
+    const topLeft = latLonToGridXY(latMax, lonMin);
+    const bottomRight = latLonToGridXY(latMin, lonMax);
+    const x = Math.min(topLeft.x, bottomRight.x);
+    const y = Math.min(topLeft.y, bottomRight.y);
+    const w = Math.abs(bottomRight.x - topLeft.x);
+    const h = Math.abs(bottomRight.y - topLeft.y);
 
-    const polyEl = document.createElementNS(ns, 'polygon');
-    polyEl.setAttribute('points', pts);
-    polyEl.setAttribute('fill', color);
-    polyEl.setAttribute('fill-opacity', '0.06');
-    polyEl.setAttribute('stroke', color);
-    polyEl.setAttribute('stroke-width', '1.3');
-    polyEl.setAttribute('stroke-dasharray', '5,5');
-    polyEl.setAttribute('pointer-events', 'none');
-    layer.appendChild(polyEl);
+    const rectEl = document.createElementNS(ns, 'rect');
+    rectEl.setAttribute('x', x);
+    rectEl.setAttribute('y', y);
+    rectEl.setAttribute('width', w);
+    rectEl.setAttribute('height', h);
+    rectEl.setAttribute('rx', 4);
+    rectEl.setAttribute('fill', color);
+    rectEl.setAttribute('fill-opacity', '0.06');
+    rectEl.setAttribute('stroke', color);
+    rectEl.setAttribute('stroke-width', '1.3');
+    rectEl.setAttribute('stroke-dasharray', '5,5');
+    rectEl.setAttribute('pointer-events', 'none');
+    layer.appendChild(rectEl);
 
-    const c = latLonToGridXY(centroid.lat, centroid.lon);
     const label = document.createElementNS(ns, 'text');
-    label.setAttribute('x', c.x);
-    label.setAttribute('y', c.y - 12);
-    label.setAttribute('text-anchor', 'middle');
+    label.setAttribute('x', x + 6);
+    label.setAttribute('y', y + 14);
     label.setAttribute('fill', color);
     label.setAttribute('font-size', '9.5');
     label.setAttribute('font-weight', '700');
@@ -4212,8 +4378,8 @@ function exportCSV(type='all'){
       [],
       ['ACTIVE FAULTS'],
       ['Light ID','GPS Latitude','GPS Longitude','Zone','Fault Type','Time Down','Risk Level','Status'],
-      ['SL-04','11.4992','77.2757','Zone B','Lamp Failure','8 min','HIGH','Open'],
-      ['SL-09','11.4966','77.2753','Zone D','Power Surge','1.2 hr','MEDIUM','Assigned'],
+      ['SL-04','11.4992','77.2757','Zone F','Lamp Failure','8 min','HIGH','Open'],
+      ['SL-09','11.4966','77.2753','Zone C','Power Surge','1.2 hr','MEDIUM','Assigned'],
       [],
       ['FAULT SUMMARY'],
       ['Metric','Value'],
@@ -4231,10 +4397,10 @@ function exportCSV(type='all'){
       [],
       ['ZONE FAULT HEATMAP'],
       ['Zone','Fault Count','Risk Level'],
-      ['Zone B (Academic Block I)','1','WARNING'],
-      ['Zone D (Cafeteria / Food Court)','1','WARNING'],
-      ['Zone C (Boys Hostel)','0 faults, 1 dim','LOW'],
-      ['Zone A / E','0','LOW'],
+      ['Zone F (Academic Block I)','1','WARNING'],
+      ['Zone C (Cafeteria / Food Court)','1','WARNING'],
+      ['Zone E (Boys Hostel)','0 faults, 1 dim','LOW'],
+      ['Zone A / B / D','0','LOW'],
     ].map(r=>r.join(',')).join('\n');
 
   } else if(type==='energy'){
@@ -4359,8 +4525,8 @@ function exportCSV(type='all'){
       [],
       ['=== ACTIVE FAULTS ==='],
       ['ID','Zone','Fault','Time Down','Risk'],
-      ['SL-04','Zone B','Lamp Failure','8 min','HIGH'],
-      ['SL-09','Zone D','Power Surge','1.2 hr','MEDIUM'],
+      ['SL-04','Zone F','Lamp Failure','8 min','HIGH'],
+      ['SL-09','Zone C','Power Surge','1.2 hr','MEDIUM'],
       [],
       ['=== COST SAVINGS ==='],
       ['Category','INR'],
@@ -4434,8 +4600,8 @@ function exportPDF(){
 <table>
   <thead><tr><th>Light ID</th><th>Zone</th><th>AI Fault Type</th><th>Time Down</th><th>Risk</th></tr></thead>
   <tbody>
-    <tr><td>SL-04</td><td>Zone B</td><td>Lamp Failure</td><td>8 min</td><td><span class="tag r">HIGH</span></td></tr>
-    <tr><td>SL-09</td><td>Zone D</td><td>Power Surge</td><td>1.2 hr</td><td><span class="tag a">MEDIUM</span></td></tr>
+    <tr><td>SL-04</td><td>Zone F</td><td>Lamp Failure</td><td>8 min</td><td><span class="tag r">HIGH</span></td></tr>
+    <tr><td>SL-09</td><td>Zone C</td><td>Power Surge</td><td>1.2 hr</td><td><span class="tag a">MEDIUM</span></td></tr>
   </tbody>
 </table>
 
@@ -4706,18 +4872,18 @@ if ('serviceWorker' in navigator) {
 
 const NOTIFS = [
   // FAULTS
-  { id:1,  type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" fill="currentColor" stroke="none"/></svg>', bg:'rgba(255,68,102,0.12)', bc:'rgba(255,68,102,0.25)', nc:'#ff4466', msg:'SL-04 — Lamp Failure detected in Zone B', meta:'Zone B · Academic Block I · No current flow detected', time:'2 min ago', unread:true },
-  { id:2,  type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>', bg:'rgba(255,194,0,0.10)',  bc:'rgba(255,194,0,0.22)',  nc:'#ffc200', msg:'SL-09 — Power Surge detected in Zone D', meta:'Zone D · Cafeteria / Food Court · Voltage spike detected', time:'8 min ago', unread:true },
-  { id:3,  type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.25a6 6 0 0 1 0-8.49M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14"/></svg>', bg:'rgba(255,68,102,0.12)', bc:'rgba(255,68,102,0.25)', nc:'#ff4466', msg:'SL-06 — Low voltage warning (172V)', meta:'Zone C · Boys Hostel · Min threshold: 190V', time:'22 min ago', unread:true },
-  { id:4,  type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>', bg:'rgba(255,194,0,0.10)',  bc:'rgba(255,194,0,0.22)',  nc:'#ffc200', msg:'SL-04 — AI confirms Lamp Failure', meta:'Zone B · LightNet v2.3 · 91% confidence', time:'35 min ago', unread:false },
-  { id:5,  type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>', bg:'rgba(255,68,102,0.12)', bc:'rgba(255,68,102,0.25)', nc:'#ff4466', msg:'SL-02 — Preventive maintenance scheduled', meta:'Zone A · Admin Block · Scheduled for tomorrow', time:'1 hr ago', unread:false },
+  { id:1,  type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" fill="currentColor" stroke="none"/></svg>', bg:'rgba(255,68,102,0.12)', bc:'rgba(255,68,102,0.25)', nc:'#ff4466', msg:'SL-04 — Lamp Failure detected in Zone F', meta:'Zone F · Academic Block I · No current flow detected', time:'2 min ago', unread:true },
+  { id:2,  type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>', bg:'rgba(255,194,0,0.10)',  bc:'rgba(255,194,0,0.22)',  nc:'#ffc200', msg:'SL-09 — Power Surge detected in Zone C', meta:'Zone C · Cafeteria / Food Court · Voltage spike detected', time:'8 min ago', unread:true },
+  { id:3,  type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.25a6 6 0 0 1 0-8.49M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14"/></svg>', bg:'rgba(255,68,102,0.12)', bc:'rgba(255,68,102,0.25)', nc:'#ff4466', msg:'SL-06 — Low voltage warning (172V)', meta:'Zone E · Boys Hostel · Min threshold: 190V', time:'22 min ago', unread:true },
+  { id:4,  type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>', bg:'rgba(255,194,0,0.10)',  bc:'rgba(255,194,0,0.22)',  nc:'#ffc200', msg:'SL-04 — AI confirms Lamp Failure', meta:'Zone F · LightNet v2.3 · 91% confidence', time:'35 min ago', unread:false },
+  { id:5,  type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>', bg:'rgba(255,68,102,0.12)', bc:'rgba(255,68,102,0.25)', nc:'#ff4466', msg:'SL-02 — Preventive maintenance scheduled', meta:'Zone B · Admin Block · Scheduled for tomorrow', time:'1 hr ago', unread:false },
   // REPAIRS
-  { id:6,  type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', bg:'rgba(0,240,122,0.10)',  bc:'rgba(0,240,122,0.22)',  nc:'#00f07a', msg:'Meena Devi replaced bulb on SL-01', meta:'Zone A · Main Gate · LED 40W replaced · Repair: 52 min', time:'45 min ago', unread:true },
+  { id:6,  type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', bg:'rgba(0,240,122,0.10)',  bc:'rgba(0,240,122,0.22)',  nc:'#00f07a', msg:'Meena Devi replaced bulb on SL-01', meta:'Zone B · Main Gate · LED 40W replaced · Repair: 52 min', time:'45 min ago', unread:true },
   { id:7,  type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>', bg:'rgba(0,229,255,0.08)',  bc:'rgba(0,229,255,0.2)',   nc:'#00e5ff', msg:'Ravi Kumar fixed driver module on SL-10', meta:'Zone E · Auditorium · Module #LD-09 replaced · 1.4 hr', time:'1 hr ago', unread:true },
-  { id:8,  type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', bg:'rgba(0,240,122,0.10)',  bc:'rgba(0,240,122,0.22)',  nc:'#00f07a', msg:'Arjun Nair renewed lamp driver on SL-05', meta:'Zone B · Academic Block II · Driver #LD-07 installed · 2.1 hr', time:'2 hr ago', unread:false },
-  { id:9,  type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>', bg:'rgba(0,229,255,0.08)',  bc:'rgba(0,229,255,0.2)',   nc:'#00e5ff', msg:'Kiran Babu cleaned heatsink on SL-07', meta:'Zone C · Girls Hostel · Preventive maintenance done · 45 min', time:'3 hr ago', unread:false },
-  { id:10, type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', bg:'rgba(0,240,122,0.10)',  bc:'rgba(0,240,122,0.22)',  nc:'#00f07a', msg:'Suresh Raj replaced bulb on SL-08', meta:'Zone D · Sports Ground · High Mast 150W replaced · Repair: 1.2 hr', time:'4 hr ago', unread:false },
-  { id:11, type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>', bg:'rgba(191,128,255,0.10)',bc:'rgba(191,128,255,0.22)',nc:'#bf80ff', msg:'Meena Devi completed routine check on SL-03', meta:'Zone B · Central Library · Preventive maintenance · Total: 2.5 hr', time:'5 hr ago', unread:false },
+  { id:8,  type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', bg:'rgba(0,240,122,0.10)',  bc:'rgba(0,240,122,0.22)',  nc:'#00f07a', msg:'Arjun Nair renewed lamp driver on SL-05', meta:'Zone E · Academic Block II · Driver #LD-07 installed · 2.1 hr', time:'2 hr ago', unread:false },
+  { id:9,  type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>', bg:'rgba(0,229,255,0.08)',  bc:'rgba(0,229,255,0.2)',   nc:'#00e5ff', msg:'Kiran Babu cleaned heatsink on SL-07', meta:'Zone D · Girls Hostel · Preventive maintenance done · 45 min', time:'3 hr ago', unread:false },
+  { id:10, type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', bg:'rgba(0,240,122,0.10)',  bc:'rgba(0,240,122,0.22)',  nc:'#00f07a', msg:'Suresh Raj replaced bulb on SL-08', meta:'Zone A · Sports Ground · High Mast 150W replaced · Repair: 1.2 hr', time:'4 hr ago', unread:false },
+  { id:11, type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>', bg:'rgba(191,128,255,0.10)',bc:'rgba(191,128,255,0.22)',nc:'#bf80ff', msg:'Meena Devi completed routine check on SL-03', meta:'Zone C · Central Library · Preventive maintenance · Total: 2.5 hr', time:'5 hr ago', unread:false },
   // SYSTEM
   { id:12, type:'system', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>', bg:'rgba(0,229,255,0.08)',  bc:'rgba(0,229,255,0.18)',  nc:'#00e5ff', msg:'AI model LightNet v2.3 prediction run complete', meta:'18 lights flagged at-risk in next 7 days', time:'10 min ago', unread:true },
   { id:13, type:'system', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>', bg:'rgba(191,128,255,0.10)',bc:'rgba(191,128,255,0.22)',nc:'#bf80ff', msg:'Energy saving schedule applied for tonight', meta:'AI brightness plan activated · Saves ₹280 tonight', time:'18:00 today', unread:false },
@@ -4800,10 +4966,10 @@ document.head.appendChild(bellStyle);
 
 // Simulate a new notification arriving every 45 seconds
 const liveAlerts = [
-  { type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" fill="currentColor" stroke="none"/></svg>', bg:'rgba(255,68,102,0.12)', bc:'rgba(255,68,102,0.25)', nc:'#ff4466', msg:'SL-04 — Lamp Failure ongoing', meta:'Zone B · Academic Block I · Technician en route', time:'Just now' },
-  { type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', bg:'rgba(0,240,122,0.10)',  bc:'rgba(0,240,122,0.22)',  nc:'#00f07a', msg:'Ravi Kumar renewed bulb on SL-01', meta:'Zone A · Main Gate · LED 40W installed · 38 min', time:'Just now' },
+  { type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" fill="currentColor" stroke="none"/></svg>', bg:'rgba(255,68,102,0.12)', bc:'rgba(255,68,102,0.25)', nc:'#ff4466', msg:'SL-04 — Lamp Failure ongoing', meta:'Zone F · Academic Block I · Technician en route', time:'Just now' },
+  { type:'repair', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', bg:'rgba(0,240,122,0.10)',  bc:'rgba(0,240,122,0.22)',  nc:'#00f07a', msg:'Ravi Kumar renewed bulb on SL-01', meta:'Zone B · Main Gate · LED 40W installed · 38 min', time:'Just now' },
   { type:'system', icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>', bg:'rgba(191,128,255,0.10)',bc:'rgba(191,128,255,0.22)',nc:'#bf80ff', msg:'AI dimming activated for Zone A (02:00)', meta:'Brightness reduced to 30% · Saving ₹38/hr', time:'Just now' },
-  { type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.25a6 6 0 0 1 0-8.49M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14"/></svg>', bg:'rgba(255,194,0,0.10)',  bc:'rgba(255,194,0,0.22)',  nc:'#ffc200', msg:'SL-06 — Voltage still low', meta:'Zone C · Boys Hostel · Reading 172V', time:'Just now' },
+  { type:'fault',  icon:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.25a6 6 0 0 1 0-8.49M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14"/></svg>', bg:'rgba(255,194,0,0.10)',  bc:'rgba(255,194,0,0.22)',  nc:'#ffc200', msg:'SL-06 — Voltage still low', meta:'Zone E · Boys Hostel · Reading 172V', time:'Just now' },
 ];
 let liveIdx = 0;
 setInterval(() => {
