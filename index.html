@@ -1317,6 +1317,72 @@ function logoutApp(){
       <div id="ml-body" style="overflow-y:auto;flex:1;"></div>
     </div>
 
+    <!-- Light Detail Modal — shows live voltage/current/PF/energy for one light -->
+    <div id="ld-overlay" onclick="closeLightDetail()" style="display:none;position:fixed;inset:0;z-index:910;background:rgba(2,6,12,0.7);backdrop-filter:blur(2px);"></div>
+    <div id="ld-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:911;width:420px;max-width:92vw;max-height:88vh;overflow-y:auto;background:var(--surface);border:1px solid var(--border2);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.55),0 0 40px var(--glow-c);animation:loginIn .2s ease;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px 14px;border-bottom:1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="ld-icon-wrap" style="width:38px;height:38px;border-radius:10px;border:1px solid var(--cyan);display:flex;align-items:center;justify-content:center;color:var(--cyan);box-shadow:0 0 14px var(--glow-c);flex-shrink:0;">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          </div>
+          <div>
+            <div style="font-family:'Orbitron',monospace;font-size:15px;font-weight:700;color:var(--text);letter-spacing:0.5px;" id="ld-title">SL-01</div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:9.5px;color:var(--muted);letter-spacing:1px;" id="ld-subtitle">STREET LIGHT DETAIL</div>
+          </div>
+        </div>
+        <button onclick="closeLightDetail()" style="background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;" title="Close">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div style="padding:18px 20px 20px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+          <span id="ld-status-badge" class="badge green">ONLINE</span>
+          <span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);" id="ld-zone-loc">Zone A · Main Gate</span>
+        </div>
+
+        <div id="ld-live-banner" style="display:none;align-items:center;gap:6px;font-family:'Share Tech Mono',monospace;font-size:10px;color:#00e5ff;margin-bottom:12px;">
+          <span style="width:6px;height:6px;border-radius:50%;background:#00e5ff;box-shadow:0 0 6px #00e5ff;"></span>
+          <span id="ld-live-ts">Live · updated just now</span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+          <div style="background:rgba(0,210,255,0.05);border:1px solid rgba(0,210,255,0.15);border-radius:10px;padding:12px;">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">VOLTAGE</div>
+            <div style="font-family:'Orbitron',monospace;font-size:20px;font-weight:700;color:var(--cyan);" id="ld-voltage">—</div>
+          </div>
+          <div style="background:rgba(0,210,255,0.05);border:1px solid rgba(0,210,255,0.15);border-radius:10px;padding:12px;">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">CURRENT</div>
+            <div style="font-family:'Orbitron',monospace;font-size:20px;font-weight:700;color:var(--cyan);" id="ld-current">—</div>
+          </div>
+          <div style="background:rgba(0,210,255,0.05);border:1px solid rgba(0,210,255,0.15);border-radius:10px;padding:12px;">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">POWER</div>
+            <div style="font-family:'Orbitron',monospace;font-size:20px;font-weight:700;color:var(--cyan);" id="ld-power">—</div>
+          </div>
+          <div style="background:rgba(0,210,255,0.05);border:1px solid rgba(0,210,255,0.15);border-radius:10px;padding:12px;">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">POWER FACTOR</div>
+            <div style="font-family:'Orbitron',monospace;font-size:20px;font-weight:700;color:var(--cyan);" id="ld-pf">—</div>
+          </div>
+          <div style="background:rgba(0,230,118,0.05);border:1px solid rgba(0,230,118,0.15);border-radius:10px;padding:12px;grid-column:1 / -1;">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">ENERGY (SINCE CONNECTED)</div>
+            <div style="font-family:'Orbitron',monospace;font-size:20px;font-weight:700;color:var(--green);" id="ld-energy">—</div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:6px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text2);background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:16px;">
+          <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted);">GPS</span><span id="ld-gps">—</span></div>
+          <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted);">Fixture</span><span id="ld-fixture">—</span></div>
+          <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted);">Location</span><span id="ld-notes">—</span></div>
+        </div>
+
+        <div style="display:flex;gap:10px;">
+          <button class="btn sm" style="flex:1;padding:10px;" id="ld-call-btn" onclick="callAboutFault(currentLightDetailId)">📞 Call</button>
+          <button class="btn sm" style="flex:1;padding:10px;" id="ld-msg-btn" onclick="messageAboutFault(currentLightDetailId)">💬 Message</button>
+          <button class="btn sm" style="flex:0 0 auto;padding:10px 14px;color:#ff3b5c;border-color:rgba(255,59,92,0.35);" onclick="removeStreetLight(currentLightDetailId); closeLightDetail();">🗑</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Right column -->
     <div style="display:flex;flex-direction:column;gap:14px;">
       <!-- Alerts panel -->
@@ -3047,18 +3113,45 @@ function applyLiveTelemetry(data){
     const reading = data[id];
     if(!reading) return;
 
-    LIGHT_LIVE_DATA[id] = {
-      voltage: Number(reading.voltage) || 0,
-      current: Number(reading.current) || 0,
-      power:   Number(reading.power) || 0,
-      pf:      Number(reading.pf) || 0,
-      ts: Date.now(),
-    };
+    const prev = LIGHT_LIVE_DATA[id];
+    const voltage = Number(reading.voltage) || 0;
+    const current = Number(reading.current) || 0;
+    const power   = Number(reading.power) || 0;
+    const pf      = Number(reading.pf) || 0;
+    const now = Date.now();
+
+    // Riemann-sum energy accumulation (kWh) since the last reading for
+    // this light — this is what powers the "Energy" figure in the
+    // light detail panel. Skipped on the very first reading (no prior ts).
+    let kwh = prev ? prev.kwh : 0;
+    if(prev && prev.ts){
+      const hoursElapsed = (now - prev.ts) / 3600000;
+      kwh += (power / 1000) * hoursElapsed;
+    }
+
+    LIGHT_LIVE_DATA[id] = { voltage, current, power, pf, kwh, ts: now };
 
     const node = LIGHT_NODES.find(n => n.id === id);
     if(!node) return; // telemetry for a light not currently on the map — ignore
 
-    const newStatus = reading.status === 'FAULT' ? 'fault' : 'online';
+    // Status is derived from measured current draw rather than a
+    // hardcoded status field — this mirrors how a real current-sensor
+    // (e.g. ACS712) based deployment would classify each light:
+    //   ~0A          → lamp is off / fault (no draw at all)
+    //   low but >0A  → dim / underpowered
+    //   normal range → healthy / online
+    //   too high     → fault (overcurrent / short)
+    let newStatus;
+    if(current <= 0.04){
+      newStatus = 'fault';
+    } else if(current < 0.20){
+      newStatus = 'dim';
+    } else if(current <= 0.90){
+      newStatus = 'online';
+    } else {
+      newStatus = 'fault';
+    }
+
     if(node.s !== newStatus){
       node.s = newStatus;
       anyStatusChanged = true;
@@ -3067,6 +3160,12 @@ function applyLiveTelemetry(data){
       // status unchanged, but refresh popups if currently open so live readings tick over
       refreshLightPopups(id);
     }
+
+    // Persist this reading to the backend DB if one is available (fire
+    // and forget — never blocks the UI, and patchLightTelemetryToApi()
+    // itself no-ops when no backend has been detected).
+    const energyDeltaKwh = prev && prev.ts ? kwh - prev.kwh : 0;
+    patchLightTelemetryToApi(id, { status: newStatus, voltage, current, power, pf, energyDeltaKwh });
   });
 
   if(anyStatusChanged){
@@ -3101,8 +3200,12 @@ function updateLightStatusEverywhere(node){
     window.coverageMarkers[node.id].status = node.s;
     const label = LIGHT_STATUS_LABEL[node.s] || node.s;
     window.coverageMarkers[node.id].marker.setPopupContent(
-      `<div style="font-family:'Share Tech Mono',monospace;font-size:11px;"><b style="color:${color};">${node.id}</b><br>${label} · Zone ${node.z}<br>${node.lat.toFixed(4)}, ${node.lon.toFixed(4)}</div>`
+      `<div style="font-family:'Share Tech Mono',monospace;font-size:11px;"><b style="color:${color};">${node.id}</b><br>${label} · Zone ${node.z}<br>${node.lat.toFixed(4)}, ${node.lon.toFixed(4)}<br><button class="olp-btn" style="margin-top:6px;color:#00e5ff;border-color:rgba(0,229,255,0.35);" onclick="openLightDetail('${node.id}')">📊 Details</button></div>`
     );
+  }
+
+  if(currentLightDetailId === node.id){
+    renderLightDetail();
   }
 }
 
@@ -3112,6 +3215,9 @@ function refreshLightPopups(id){
   if(!node) return;
   if(window.osmMarkers && window.osmMarkers[id] && window.osmMarkers[id].marker.isPopupOpen()){
     window.osmMarkers[id].marker.setPopupContent(buildOsmLightPopup(node));
+  }
+  if(currentLightDetailId === id){
+    renderLightDetail();
   }
 }
 
@@ -3205,6 +3311,7 @@ function buildOsmLightPopup(node){
     ${extra ? `<div class="olp-meta">${extra}</div>` : ''}
     ${liveRow}
     <div class="olp-actions">
+      <button class="olp-btn" style="color:#00e5ff;border-color:rgba(0,229,255,0.35);" onclick="openLightDetail('${node.id}')">📊 Details</button>
       <button class="olp-btn call" onclick="callAboutFault('${node.id}')">📞 Call</button>
       <button class="olp-btn msg" onclick="messageAboutFault('${node.id}')">💬 Msg</button>
       <button class="olp-btn" style="color:#ff3b5c;border-color:rgba(255,59,92,0.35);" onclick="removeStreetLight('${node.id}')">🗑 Remove</button>
@@ -3218,41 +3325,78 @@ function liveAgoLabel(ts){
   return Math.round(secs / 60) + 'm ago';
 }
 
-// Shared zone-bounding-box math used by BOTH the Live Map (Leaflet) and
-// the Grid map (SVG), so the two views always show the exact same zone
-// regions — just rendered in different coordinate systems.
-const ZONE_BOX_PAD = 0.0016;
-function computeZoneBoxes(){
+// Shared zone-region math used by BOTH the Live Map (Leaflet) and the
+// Grid map (SVG). Rather than a padded bounding box per zone (which
+// overlaps as soon as two zones' points are geographically close), we
+// compute a bounded Voronoi partition over each zone's centroid — this
+// tiles the whole campus with NON-OVERLAPPING cells by construction,
+// and both maps render from the exact same cell math so they align.
+function polygonClipHalfPlane(poly, D, M){
+  // Keeps only the part of `poly` on the side where D·(p-M) <= 0
+  const g = (p) => D.lat * (p.lat - M.lat) + D.lon * (p.lon - M.lon);
+  const out = [];
+  const n = poly.length;
+  for(let i = 0; i < n; i++){
+    const curr = poly[i];
+    const prev = poly[(i - 1 + n) % n];
+    const gCurr = g(curr), gPrev = g(prev);
+    const currIn = gCurr <= 0, prevIn = gPrev <= 0;
+    if(currIn){
+      if(!prevIn){
+        const t = gPrev / (gPrev - gCurr);
+        out.push({ lat: prev.lat + t * (curr.lat - prev.lat), lon: prev.lon + t * (curr.lon - prev.lon) });
+      }
+      out.push(curr);
+    } else if(prevIn){
+      const t = gPrev / (gPrev - gCurr);
+      out.push({ lat: prev.lat + t * (curr.lat - prev.lat), lon: prev.lon + t * (curr.lon - prev.lon) });
+    }
+  }
+  return out;
+}
+
+function computeZoneVoronoiCells(){
   const byZone = {};
   LIGHT_NODES.forEach(n => { (byZone[n.z] = byZone[n.z] || []).push(n); });
+  const zoneKeys = Object.keys(byZone);
+  if(!zoneKeys.length) return [];
 
-  return Object.keys(byZone).sort().map(z => {
+  const sites = zoneKeys.map(z => {
     const nodes = byZone[z];
-    const color = zoneColor(z);
-    const minLat = Math.min(...nodes.map(n => n.lat)) - ZONE_BOX_PAD;
-    const maxLat = Math.max(...nodes.map(n => n.lat)) + ZONE_BOX_PAD;
-    const minLon = Math.min(...nodes.map(n => n.lon)) - ZONE_BOX_PAD;
-    const maxLon = Math.max(...nodes.map(n => n.lon)) + ZONE_BOX_PAD;
-    return { zone: z, color, count: nodes.length, minLat, maxLat, minLon, maxLon };
+    const lat = nodes.reduce((s, n) => s + n.lat, 0) / nodes.length;
+    const lon = nodes.reduce((s, n) => s + n.lon, 0) / nodes.length;
+    return { zone: z, lat, lon, count: nodes.length, color: zoneColor(z) };
+  });
+
+  const b = GRID_BOUNDS;
+  const boundingPoly = [
+    { lat: b.latMin, lon: b.lonMin }, { lat: b.latMin, lon: b.lonMax },
+    { lat: b.latMax, lon: b.lonMax }, { lat: b.latMax, lon: b.lonMin },
+  ];
+
+  return sites.map(site => {
+    let poly = boundingPoly.slice();
+    sites.forEach(other => {
+      if(other.zone === site.zone || poly.length === 0) return;
+      const D = { lat: other.lat - site.lat, lon: other.lon - site.lon };
+      const M = { lat: (site.lat + other.lat) / 2, lon: (site.lon + other.lon) / 2 };
+      poly = polygonClipHalfPlane(poly, D, M);
+    });
+    return { zone: site.zone, color: site.color, count: site.count, centroid: { lat: site.lat, lon: site.lon }, poly };
   });
 }
 
-// Groups the current LIGHT_NODES by zone and draws a dashed boundary
-// box + label for each zone on the Live Map, so zones are visually
-// split out instead of all nodes blending together.
+// Draws each zone's Voronoi cell as a dashed boundary + label on the
+// Live Map — guaranteed non-overlapping since cells tile the campus.
 function renderZoneOverlays(){
   if(!osmLightMapInstance) return;
   if(zoneOverlayLayer){ osmLightMapInstance.removeLayer(zoneOverlayLayer); }
   zoneOverlayLayer = L.layerGroup().addTo(osmLightMapInstance);
 
-  computeZoneBoxes().forEach(({ zone, color, count, minLat, maxLat, minLon, maxLon }) => {
-    L.rectangle([[minLat, minLon], [maxLat, maxLon]], {
-      color: color,
-      weight: 1.5,
-      dashArray: '5,5',
-      fillColor: color,
-      fillOpacity: 0.06,
-      interactive: false
+  computeZoneVoronoiCells().forEach(({ zone, color, count, centroid, poly }) => {
+    if(poly.length < 3) return;
+    L.polygon(poly.map(p => [p.lat, p.lon]), {
+      color, weight: 1.5, dashArray: '5,5', fillColor: color, fillOpacity: 0.07, interactive: false
     }).addTo(zoneOverlayLayer);
 
     const label = L.divIcon({
@@ -3261,9 +3405,9 @@ function renderZoneOverlays(){
         background:rgba(2,10,18,0.85);border:1px solid ${color};border-radius:5px;padding:2px 7px;
         white-space:nowrap;box-shadow:0 0 8px ${color}55;">ZONE ${zone} · ${count}</div>`,
       iconSize: [90, 20],
-      iconAnchor: [-4, 24]
+      iconAnchor: [45, 10]
     });
-    L.marker([maxLat, minLon], { icon: label, interactive: false }).addTo(zoneOverlayLayer);
+    L.marker([centroid.lat, centroid.lon], { icon: label, interactive: false }).addTo(zoneOverlayLayer);
   });
 }
 window.renderZoneOverlays = renderZoneOverlays;
@@ -3438,42 +3582,35 @@ function renderGridBuildingLabels(){
   });
 }
 
-// Draws the same zone bounding boxes as the Live Map (see
-// computeZoneBoxes()), just converted into Grid-SVG pixel space via
-// latLonToGridXY, so the Grid and Live Map always show aligned zones.
+// Draws the same Voronoi zone cells as the Live Map (see
+// computeZoneVoronoiCells()), converted into Grid-SVG pixel space via
+// latLonToGridXY, so the Grid and Live Map always show aligned,
+// non-overlapping zones.
 function renderGridZoneOverlays(){
   const layer = document.getElementById('grid-zone-layer');
   if(!layer) return;
   layer.innerHTML = '';
   const ns = 'http://www.w3.org/2000/svg';
 
-  computeZoneBoxes().forEach(({ zone, color, count, minLat, maxLat, minLon, maxLon }) => {
-    // lat increases downward in this grid's convention (matches latLonToGridXY),
-    // so the "top" corner in pixel space comes from maxLat.
-    const topLeft = latLonToGridXY(maxLat, minLon);
-    const bottomRight = latLonToGridXY(minLat, maxLon);
-    const rectX = Math.min(topLeft.x, bottomRight.x);
-    const rectY = Math.min(topLeft.y, bottomRight.y);
-    const rectW = Math.max(30, Math.abs(bottomRight.x - topLeft.x));
-    const rectH = Math.max(30, Math.abs(bottomRight.y - topLeft.y));
+  computeZoneVoronoiCells().forEach(({ zone, color, count, centroid, poly }) => {
+    if(poly.length < 3) return;
+    const pts = poly.map(p => { const c = latLonToGridXY(p.lat, p.lon); return `${c.x},${c.y}`; }).join(' ');
 
-    const rect = document.createElementNS(ns, 'rect');
-    rect.setAttribute('x', rectX);
-    rect.setAttribute('y', rectY);
-    rect.setAttribute('width', rectW);
-    rect.setAttribute('height', rectH);
-    rect.setAttribute('rx', 6);
-    rect.setAttribute('fill', color);
-    rect.setAttribute('fill-opacity', '0.05');
-    rect.setAttribute('stroke', color);
-    rect.setAttribute('stroke-width', '1.3');
-    rect.setAttribute('stroke-dasharray', '5,5');
-    rect.setAttribute('pointer-events', 'none');
-    layer.appendChild(rect);
+    const polyEl = document.createElementNS(ns, 'polygon');
+    polyEl.setAttribute('points', pts);
+    polyEl.setAttribute('fill', color);
+    polyEl.setAttribute('fill-opacity', '0.06');
+    polyEl.setAttribute('stroke', color);
+    polyEl.setAttribute('stroke-width', '1.3');
+    polyEl.setAttribute('stroke-dasharray', '5,5');
+    polyEl.setAttribute('pointer-events', 'none');
+    layer.appendChild(polyEl);
 
+    const c = latLonToGridXY(centroid.lat, centroid.lon);
     const label = document.createElementNS(ns, 'text');
-    label.setAttribute('x', rectX + 6);
-    label.setAttribute('y', rectY + 13);
+    label.setAttribute('x', c.x);
+    label.setAttribute('y', c.y - 12);
+    label.setAttribute('text-anchor', 'middle');
     label.setAttribute('fill', color);
     label.setAttribute('font-size', '9.5');
     label.setAttribute('font-weight', '700');
@@ -3507,7 +3644,7 @@ function addLightNodeToCoverageMap(node){
     fillColor: color,
     fillOpacity: 0.95
   }).addTo(homeCoverageMapInstance);
-  marker.bindPopup(`<div style="font-family:'Share Tech Mono',monospace;font-size:11px;"><b style="color:${color};">${node.id}</b><br>${label} · Zone ${node.z}<br>${node.lat.toFixed(4)}, ${node.lon.toFixed(4)}</div>`);
+  marker.bindPopup(`<div style="font-family:'Share Tech Mono',monospace;font-size:11px;"><b style="color:${color};">${node.id}</b><br>${label} · Zone ${node.z}<br>${node.lat.toFixed(4)}, ${node.lon.toFixed(4)}<br><button class="olp-btn" style="margin-top:6px;color:#00e5ff;border-color:rgba(0,229,255,0.35);" onclick="openLightDetail('${node.id}')">📊 Details</button></div>`);
   window.coverageMarkers = window.coverageMarkers || {};
   window.coverageMarkers[node.id] = { marker, status: node.s };
 }
@@ -3532,6 +3669,7 @@ function handleAddLightSubmit(event){
 
   const node = { id, s: status, z: zone, lat, lon, type: fixtureType || undefined, notes: notes || undefined };
   LIGHT_NODES.push(node);
+  saveLightToApi(node);
 
   // Grid map (schematic SVG) — always add immediately
   addLightNodeToGrid(node);
@@ -3583,6 +3721,7 @@ function removeStreetLight(id, opts){
 
   const node = LIGHT_NODES[idx];
   LIGHT_NODES.splice(idx, 1);
+  deleteLightFromApi(id);
 
   // Remove from OSM live map
   if(window.osmMarkers && window.osmMarkers[id]){
@@ -3637,13 +3776,13 @@ function renderManageLightsList(filter){
     const color = LIGHT_STATUS_COLOR[n.s] || '#888';
     const label = LIGHT_STATUS_LABEL[n.s] || n.s;
     return `
-    <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);">
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;" onclick="openLightDetail('${n.id}')">
       <div style="width:9px;height:9px;border-radius:50%;background:${color};box-shadow:0 0 6px ${color};flex-shrink:0;"></div>
       <div style="flex:1;min-width:0;">
         <div style="font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:700;color:var(--text);">${n.id} <span style="color:${color};font-weight:600;">· ${label}</span></div>
         <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);">Zone ${n.z} · ${n.lat.toFixed(4)}, ${n.lon.toFixed(4)}${n.type ? ' · ' + n.type : ''}</div>
       </div>
-      <button class="btn sm danger" onclick="removeStreetLight('${n.id}')" title="Remove ${n.id}" style="flex-shrink:0;display:flex;align-items:center;gap:4px;">
+      <button class="btn sm danger" onclick="event.stopPropagation(); removeStreetLight('${n.id}')" title="Remove ${n.id}" style="flex-shrink:0;display:flex;align-items:center;gap:4px;">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" style="width:13px;height:13px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
         Remove
       </button>
@@ -3653,6 +3792,68 @@ function renderManageLightsList(filter){
 window.openManageLightsModal = openManageLightsModal;
 window.closeManageLightsModal = closeManageLightsModal;
 window.renderManageLightsList = renderManageLightsList;
+
+// ══ LIGHT DETAIL PANEL ══
+// Click any light (Grid node, Live/Coverage map marker, or Manage row) to
+// see its live voltage / current / power factor / energy and full details.
+let currentLightDetailId = null;
+
+function openLightDetail(id){
+  const node = LIGHT_NODES.find(n => n.id === id);
+  if(!node) return;
+  currentLightDetailId = id;
+  renderLightDetail();
+  document.getElementById('ld-overlay').style.display = 'block';
+  document.getElementById('ld-modal').style.display = 'block';
+}
+
+function closeLightDetail(){
+  document.getElementById('ld-overlay').style.display = 'none';
+  document.getElementById('ld-modal').style.display = 'none';
+  currentLightDetailId = null;
+}
+
+function renderLightDetail(){
+  if(!currentLightDetailId) return;
+  const node = LIGHT_NODES.find(n => n.id === currentLightDetailId);
+  if(!node){ closeLightDetail(); return; }
+
+  const color = LIGHT_STATUS_COLOR[node.s] || '#888';
+  const label = LIGHT_STATUS_LABEL[node.s] || node.s;
+  const badgeClass = node.s === 'online' ? 'green' : node.s === 'fault' ? 'red' : 'amber';
+
+  document.getElementById('ld-title').textContent = node.id;
+  document.getElementById('ld-title').style.color = color;
+  document.getElementById('ld-icon-wrap').style.color = color;
+  document.getElementById('ld-icon-wrap').style.borderColor = color;
+  document.getElementById('ld-status-badge').textContent = label.toUpperCase();
+  document.getElementById('ld-status-badge').className = 'badge ' + badgeClass;
+  document.getElementById('ld-zone-loc').textContent = `Zone ${node.z}` + (node.notes ? ' · ' + node.notes : '');
+  document.getElementById('ld-gps').textContent = `${node.lat.toFixed(5)}, ${node.lon.toFixed(5)}`;
+  document.getElementById('ld-fixture').textContent = node.type || '—';
+  document.getElementById('ld-notes').textContent = node.notes || '—';
+
+  const live = LIGHT_LIVE_DATA[node.id];
+  const banner = document.getElementById('ld-live-banner');
+  if(live){
+    banner.style.display = 'flex';
+    document.getElementById('ld-live-ts').textContent = 'Live · updated ' + liveAgoLabel(live.ts);
+    document.getElementById('ld-voltage').textContent = live.voltage.toFixed(1) + ' V';
+    document.getElementById('ld-current').textContent = live.current.toFixed(2) + ' A';
+    document.getElementById('ld-power').textContent = live.power.toFixed(1) + ' W';
+    document.getElementById('ld-pf').textContent = live.pf.toFixed(2);
+    document.getElementById('ld-energy').textContent = live.kwh.toFixed(3) + ' kWh';
+  } else {
+    banner.style.display = 'none';
+    document.getElementById('ld-voltage').textContent = '—';
+    document.getElementById('ld-current').textContent = '—';
+    document.getElementById('ld-power').textContent = '—';
+    document.getElementById('ld-pf').textContent = '—';
+    document.getElementById('ld-energy').textContent = 'No live data yet';
+  }
+}
+window.openLightDetail = openLightDetail;
+window.closeLightDetail = closeLightDetail;
 
 let patrolMapInstance = null;
 let patrolStreetLayer = null;
@@ -3843,18 +4044,86 @@ function attachMnodeTooltip(n){
   n.addEventListener('click',()=>{
     document.querySelectorAll('.mnode').forEach(x=>x.setAttribute('stroke-width','1.5'));
     n.setAttribute('stroke-width','3');
+    openLightDetail(n.dataset.id);
   });
 }
+// ══ BACKEND API (optional) ══
+// When this page is served by the Vercel project (see /api/lights), we
+// load/save through it so light data persists in a real database. When
+// opened standalone (no backend present, e.g. as a local file), every
+// call below fails silently and the app keeps using the built-in
+// LIGHT_NODES seed + client-side MQTT — nothing breaks either way.
+const API_BASE = '/api/lights';
+let apiBackendAvailable = false;
+
+async function loadLightsFromApi(){
+  try {
+    const res = await fetch(API_BASE, { cache: 'no-store' });
+    if(!res.ok) return false;
+    const data = await res.json();
+    if(!Array.isArray(data) || !data.length) return false;
+    LIGHT_NODES.length = 0;
+    data.forEach(n => LIGHT_NODES.push(n));
+    apiBackendAvailable = true;
+    return true;
+  } catch(e){
+    return false;
+  }
+}
+
+function saveLightToApi(node){
+  fetch(API_BASE, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(node)
+  }).then(res => { if(res.ok) apiBackendAvailable = true; }).catch(() => {});
+}
+
+function deleteLightFromApi(id){
+  fetch(`${API_BASE}/${encodeURIComponent(id)}`, { method: 'DELETE' }).catch(() => {});
+}
+
+function patchLightTelemetryToApi(id, payload){
+  if(!apiBackendAvailable) return; // don't spam a 404 every 3s when there's no backend
+  fetch(`${API_BASE}/${encodeURIComponent(id)}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(() => {});
+}
+window.saveLightToApi = saveLightToApi;
+window.deleteLightFromApi = deleteLightFromApi;
+window.patchLightTelemetryToApi = patchLightTelemetryToApi;
+
 renderSeedGridNodes();
 window.attachMnodeTooltip = attachMnodeTooltip;
 
 // Sync the Fault table, Live Alerts panel, and KPI cards to LIGHT_NODES
 // on load (they were static HTML before — now LIGHT_NODES is the single
 // source of truth), then start listening for live ESP32 data over MQTT.
-renderFaultTable();
-renderLiveAlerts();
-recalcAndRenderKpis();
-initMqttLive();
+(async function initApp(){
+  const gotBackend = await loadLightsFromApi();
+  if(gotBackend){
+    // Backend returned real data — re-render everything that was already
+    // drawn from the built-in seed data above.
+    renderSeedGridNodes();
+    if(osmLightMapInstance){
+      Object.values(window.osmMarkers || {}).forEach(m => osmLightMapInstance.removeLayer(m.marker));
+      window.osmMarkers = {};
+      LIGHT_NODES.forEach(node => {
+        const color = LIGHT_STATUS_COLOR[node.s] || '#888';
+        const marker = L.circleMarker([node.lat, node.lon], { radius:8, color:'#fff', weight:2, fillColor:color, fillOpacity:0.95 }).addTo(osmLightMapInstance);
+        marker.bindPopup(buildOsmLightPopup(node));
+        window.osmMarkers[node.id] = { marker, status: node.s };
+      });
+      renderZoneOverlays();
+    }
+  }
+  renderFaultTable();
+  renderLiveAlerts();
+  recalcAndRenderKpis();
+  initMqttLive();
+})();
 
 // ── Map coord ──
 const mapSvg=document.getElementById('mainMap');
