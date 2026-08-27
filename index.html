@@ -1155,21 +1155,21 @@ function logoutApp(){
       <div class="card-accent green"></div>
       <div style="font-size:20px;margin-bottom:8px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
       <div class="kpi-num" id="kpi-online-count" style="color:var(--green);font-size:24px;">7</div>
-      <div class="kpi-lbl">ON</div>
+      <div class="kpi-lbl">Proper Working</div>
       <div class="kpi-delta up">↑ 70% uptime</div>
     </div>
     <div class="card" style="padding:16px;">
       <div class="card-accent red"></div>
       <div style="font-size:20px;margin-bottom:8px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" fill="currentColor" stroke="none"/></svg></div>
       <div class="kpi-num" id="kpi-fault-count" style="color:var(--red);font-size:24px;">2</div>
-      <div class="kpi-lbl">Faults</div>
+      <div class="kpi-lbl">Faulty</div>
       <div class="kpi-delta down">Academic Block I, Cafeteria</div>
     </div>
     <div class="card" style="padding:16px;">
       <div class="card-accent amber"></div>
       <div style="font-size:20px;margin-bottom:8px;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
       <div class="kpi-num" id="kpi-dim-count" style="color:var(--amber);font-size:24px;">1</div>
-      <div class="kpi-lbl">Dim / Low</div>
+      <div class="kpi-lbl">Dim</div>
       <div class="kpi-delta warn"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Boys Hostel</div>
     </div>
     <div class="card" style="padding:16px;">
@@ -1389,10 +1389,18 @@ function logoutApp(){
             <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">POWER FACTOR</div>
             <div style="font-family:'Orbitron',monospace;font-size:20px;font-weight:700;color:var(--cyan);" id="ld-pf">—</div>
           </div>
+          <div style="background:rgba(0,210,255,0.05);border:1px solid rgba(0,210,255,0.15);border-radius:10px;padding:12px;">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">FREQUENCY</div>
+            <div style="font-family:'Orbitron',monospace;font-size:20px;font-weight:700;color:var(--cyan);" id="ld-frequency">—</div>
+          </div>
           <div style="background:rgba(0,230,118,0.05);border:1px solid rgba(0,230,118,0.15);border-radius:10px;padding:12px;grid-column:1 / -1;">
             <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">ENERGY (SINCE CONNECTED)</div>
             <div style="font-family:'Orbitron',monospace;font-size:20px;font-weight:700;color:var(--green);" id="ld-energy">—</div>
           </div>
+        </div>
+
+        <div id="ld-reason-row" style="display:none;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:11px;padding:9px 12px;border-radius:8px;margin-bottom:16px;">
+          <span id="ld-reason-text"></span>
         </div>
 
         <div style="display:flex;flex-direction:column;gap:6px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text2);background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:16px;">
@@ -3040,7 +3048,7 @@ const LIGHT_NODES = [
   {id:'SL-10',s:'online',z:'E',lat:11.4988,lon:77.2737,type:'LED 60W',notes:'Auditorium'},
 ];
 const LIGHT_STATUS_COLOR = { online:'#00e676', fault:'#ff3b5c', dim:'#ffb300' };
-const LIGHT_STATUS_LABEL = { online:'Online', fault:'Fault', dim:'Dim / Low' };
+const LIGHT_STATUS_LABEL = { online:'Proper Working', fault:'Faulty', dim:'Dim' };
 const ZONE_COLORS = { A:'#ffffff', B:'#00f07a', C:'#ff6688', D:'#00e5ff', E:'#bf80ff', F:'#ffc200' };
 function zoneColor(z){ return ZONE_COLORS[z] || '#00e5ff'; }
 
@@ -3050,6 +3058,9 @@ function zoneColor(z){ return ZONE_COLORS[z] || '#00e5ff'; }
 // connect over MQTT-over-WebSockets (HiveMQ exposes this on 8884/wss)
 // using the mqtt.js browser bundle loaded above.
 //   Topic "streetlights/data"   → JSON: {"SL-01":{voltage,current,power,pf,status}, ...}
+//                                  (optional extra fields "freq"/"frequency" and
+//                                  "energy" are read automatically if your firmware
+//                                  sends them — safely ignored otherwise)
 //   Topic "streetlights/status" → plain text: "ESP32 ONLINE"
 //   Topic "streetlights/sos"    → panic-button press signal (see handleSosSignal()
 //                                  below for the accepted payload shapes). Wire your
@@ -3061,10 +3072,116 @@ const MQTT_DATA_TOPIC = 'streetlights/data';
 const MQTT_STATUS_TOPIC = 'streetlights/status';
 const MQTT_SOS_TOPIC = 'streetlights/sos';
 
-// Latest telemetry per light ID: { voltage, current, power, pf, ts }
+// Latest telemetry per light ID: { voltage, current, power, pf, freq, kwh, ts }
 const LIGHT_LIVE_DATA = {};
 let mqttLiveClient = null;
 let mqttLastEspStatus = null;
+
+// ══════════════════════════════════════════════════════════════════
+// CLASSIFICATION ENGINE — exactly 3 output classes, matching the PZEM-
+// 004T deployment spec:
+//   Class 0 "online" → 🟢 PROPER WORKING
+//   Class 1 "dim"    → 🟡 DIM
+//   Class 2 "fault"  → 🔴 FAULTY
+//
+// Current draw is the PRIMARY signal (baseline system), calibrated to
+// this hardware's real behavior:
+//   0.00–0.04 A → FAULTY   (no bulb / open circuit)
+//   0.05–0.19 A → DIM      (underpowered / degraded)
+//   0.20–0.90 A → PROPER WORKING
+//   > 0.90 A    → FAULTY   (overcurrent / short)
+// Voltage, frequency, power factor, and recent history then REFINE
+// borderline cases (severe abnormalities force FAULTY; mild ones or a
+// poor PF downgrade an otherwise-healthy reading to DIM — never the
+// reverse, and PF alone never forces FAULTY, per spec rule 9).
+//
+// Every caller in the dashboard only ever consumes classifyLightReading()'s
+// {status, reasons} result — never the raw MQTT "status" string — so this
+// is where a trained ML model plugs in later (see classifyByML() stub)
+// WITHOUT touching any other part of the dashboard.
+// ══════════════════════════════════════════════════════════════════
+const LIGHT_HISTORY = {};        // id -> recent readings (newest last), for trend-based ML features
+const LIGHT_HISTORY_MAX = 20;
+
+function pushLightHistory(id, sample){
+  const hist = LIGHT_HISTORY[id] = LIGHT_HISTORY[id] || [];
+  hist.push(sample);
+  if(hist.length > LIGHT_HISTORY_MAX) hist.shift();
+}
+
+// The "initial baseline system" mentioned in the spec — pure threshold
+// logic, no ML. `history` is passed in purely so trend checks (rules
+// 11/12: intermittent operation, gradual degradation) have something
+// to look at; it's the same shape of data an ML model would consume.
+function classifyByThreshold(reading, history){
+  const { voltage, current, power, pf, freq, hasFreq } = reading;
+  const reasons = [];
+
+  // Step 1 — current is the primary signal (baseline thresholds above)
+  let status;
+  if(current <= 0.04){
+    status = 'fault'; reasons.push('Near-zero current — lamp off / open circuit');
+  } else if(current < 0.20){
+    status = 'dim'; reasons.push(`Low current (${current.toFixed(2)}A) — underpowered`);
+  } else if(current <= 0.90){
+    status = 'online';
+  } else {
+    status = 'fault'; reasons.push(`Overcurrent (${current.toFixed(2)}A)`);
+  }
+
+  // Step 2 — severe voltage/frequency abnormalities always force FAULTY
+  // (rules 5b/6/8). `voltage > 0` guard avoids double-flagging a
+  // genuine all-zero PZEM-error packet, which Step 1 already caught.
+  if(voltage > 0 && (voltage < 160 || voltage > 270)){
+    status = 'fault'; reasons.push(`Severe voltage abnormality (${voltage.toFixed(1)}V)`);
+  }
+  if(hasFreq && freq > 0 && (freq < 47 || freq > 53)){
+    status = 'fault'; reasons.push(`Frequency abnormality (${freq.toFixed(1)}Hz)`);
+  }
+
+  // Step 3 — mild under-voltage or poor PF downgrades a healthy reading
+  // to DIM only (rules 5a/9) — never auto-FAULTY from PF alone.
+  if(status === 'online'){
+    if(voltage > 0 && voltage < 200){
+      status = 'dim'; reasons.push(`Reduced voltage (${voltage.toFixed(1)}V)`);
+    } else if(pf > 0 && pf < 0.55){
+      status = 'dim'; reasons.push(`Poor power factor (${pf.toFixed(2)})`);
+    }
+  }
+
+  // Step 4 — trend-based refinement (rules 11/12: intermittent lamp /
+  // gradual degradation) using the last few readings' current draw.
+  if(status === 'online' && history && history.length >= 5){
+    const recent = history.slice(-5).map(h => h.current);
+    const mean = recent.reduce((a, b) => a + b, 0) / recent.length;
+    const variance = recent.reduce((a, b) => a + (b - mean) ** 2, 0) / recent.length;
+    const stdev = Math.sqrt(variance);
+    if(mean > 0 && stdev / mean > 0.35){
+      status = 'dim'; reasons.push('Fluctuating current — possible intermittent fault');
+    }
+  }
+
+  return { status, reasons };
+}
+
+// Placeholder for the future trained model. Swap the call inside
+// classifyLightReading() from classifyByThreshold(...) to this once a
+// model is ready — the {status, reasons} contract stays identical, so
+// nothing else in the dashboard needs to change.
+//   Class 0 = online (Proper Working) · Class 1 = dim · Class 2 = fault
+function classifyByML(reading, history){
+  throw new Error('classifyByML() not implemented yet — wire your trained model in here.');
+}
+
+// Single entry point the rest of the dashboard calls — never the raw
+// MQTT status string.
+function classifyLightReading(id, reading){
+  const history = LIGHT_HISTORY[id] || [];
+  const result = classifyByThreshold(reading, history);
+  pushLightHistory(id, reading);
+  return result;
+}
+window.classifyLightReading = classifyLightReading;
 
 function setMqttStatusBadge(state){
   // state: 'connecting' | 'connected' | 'disconnected' | 'error'
@@ -3263,39 +3380,33 @@ function applyLiveTelemetry(data){
     const current = Number(reading.current) || 0;
     const power   = Number(reading.power) || 0;
     const pf      = Number(reading.pf) || 0;
+    // Frequency isn't in every firmware version yet — only trust it (and
+    // only let it affect classification) when the field is actually present,
+    // so older payloads without it can't get misread as "0 Hz = fault".
+    const hasFreq = reading.freq !== undefined || reading.frequency !== undefined || reading.f !== undefined;
+    const freq = hasFreq ? (Number(reading.freq ?? reading.frequency ?? reading.f) || 0) : 0;
     const now = Date.now();
 
     // Riemann-sum energy accumulation (kWh) since the last reading for
     // this light — this is what powers the "Energy" figure in the
     // light detail panel. Skipped on the very first reading (no prior ts).
+    // If the firmware already reports a cumulative energy field, prefer
+    // that (more accurate than our client-side estimate).
+    const hasReportedEnergy = reading.energy !== undefined || reading.e !== undefined;
     let kwh = prev ? prev.kwh : 0;
-    if(prev && prev.ts){
+    if(hasReportedEnergy){
+      kwh = Number(reading.energy ?? reading.e) || 0;
+    } else if(prev && prev.ts){
       const hoursElapsed = (now - prev.ts) / 3600000;
       kwh += (power / 1000) * hoursElapsed;
     }
 
-    LIGHT_LIVE_DATA[id] = { voltage, current, power, pf, kwh, ts: now };
+    const { status: newStatus, reasons } = classifyLightReading(id, { voltage, current, power, pf, freq, hasFreq });
+
+    LIGHT_LIVE_DATA[id] = { voltage, current, power, pf, freq: hasFreq ? freq : null, kwh, reasons, ts: now };
 
     const node = LIGHT_NODES.find(n => n.id === id);
     if(!node) return; // telemetry for a light not currently on the map — ignore
-
-    // Status is derived from measured current draw rather than a
-    // hardcoded status field — this mirrors how a real current-sensor
-    // (e.g. ACS712) based deployment would classify each light:
-    //   ~0A          → lamp is off / fault (no draw at all)
-    //   low but >0A  → dim / underpowered
-    //   normal range → healthy / online
-    //   too high     → fault (overcurrent / short)
-    let newStatus;
-    if(current <= 0.04){
-      newStatus = 'fault';
-    } else if(current < 0.20){
-      newStatus = 'dim';
-    } else if(current <= 0.90){
-      newStatus = 'online';
-    } else {
-      newStatus = 'fault';
-    }
 
     if(node.s !== newStatus){
       node.s = newStatus;
@@ -3309,7 +3420,7 @@ function applyLiveTelemetry(data){
     // Persist this reading to the backend DB if one is available (fire
     // and forget — never blocks the UI, and patchLightTelemetryToApi()
     // itself no-ops when no backend has been detected).
-    const energyDeltaKwh = prev && prev.ts ? kwh - prev.kwh : 0;
+    const energyDeltaKwh = prev && prev.ts && !hasReportedEnergy ? kwh - prev.kwh : 0;
     patchLightTelemetryToApi(id, { status: newStatus, voltage, current, power, pf, energyDeltaKwh });
   });
 
@@ -3447,14 +3558,18 @@ function buildOsmLightPopup(node){
   const extra = [node.type, node.notes].filter(Boolean).join(' · ');
   const live = LIGHT_LIVE_DATA[node.id];
   const liveRow = live
-    ? `<div class="olp-meta" style="color:#00e5ff;">⚡ ${live.voltage.toFixed(1)}V · ${live.current.toFixed(2)}A · ${live.power.toFixed(1)}W · PF ${live.pf.toFixed(2)}
+    ? `<div class="olp-meta" style="color:#00e5ff;">⚡ ${live.voltage.toFixed(1)}V · ${live.current.toFixed(2)}A · ${live.power.toFixed(1)}W · PF ${live.pf.toFixed(2)}${live.freq ? ' · ' + live.freq.toFixed(1) + 'Hz' : ''}
         <span style="color:var(--muted);"> · ${liveAgoLabel(live.ts)}</span></div>`
+    : '';
+  const reasonRow = (live && live.reasons && live.reasons.length)
+    ? `<div class="olp-meta" style="color:${color};">${live.reasons[0]}</div>`
     : '';
   return `<div class="osm-light-popup">
     <div class="olp-id" style="color:${color};">${node.id}${live ? ' <span style="font-size:9px;color:#00e5ff;font-weight:700;">● LIVE</span>' : ''}</div>
     <div class="olp-meta">${label} · Zone ${node.z} · ${node.lat.toFixed(4)}, ${node.lon.toFixed(4)}</div>
     ${extra ? `<div class="olp-meta">${extra}</div>` : ''}
     ${liveRow}
+    ${reasonRow}
     <div class="olp-actions">
       <button class="olp-btn" style="color:#00e5ff;border-color:rgba(0,229,255,0.35);" onclick="openLightDetail('${node.id}')">📊 Details</button>
       <button class="olp-btn call" onclick="callAboutFault('${node.id}')">📞 Call</button>
@@ -4001,6 +4116,8 @@ function renderLightDetail(){
 
   const live = LIGHT_LIVE_DATA[node.id];
   const banner = document.getElementById('ld-live-banner');
+  const reasonRow = document.getElementById('ld-reason-row');
+  const reasonText = document.getElementById('ld-reason-text');
   if(live){
     banner.style.display = 'flex';
     document.getElementById('ld-live-ts').textContent = 'Live · updated ' + liveAgoLabel(live.ts);
@@ -4008,14 +4125,27 @@ function renderLightDetail(){
     document.getElementById('ld-current').textContent = live.current.toFixed(2) + ' A';
     document.getElementById('ld-power').textContent = live.power.toFixed(1) + ' W';
     document.getElementById('ld-pf').textContent = live.pf.toFixed(2);
+    document.getElementById('ld-frequency').textContent = live.freq ? live.freq.toFixed(1) + ' Hz' : '—';
     document.getElementById('ld-energy').textContent = live.kwh.toFixed(3) + ' kWh';
+
+    if(live.reasons && live.reasons.length){
+      reasonRow.style.display = 'flex';
+      reasonRow.style.background = color + '15';
+      reasonRow.style.border = '1px solid ' + color + '40';
+      reasonRow.style.color = color;
+      reasonText.textContent = '⚠ ' + live.reasons.join(' · ');
+    } else {
+      reasonRow.style.display = 'none';
+    }
   } else {
     banner.style.display = 'none';
     document.getElementById('ld-voltage').textContent = '—';
     document.getElementById('ld-current').textContent = '—';
     document.getElementById('ld-power').textContent = '—';
     document.getElementById('ld-pf').textContent = '—';
+    document.getElementById('ld-frequency').textContent = '—';
     document.getElementById('ld-energy').textContent = 'No live data yet';
+    reasonRow.style.display = 'none';
   }
 }
 window.openLightDetail = openLightDetail;
