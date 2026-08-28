@@ -1213,8 +1213,8 @@ function logoutApp(){
           Manage
         </button>
         <div class="osm-only-control" id="home-osm-layer-toggle" style="display:none;gap:0;border:1px solid var(--border2);border-radius:8px;overflow:hidden;">
-          <button class="btn sm" id="home-osm-sat-btn" onclick="setHomeOsmLayer('sat')" style="border:none;border-radius:0;background:var(--cyan);color:#03141f;">Satellite</button>
-          <button class="btn sm" id="home-osm-map-btn" onclick="setHomeOsmLayer('street')" style="border:none;border-radius:0;">Map</button>
+          <button class="btn sm" id="home-osm-sat-btn" onclick="setHomeOsmLayer('sat')" style="border:none;border-radius:0;" title="Satellite imagery for this area has real cloud cover in the source photos">Satellite</button>
+          <button class="btn sm" id="home-osm-map-btn" onclick="setHomeOsmLayer('street')" style="border:none;border-radius:0;background:var(--cyan);color:#03141f;">Map</button>
         </div>
         <button class="btn sm osm-only-control" id="home-osm-recenter-btn" onclick="recenterHomeOsmMap()" style="display:none;align-items:center;gap:5px;" title="Recenter on BIT Sathy campus">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
@@ -3719,8 +3719,12 @@ function initHomeOsmMap(){
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 })
   ]);
 
-  // Satellite is the default view (matches the reference campus patrol map style)
-  osmSatLayer.addTo(osmLightMapInstance);
+  // Street map is the default view — the satellite imagery for this area
+  // has real cloud cover baked into the tiles (not fixable with styling,
+  // it's the actual captured photo), which made the map hard to read.
+  // Satellite is still available via the toggle for anyone who wants it.
+  osmStreetLayer.addTo(osmLightMapInstance);
+  el.classList.add('street-mode');
 
   renderZoneOverlays();
 
