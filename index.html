@@ -3118,6 +3118,8 @@ const MQTT_WS_URL = 'wss://broker.hivemq.com:8884/mqtt';
 const MQTT_DATA_TOPIC = 'streetlights/data';
 const MQTT_STATUS_TOPIC = 'streetlights/status';
 const MQTT_SOS_TOPIC = 'streetlights/sos';
+const MQTT_COMMAND_TOPIC = 'streetlights/command';
+const MQTT_ACK_TOPIC = 'streetlights/ack';
 
 // Latest telemetry per light ID: { voltage, current, power, pf, freq, kwh, ts }
 const LIGHT_LIVE_DATA = {};
@@ -3288,7 +3290,7 @@ function initMqttLive(){
 
   mqttLiveClient.on('connect', () => {
     setMqttStatusBadge('connected');
-    mqttLiveClient.subscribe([MQTT_DATA_TOPIC, MQTT_STATUS_TOPIC, MQTT_SOS_TOPIC], (err) => {
+    mqttLiveClient.subscribe([MQTT_DATA_TOPIC, MQTT_STATUS_TOPIC, MQTT_SOS_TOPIC, MQTT_ACK_TOPIC], (err) => {
       if(err) console.warn('MQTT subscribe failed', err);
     });
   });
@@ -3312,6 +3314,10 @@ function initMqttLive(){
     }
     if(topic === MQTT_SOS_TOPIC){
       handleSosSignal(text);
+      return;
+    }
+    if(topic === MQTT_ACK_TOPIC){
+      handleSirenAck(text);
     }
   });
 }
@@ -3350,10 +3356,36 @@ window.handleSosSignal = handleSosSignal;
 // Starts the audible + visual siren and kicks off the Patrol page's
 // Emergency Lighting protocol automatically — this is the "pressing a
 // physical button should activate the siren on the patrol side" path.
+function publishSirenCommand(node, command){
+  if(!mqttLiveClient || !mqttLiveClient.connected){
+    if(window.showToast) showToast('MQTT not connected — command not sent', '#ff3b5c', 5000);
+    return false;
+  }
+  const msg = JSON.stringify({node: node, command: command, ts: Date.now()});
+  mqttLiveClient.publish(MQTT_COMMAND_TOPIC, msg, {qos: 1, retain: false}, (err) => {
+    if(err) console.warn('Siren command publish failed', err);
+  });
+  return true;
+}
+window.publishSirenCommand = publishSirenCommand;
+
+function handleSirenAck(text){
+  let p = {};
+  try { p = JSON.parse(text); } catch(e){ return; }
+  const node = p.node || p.light || 'UNKNOWN';
+  const command = p.command || '';
+  const status = p.status || 'ACK';
+  if(window.showToast) showToast(`✓ ${node} · ${command} · ${status}`, '#00f07a', 4500);
+}
+window.handleSirenAck = handleSirenAck;
+
 function triggerSosSiren(lightId, location){
   startSiren();
 
   document.getElementById('siren-banner-detail').textContent = `${lightId} · ${location}`;
+
+  // Route the physical siren command back to the exact streetlight node.
+  publishSirenCommand(lightId, 'SIREN_ON');
 
   if(window.showToast) showToast('🚨 SOS button pressed — ' + lightId, '#ff3b5c', 6000);
 
