@@ -190,10 +190,10 @@ function resetSettings() {
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 <!-- ══ MAP CONFIG ══
      The AI Route Map uses the same real Leaflet + OpenStreetMap tile
-     engine as the Coverage Map (Home) and Pink Patrol Coverage Map —
-     live streets, Map/Satellite toggle, no API key required.
-     Reference landmarks (Sathyamangalam Town Centre + Bannari Amman
-     Institute of Technology) are shared across all three maps via the
+     engine as the Pink Patrol Coverage Map — live streets, Map/Satellite
+     toggle, no API key required. Reference landmarks (Sathyamangalam
+     Town Centre + Bannari Amman Institute of Technology) are shared
+     across these maps via the
      landmarkLocations array. ══ -->
 <style>
 :root {
@@ -1481,21 +1481,6 @@ function logoutApp(){
         <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-top:6px;">Budget: 246 kWh · Saved 12% vs yesterday</div>
       </div>
     </div>
-  </div>
-
-  <!-- Coverage Map: Sathyamangalam & Bannari Amman College -->
-  <div class="card" style="margin-top:14px;padding:0;overflow:hidden;">
-    <div style="padding:18px 20px 14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
-      <div>
-        <div style="font-size:15px;font-weight:700;">Coverage Map — Sathyamangalam &amp; Bannari Amman College</div>
-        <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-top:2px;">Real GPS reference points · Street light monitoring anchor locations</div>
-      </div>
-      <div class="map-view-toggle" id="home-cov-toggle">
-        <button class="active" id="hcov-map-btn" onclick="setHomeCovLayer('map')">Map</button>
-        <button id="hcov-sat-btn" onclick="setHomeCovLayer('sat')">Satellite</button>
-      </div>
-    </div>
-    <div id="homeCoverageMap" style="width:100%;height:340px;position:relative;background:#060e1a;"></div>
   </div>
 </div>
 
@@ -3019,10 +3004,6 @@ function showPage(id,btn,mobileId){
   if(mobileId) document.getElementById(mobileId).classList.add('active');
   if(id==='maint') setTimeout(initRouteMap,100);
   if(id==='patrol') setTimeout(() => { if(window.initPatrolMap) initPatrolMap(); }, 100);
-  if(id==='home'){
-    if(window.initHomeCoverageMap) setTimeout(initHomeCoverageMap, 100);
-    if(homeCoverageMapInstance) setTimeout(() => homeCoverageMapInstance.invalidateSize(), 120);
-  }
   if(id==='home' && osmLightMapInstance) setTimeout(() => osmLightMapInstance.invalidateSize(), 60);
 }
 
@@ -3449,8 +3430,8 @@ function applyLiveTelemetry(data){
   }
 }
 
-// Pushes a status change for one node out to the Grid map, Live map,
-// and Coverage map markers (color only — position is unchanged).
+// Pushes a status change for one node out to the Grid map and Live map
+// markers (color only — position is unchanged).
 function updateLightStatusEverywhere(node){
   const color = LIGHT_STATUS_COLOR[node.s] || '#888';
 
@@ -3464,15 +3445,6 @@ function updateLightStatusEverywhere(node){
     window.osmMarkers[node.id].marker.setIcon(buildLightPinIcon(color));
     window.osmMarkers[node.id].status = node.s;
     window.osmMarkers[node.id].marker.setPopupContent(buildOsmLightPopup(node));
-  }
-
-  if(window.coverageMarkers && window.coverageMarkers[node.id]){
-    window.coverageMarkers[node.id].marker.setStyle({ fillColor: color });
-    window.coverageMarkers[node.id].status = node.s;
-    const label = LIGHT_STATUS_LABEL[node.s] || node.s;
-    window.coverageMarkers[node.id].marker.setPopupContent(
-      `<div style="font-family:'Share Tech Mono',monospace;font-size:11px;"><b style="color:${color};">${node.id}</b><br>${label} · Zone ${node.z}<br>${node.lat.toFixed(4)}, ${node.lon.toFixed(4)}<br><button class="olp-btn" style="margin-top:6px;color:#00e5ff;border-color:rgba(0,229,255,0.35);" onclick="openLightDetail('${node.id}')">📊 Details</button></div>`
-    );
   }
 
   if(currentLightDetailId === node.id){
@@ -3675,16 +3647,18 @@ function renderZoneOverlays(){
       color, weight: 1.5, dashArray: '5,5', fillColor: color, fillOpacity: 0.07, interactive: false
     }).addTo(zoneOverlayLayer);
 
-    const centerLat = (latMin + latMax) / 2;
+    // Anchored to each cell's own top-left corner (not a shared row) so
+    // labels naturally spread out with their non-overlapping cells,
+    // and stay compact enough to read even at this map's minimum zoom.
     const label = L.divIcon({
       className: 'zone-label-icon',
-      html: `<div style="font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;color:${color};
-        background:rgba(2,10,18,0.85);border:1px solid ${color};border-radius:5px;padding:2px 7px;
-        white-space:nowrap;box-shadow:0 0 8px ${color}55;">ZONE ${zone} · ${count}</div>`,
-      iconSize: [90, 20],
-      iconAnchor: [45, 10]
+      html: `<div style="font-family:'Share Tech Mono',monospace;font-size:9px;font-weight:700;color:${color};
+        background:rgba(2,10,18,0.88);border:1px solid ${color};border-radius:4px;padding:1px 5px;
+        white-space:nowrap;box-shadow:0 0 6px ${color}55;">ZONE ${zone} · ${count}</div>`,
+      iconSize: [76, 16],
+      iconAnchor: [-3, -3]
     });
-    L.marker([centerLat, lonMin], { icon: label, interactive: false }).addTo(zoneOverlayLayer);
+    L.marker([latMax, lonMin], { icon: label, interactive: false }).addTo(zoneOverlayLayer);
   });
 }
 window.renderZoneOverlays = renderZoneOverlays;
@@ -3712,7 +3686,25 @@ function initHomeOsmMap(){
   const el = document.getElementById('osm-light-map');
   if(!el || osmLightMapInstance || typeof L === 'undefined') return;
 
-  osmLightMapInstance = L.map(el, { zoomControl:true, attributionControl:true }).setView([11.4986, 77.2743], 17);
+  // minZoom keeps the view locked to the campus itself — zooming out
+  // further than this crams all 10 pins and every zone label into a
+  // tiny corner of a much wider (and, per the satellite imagery,
+  // frequently cloud-covered) view of the whole town, which becomes
+  // unreadable. maxBounds gives a soft leash so panning can't wander
+  // off far into the surrounding town either.
+  const campusBoundsPad = 0.012;
+  const softBounds = L.latLngBounds(
+    [11.4986 - campusBoundsPad, 77.2743 - campusBoundsPad],
+    [11.4986 + campusBoundsPad, 77.2743 + campusBoundsPad]
+  );
+
+  osmLightMapInstance = L.map(el, {
+    zoomControl: true,
+    attributionControl: true,
+    minZoom: 16,
+    maxBounds: softBounds,
+    maxBoundsViscosity: 0.7
+  }).setView([11.4986, 77.2743], 17);
 
   osmStreetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
@@ -3978,22 +3970,6 @@ function renderSeedGridNodes(){
   renderGridBuildingLabels();
 }
 
-function addLightNodeToCoverageMap(node){
-  if(!homeCoverageMapInstance) return;
-  const color = LIGHT_STATUS_COLOR[node.s] || '#888';
-  const label = LIGHT_STATUS_LABEL[node.s] || node.s;
-  const marker = L.circleMarker([node.lat, node.lon], {
-    radius: 8,
-    color: '#fff',
-    weight: 2,
-    fillColor: color,
-    fillOpacity: 0.95
-  }).addTo(homeCoverageMapInstance);
-  marker.bindPopup(`<div style="font-family:'Share Tech Mono',monospace;font-size:11px;"><b style="color:${color};">${node.id}</b><br>${label} · Zone ${node.z}<br>${node.lat.toFixed(4)}, ${node.lon.toFixed(4)}<br><button class="olp-btn" style="margin-top:6px;color:#00e5ff;border-color:rgba(0,229,255,0.35);" onclick="openLightDetail('${node.id}')">📊 Details</button></div>`);
-  window.coverageMarkers = window.coverageMarkers || {};
-  window.coverageMarkers[node.id] = { marker, status: node.s };
-}
-
 function handleAddLightSubmit(event){
   event.preventDefault();
   const errEl = document.getElementById('al-error');
@@ -4020,14 +3996,6 @@ function handleAddLightSubmit(event){
   addLightNodeToGrid(node);
   renderGridZoneOverlays();
   renderGridBuildingLabels();
-
-  // Coverage map — add if it's already initialised, otherwise wait for it
-  if(homeCoverageMapInstance){
-    addLightNodeToCoverageMap(node);
-  } else if(window.initHomeCoverageMap){
-    initHomeCoverageMap();
-    setTimeout(() => addLightNodeToCoverageMap(node), 200);
-  }
 
   // Make sure the Live Map is visible so the new node is immediately seen
   setHomeMapView('osm');
@@ -4072,11 +4040,6 @@ function removeStreetLight(id, opts){
   if(window.osmMarkers && window.osmMarkers[id]){
     if(osmLightMapInstance) osmLightMapInstance.removeLayer(window.osmMarkers[id].marker);
     delete window.osmMarkers[id];
-  }
-  // Remove from Coverage map
-  if(window.coverageMarkers && window.coverageMarkers[id]){
-    if(homeCoverageMapInstance) homeCoverageMapInstance.removeLayer(window.coverageMarkers[id].marker);
-    delete window.coverageMarkers[id];
   }
   // Remove from Grid SVG
   const gridNode = document.querySelector(`.mnode[data-id="${id}"]`);
@@ -4139,7 +4102,7 @@ window.closeManageLightsModal = closeManageLightsModal;
 window.renderManageLightsList = renderManageLightsList;
 
 // ══ LIGHT DETAIL PANEL ══
-// Click any light (Grid node, Live/Coverage map marker, or Manage row) to
+// Click any light (Grid node, Live Map marker, or Manage row) to
 // see its live voltage / current / power factor / energy and full details.
 let currentLightDetailId = null;
 
@@ -4286,83 +4249,6 @@ function setPatrolCovLayer(kind){
   }
 }
 window.setPatrolCovLayer = setPatrolCovLayer;
-
-let homeCoverageMapInstance = null;
-let homeStreetLayer = null;
-let homeSatLayer = null;
-function initHomeCoverageMap(){
-  const el = document.getElementById('homeCoverageMap');
-  if(!el || homeCoverageMapInstance || typeof L === 'undefined' || typeof landmarkLocations === 'undefined') return;
-
-  const midLat = (landmarkLocations[0].lat + landmarkLocations[1].lat) / 2;
-  const midLng = (landmarkLocations[0].lng + landmarkLocations[1].lng) / 2;
-
-  homeCoverageMapInstance = L.map(el, { zoomControl:true, attributionControl:true }).setView([midLat, midLng], 13);
-
-  homeStreetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(homeCoverageMapInstance);
-
-  homeSatLayer = L.layerGroup([
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 19,
-      attribution: 'Tiles &copy; Esri — Source: Esri, Maxar, Earthstar Geographics, GIS User Community'
-    }),
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 })
-  ]);
-
-  const bounds = [];
-  landmarkLocations.forEach(loc => {
-    bounds.push([loc.lat, loc.lng]);
-    const icon = L.divIcon({
-      className: 'home-landmark-icon',
-      html: `<div style="display:flex;flex-direction:column;align-items:center;transform:translateY(-6px);">
-        <div style="font-family:'Share Tech Mono',monospace;font-size:9.5px;font-weight:700;color:#fff;
-          background:${loc.color};border:1px solid #fff;border-radius:5px;padding:2px 6px;
-          white-space:nowrap;margin-bottom:3px;box-shadow:0 2px 6px rgba(0,0,0,0.3);">${loc.name}</div>
-        <svg width="24" height="28" viewBox="0 0 22 26">
-          <path d="M11 25 C11 25 20 15.5 20 10 A9 9 0 0 0 2 10 C2 15.5 11 25 11 25 Z" fill="${loc.color}" stroke="#fff" stroke-width="1.4"/>
-          <circle cx="11" cy="10" r="3.4" fill="#fff"/>
-        </svg></div>`,
-      iconSize: [160, 48],
-      iconAnchor: [12, 42]
-    });
-    L.marker([loc.lat, loc.lng], { icon, title: loc.name })
-      .addTo(homeCoverageMapInstance)
-      .bindPopup(`<div style="font-family:'Share Tech Mono',monospace;font-size:11px;"><b style="color:${loc.color};">${loc.name}</b><br>${loc.lat.toFixed(4)}, ${loc.lng.toFixed(4)}</div>`);
-  });
-  if (bounds.length > 1) homeCoverageMapInstance.fitBounds(bounds, { padding: [40, 40] });
-
-  // Plot the current street-light network (kept in sync with the Live Map / Grid map)
-  LIGHT_NODES.forEach(node => addLightNodeToCoverageMap(node));
-
-  setTimeout(() => { if(homeCoverageMapInstance) homeCoverageMapInstance.invalidateSize(); }, 60);
-}
-window.initHomeCoverageMap = initHomeCoverageMap;
-document.addEventListener('DOMContentLoaded', () => { setTimeout(initHomeCoverageMap, 150); });
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    if (!homeCoverageMapInstance) initHomeCoverageMap();
-    if (homeCoverageMapInstance) homeCoverageMapInstance.invalidateSize();
-  }, 300);
-});
-
-function setHomeCovLayer(kind){
-  if(!homeCoverageMapInstance) return;
-  const mapBtn = document.getElementById('hcov-map-btn');
-  const satBtn = document.getElementById('hcov-sat-btn');
-  if(kind === 'sat'){
-    homeCoverageMapInstance.removeLayer(homeStreetLayer);
-    homeSatLayer.addTo(homeCoverageMapInstance);
-    satBtn.classList.add('active'); mapBtn.classList.remove('active');
-  } else {
-    homeCoverageMapInstance.removeLayer(homeSatLayer);
-    homeStreetLayer.addTo(homeCoverageMapInstance);
-    mapBtn.classList.add('active'); satBtn.classList.remove('active');
-  }
-}
-window.setHomeCovLayer = setHomeCovLayer;
 
 function setHomeMapView(view){
   const panel = document.getElementById('home-map-panel');
@@ -4877,8 +4763,8 @@ function showToast(msg, color='#00e5ff', duration=3000){
 
 // ══════════════════════════════════════════════════════════════════
 // AI ROUTE MAP — real Leaflet + OpenStreetMap tiles (same engine as
-// the Home Coverage Map and Pink Patrol Coverage Map). No API key,
-// no offline fallback needed — just live streets around
+// the Pink Patrol Coverage Map). No API key, no offline fallback
+// needed — just live streets around
 // Sathyamangalam Town Centre + Bannari Amman Institute of Technology.
 // ══════════════════════════════════════════════════════════════════
 
@@ -4890,8 +4776,8 @@ const faultLocations = [
 ];
 
 // Landmark reference points (real, verified GPS coords) — shown on the
-// Street Monitoring route map, the Home Coverage Map, and the Pink
-// Patrol coverage map.
+// Street Monitoring route map, the Live Map, and the Pink Patrol
+// coverage map.
 const landmarkLocations = [
   { id:'LM-SATHY', name:'Sathyamangalam Town Centre', lat:11.5040, lng:77.2410, type:'landmark', color:'#00e5ff', label:'STM' },
   { id:'LM-BIT',   name:'Bannari Amman Institute of Technology (BIT Sathy)', lat:11.4986, lng:77.2743, type:'landmark', color:'#ffb300', label:'BIT' },
@@ -4951,7 +4837,7 @@ function initRouteMap() {
 
   // Landmark pins — Sathyamangalam Town Centre + Bannari Amman Institute of
   // Technology, always-visible with permanent labels, same style used on
-  // the Home Coverage Map and Pink Patrol Coverage Map.
+  // the Live Map and Pink Patrol Coverage Map.
   const bounds = faultLocations.map(f => [f.lat, f.lng]);
   landmarkLocations.forEach(loc => {
     bounds.push([loc.lat, loc.lng]);
