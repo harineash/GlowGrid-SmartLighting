@@ -733,6 +733,13 @@ input,select,textarea{font-size:16px;}
             PATROL
           </div>
         </label>
+        <label class="role-opt">
+          <input type="radio" name="login-role" value="technician" required>
+          <div class="role-card">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            TECHNICIAN
+          </div>
+        </label>
       </div>
     </div>
 
@@ -776,7 +783,7 @@ function handleLogin(e){
   const nameEl = document.getElementById('user-panel-name');
   const roleEl2 = document.getElementById('user-panel-role');
   if(nameEl) nameEl.textContent = user;
-  if(roleEl2) roleEl2.textContent = role === 'electrician' ? 'ELECTRICIAN' : 'PATROL OFFICER';
+  if(roleEl2) roleEl2.textContent = role === 'electrician' ? 'ELECTRICIAN' : role === 'technician' ? 'TECHNICIAN' : 'PATROL OFFICER';
 
   // Route to the correct dashboard based on role
   const siteHeader = document.getElementById('site-header');
@@ -787,6 +794,11 @@ function handleLogin(e){
     document.body.classList.add('patrol-mode');
     showPage('patrol', null);
     if(window.initPatrolClock) initPatrolClock();
+  } else if(role === 'technician'){
+    if(siteHeader) siteHeader.style.display = '';
+    if(mobileNavEl) mobileNavEl.style.display = '';
+    document.body.classList.remove('patrol-mode');
+    showPage('tech', document.getElementById('hnav-tech-btn'), 'mn-tech');
   } else {
     if(siteHeader) siteHeader.style.display = '';
     if(mobileNavEl) mobileNavEl.style.display = '';
@@ -794,7 +806,7 @@ function handleLogin(e){
     showPage('home', document.querySelector('.hnav-btn'), 'mn-home');
   }
 
-  if(window.showToast) setTimeout(() => showToast('Welcome, ' + user + '! (' + (role==='electrician'?'Electrician':'Patrol') + ')', '#00e5ff'), 450);
+  if(window.showToast) setTimeout(() => showToast('Welcome, ' + user + '! (' + (role==='electrician'?'Electrician':role==='technician'?'Technician':'Patrol') + ')', '#00e5ff'), 450);
   return false;
 }
 
@@ -2231,6 +2243,8 @@ function logoutApp(){
     </div>
   </div>
 
+  <div id="tech-overview" style="display:none;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px;"></div>
+
   <div id="tech-fault-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;"></div>
 </div>
 
@@ -3107,6 +3121,15 @@ const MQTT_SOS_TOPIC = 'streetlights/sos';
 
 // Latest telemetry per light ID: { voltage, current, power, pf, freq, kwh, ts }
 const LIGHT_LIVE_DATA = {};
+// id -> ms timestamp of when a light most recently became faulty (used
+// to prioritize the Technician View by how long something's been broken).
+const LIGHT_FAULT_SINCE = {};
+// Seed plausible fault-start times for the two demo lights that start
+// out already faulty, matching the "8m" / "1.2 hr" flavor text used
+// elsewhere in the dashboard, so the Technician View's priority sort
+// is consistent from the very first paint.
+if(LIGHT_NODES.find(n => n.id === 'SL-04' && n.s === 'fault')) LIGHT_FAULT_SINCE['SL-04'] = Date.now() - 8 * 60 * 1000;
+if(LIGHT_NODES.find(n => n.id === 'SL-09' && n.s === 'fault')) LIGHT_FAULT_SINCE['SL-09'] = Date.now() - 72 * 60 * 1000;
 let mqttLiveClient = null;
 let mqttLastEspStatus = null;
 
@@ -3442,8 +3465,17 @@ function applyLiveTelemetry(data){
     if(!node) return; // telemetry for a light not currently on the map — ignore
 
     if(node.s !== newStatus){
+      const prevStatus = node.s;
       node.s = newStatus;
       anyStatusChanged = true;
+      // Track when a light most recently became faulty, so the
+      // Technician View can prioritize by how long something has been
+      // broken, not just why.
+      if(newStatus === 'fault' && prevStatus !== 'fault'){
+        LIGHT_FAULT_SINCE[id] = now;
+      } else if(newStatus !== 'fault'){
+        delete LIGHT_FAULT_SINCE[id];
+      }
       updateLightStatusEverywhere(node);
     } else {
       // status unchanged, but refresh popups if currently open so live readings tick over
@@ -3548,16 +3580,46 @@ function renderFaultTable(){
   }).join('');
 }
 
+// Classifies a faulty light's priority for the Technician View, combining
+// how dangerous the fault reason is with how long it's gone unresolved —
+// a hazard is always HIGH; a simple "lamp off" fault escalates from LOW
+// to MEDIUM to HIGH the longer it sits unfixed.
+function getFaultPriority(node){
+  const live = LIGHT_LIVE_DATA[node.id];
+  const reasonText = ((live && live.reasons) || []).join(' ');
+  const isHazard = /severe voltage|frequency abnormality|overcurrent/i.test(reasonText);
+  const since = LIGHT_FAULT_SINCE[node.id];
+  const minutesFaulty = since ? (Date.now() - since) / 60000 : 0;
+
+  if(isHazard || minutesFaulty >= 30){
+    return { level: 'HIGH', rank: 0, color: '#ff3b5c', icon: '🔴', label: 'HIGH PRIORITY', minutesFaulty };
+  }
+  if(minutesFaulty >= 5 || !live){
+    return { level: 'MEDIUM', rank: 1, color: '#ffb300', icon: '🟡', label: 'MEDIUM PRIORITY', minutesFaulty };
+  }
+  return { level: 'LOW', rank: 2, color: '#00e5ff', icon: '🔵', label: 'LOW · JUST REPORTED', minutesFaulty };
+}
+
+function faultDurationLabel(minutes){
+  if(!minutes || minutes < 1) return 'Just now';
+  if(minutes < 60) return Math.round(minutes) + 'm ago';
+  return (minutes / 60).toFixed(1) + 'h ago';
+}
+
 // Rebuilds the Technician View — a stripped-down, field-friendly page
-// showing ONLY faulty lights (no online/dim noise), each as a card with
-// live readings, the specific fault reason, and one-tap Call/Message/
-// Directions actions. Kept in sync with LIGHT_NODES everywhere its
-// status can change: live MQTT ticks, adding, and removing lights.
+// showing ONLY faulty lights (no online/dim noise), grouped and sorted
+// by priority, each as a card with live readings, the specific fault
+// reason, and one-tap Call/Message/Directions actions. Kept in sync with
+// LIGHT_NODES everywhere its status can change: live MQTT ticks, adding,
+// and removing lights.
 function renderTechDashboard(){
   const grid = document.getElementById('tech-fault-grid');
   if(!grid) return; // page not in the DOM yet on first paint — fine, initApp() calls this again after render
 
-  const faults = LIGHT_NODES.filter(n => n.s === 'fault');
+  const faults = LIGHT_NODES
+    .filter(n => n.s === 'fault')
+    .map(n => ({ node: n, priority: getFaultPriority(n) }))
+    .sort((a, b) => a.priority.rank - b.priority.rank || b.priority.minutesFaulty - a.priority.minutesFaulty);
 
   document.getElementById('tech-fault-count').textContent = faults.length;
   const updatedEl = document.getElementById('tech-updated-at');
@@ -3573,6 +3635,36 @@ function renderTechDashboard(){
     }
   });
 
+  // ── Overview strip: counts by priority + how many zones are affected ──
+  const overview = document.getElementById('tech-overview');
+  if(overview){
+    if(!faults.length){
+      overview.style.display = 'none';
+    } else {
+      overview.style.display = 'grid';
+      const counts = { HIGH: 0, MEDIUM: 0, LOW: 0 };
+      const zones = new Set();
+      faults.forEach(f => { counts[f.priority.level]++; zones.add(f.node.z); });
+      overview.innerHTML = `
+        <div style="background:rgba(255,59,92,0.08);border:1px solid rgba(255,59,92,0.25);border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:'Orbitron',monospace;font-size:22px;font-weight:800;color:#ff3b5c;">${counts.HIGH}</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:9.5px;color:var(--muted);">🔴 HIGH PRIORITY</div>
+        </div>
+        <div style="background:rgba(255,179,0,0.08);border:1px solid rgba(255,179,0,0.25);border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:'Orbitron',monospace;font-size:22px;font-weight:800;color:#ffb300;">${counts.MEDIUM}</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:9.5px;color:var(--muted);">🟡 MEDIUM PRIORITY</div>
+        </div>
+        <div style="background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.25);border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:'Orbitron',monospace;font-size:22px;font-weight:800;color:#00e5ff;">${counts.LOW}</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:9.5px;color:var(--muted);">🔵 LOW / JUST REPORTED</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:'Orbitron',monospace;font-size:22px;font-weight:800;color:var(--text);">${zones.size}</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:9.5px;color:var(--muted);">ZONES AFFECTED</div>
+        </div>`;
+    }
+  }
+
   if(!faults.length){
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px 20px;color:var(--muted);">
       <div style="font-size:40px;margin-bottom:10px;">✅</div>
@@ -3582,48 +3674,68 @@ function renderTechDashboard(){
     return;
   }
 
-  grid.innerHTML = faults.map(n => {
-    const live = LIGHT_LIVE_DATA[n.id];
-    const reason = (live && live.reasons && live.reasons.length) ? live.reasons[0] : 'Lamp failure — no live telemetry yet';
-    const liveReadout = live
-      ? `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0;">
-          <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:8px;text-align:center;">
-            <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;color:var(--muted);">VOLTAGE</div>
-            <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--red);">${live.voltage.toFixed(1)}V</div>
-          </div>
-          <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:8px;text-align:center;">
-            <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;color:var(--muted);">CURRENT</div>
-            <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--red);">${live.current.toFixed(2)}A</div>
-          </div>
-          <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:8px;text-align:center;">
-            <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;color:var(--muted);">POWER</div>
-            <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--red);">${live.power.toFixed(1)}W</div>
-          </div>
-        </div>`
-      : `<div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);margin:10px 0;">No live telemetry received yet for this light.</div>`;
+  // ── Group cards under priority headers, in priority order ──
+  const groups = [
+    { level: 'HIGH', title: '🔴 High Priority — Attend First', color: '#ff3b5c' },
+    { level: 'MEDIUM', title: '🟡 Medium Priority', color: '#ffb300' },
+    { level: 'LOW', title: '🔵 Low Priority — Just Reported', color: '#00e5ff' },
+  ];
 
-    return `<div class="card" style="padding:16px;border-color:rgba(255,59,92,0.3);background:linear-gradient(135deg,rgba(255,59,92,0.06),transparent);">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
-        <div>
-          <div style="font-family:'Orbitron',monospace;font-size:17px;font-weight:800;color:var(--red);">${n.id}</div>
-          <div style="font-size:12px;font-weight:600;margin-top:2px;">${n.notes || 'Unnamed location'}</div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);">Zone ${n.z} · ${n.lat.toFixed(4)}, ${n.lon.toFixed(4)}</div>
+  grid.style.display = 'block';
+  grid.innerHTML = groups.map(g => {
+    const items = faults.filter(f => f.priority.level === g.level);
+    if(!items.length) return '';
+    const cards = items.map(({ node: n, priority }) => {
+      const live = LIGHT_LIVE_DATA[n.id];
+      const reason = (live && live.reasons && live.reasons.length) ? live.reasons[0] : 'Lamp failure — no live telemetry yet';
+      const liveReadout = live
+        ? `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0;">
+            <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:8px;text-align:center;">
+              <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;color:var(--muted);">VOLTAGE</div>
+              <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--red);">${live.voltage.toFixed(1)}V</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:8px;text-align:center;">
+              <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;color:var(--muted);">CURRENT</div>
+              <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--red);">${live.current.toFixed(2)}A</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:8px;text-align:center;">
+              <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;color:var(--muted);">POWER</div>
+              <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--red);">${live.power.toFixed(1)}W</div>
+            </div>
+          </div>`
+        : `<div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);margin:10px 0;">No live telemetry received yet for this light.</div>`;
+
+      return `<div class="card" style="padding:16px;border-color:${priority.color}4d;background:linear-gradient(135deg,${priority.color}12,transparent);">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+          <div>
+            <div style="font-family:'Orbitron',monospace;font-size:17px;font-weight:800;color:var(--red);">${n.id}</div>
+            <div style="font-size:12px;font-weight:600;margin-top:2px;">${n.notes || 'Unnamed location'}</div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);">Zone ${n.z} · ${n.lat.toFixed(4)}, ${n.lon.toFixed(4)}</div>
+          </div>
+          <div style="flex-shrink:0;text-align:right;">
+            <span class="badge" style="background:${priority.color}22;color:${priority.color};border:1px solid ${priority.color}55;">${priority.icon} ${priority.level}</span>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:9.5px;color:var(--muted);margin-top:4px;">${faultDurationLabel(priority.minutesFaulty)}</div>
+          </div>
         </div>
-        <span class="badge red" style="flex-shrink:0;">🔴 FAULTY</span>
-      </div>
 
-      ${liveReadout}
+        ${liveReadout}
 
-      <div style="display:flex;align-items:flex-start;gap:6px;font-size:11px;color:#ff8fa3;background:rgba(255,59,92,0.08);border:1px solid rgba(255,59,92,0.2);border-radius:8px;padding:8px 10px;margin-bottom:12px;">
-        <span style="flex-shrink:0;">⚠</span><span>${reason}</span>
-      </div>
+        <div style="display:flex;align-items:flex-start;gap:6px;font-size:11px;color:#ff8fa3;background:rgba(255,59,92,0.08);border:1px solid rgba(255,59,92,0.2);border-radius:8px;padding:8px 10px;margin-bottom:12px;">
+          <span style="flex-shrink:0;">⚠</span><span>${reason}</span>
+        </div>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        <button class="btn sm primary" style="justify-content:center;" onclick="callAboutFault('${n.id}')">📞 Call</button>
-        <button class="btn sm" style="justify-content:center;" onclick="messageAboutFault('${n.id}')">💬 Message</button>
-        <button class="btn sm" style="justify-content:center;" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${n.lat},${n.lon}','_blank')">🧭 Directions</button>
-        <button class="btn sm" style="justify-content:center;" onclick="openLightDetail('${n.id}')">📊 Full Details</button>
-      </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <button class="btn sm primary" style="justify-content:center;" onclick="callAboutFault('${n.id}')">📞 Call</button>
+          <button class="btn sm" style="justify-content:center;" onclick="messageAboutFault('${n.id}')">💬 Message</button>
+          <button class="btn sm" style="justify-content:center;" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${n.lat},${n.lon}','_blank')">🧭 Directions</button>
+          <button class="btn sm" style="justify-content:center;" onclick="openLightDetail('${n.id}')">📊 Full Details</button>
+        </div>
+      </div>`;
+    }).join('');
+
+    return `<div style="margin-bottom:20px;">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:700;color:${g.color};letter-spacing:0.5px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid ${g.color}33;">${g.title} <span style="color:var(--muted);font-weight:400;">(${items.length})</span></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;">${cards}</div>
     </div>`;
   }).join('');
 }
@@ -4160,6 +4272,8 @@ function removeStreetLight(id, opts){
   const node = LIGHT_NODES[idx];
   LIGHT_NODES.splice(idx, 1);
   deleteLightFromApi(id);
+  delete LIGHT_LIVE_DATA[id];
+  delete LIGHT_FAULT_SINCE[id];
 
   // Remove from OSM live map
   if(window.osmMarkers && window.osmMarkers[id]){
