@@ -843,6 +843,9 @@ function logoutApp(){
     <button class="mnav-btn" id="mn-admin" onclick="showPage('admin',this,'mn-admin')">
       <div class="mnav-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><div class="mnav-lbl">Reports</div>
     </button>
+    <button class="mnav-btn" id="mn-tech" onclick="showPage('tech',this,'mn-tech')">
+      <div class="mnav-icon" style="position:relative;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><span id="tech-nav-badge-m" style="display:none;position:absolute;top:-4px;right:-6px;background:var(--red);color:#fff;font-size:8px;font-weight:800;padding:1px 4px;border-radius:8px;">0</span></div><div class="mnav-lbl">Tech</div>
+    </button>
   </div>
 </nav>
 
@@ -863,6 +866,7 @@ function logoutApp(){
     <button class="hnav-btn" onclick="showPage('energy',this)"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Energy</button>
     <button class="hnav-btn" onclick="showPage('maint',this)"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> Maintenance</button>
     <button class="hnav-btn" onclick="showPage('admin',this)"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Admin & Reports</button>
+    <button class="hnav-btn" onclick="showPage('tech',this)" id="hnav-tech-btn"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> Technician View <span id="tech-nav-badge" style="display:none;margin-left:5px;background:var(--red);color:#fff;font-size:9px;font-weight:800;padding:1px 6px;border-radius:9px;">0</span></button>
   </nav>
 
   <div class="hright">
@@ -2199,6 +2203,38 @@ function logoutApp(){
 </div>
 
 <!-- ════════════════════════════════════════════
+     PAGE: TECHNICIAN VIEW — faulty lights only
+════════════════════════════════════════════ -->
+<div class="page" id="p-tech">
+  <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
+    <div>
+      <h1 style="font-size:22px;font-weight:700;display:flex;align-items:center;gap:10px;">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" style="color:var(--red);width:24px;height:24px;"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        Technician View
+      </h1>
+      <p style="color:var(--muted);font-size:12px;margin-top:4px;font-family:'Share Tech Mono',monospace;">Only faulty lights are shown here — nothing else to wade through in the field.</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span id="tech-updated-at" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);"></span>
+      <button class="btn sm" onclick="renderTechDashboard()" title="Refresh">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <div class="card" style="padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,rgba(255,59,92,0.1),rgba(255,59,92,0.02));border-color:rgba(255,59,92,0.25);">
+    <div style="font-family:'Orbitron',monospace;font-size:32px;font-weight:800;color:var(--red);" id="tech-fault-count">0</div>
+    <div>
+      <div style="font-size:14px;font-weight:700;">Faulty Lights Right Now</div>
+      <div style="font-size:11px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Live — updates automatically as MQTT readings come in</div>
+    </div>
+  </div>
+
+  <div id="tech-fault-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;"></div>
+</div>
+
+<!-- ════════════════════════════════════════════
      PAGE 7: PINK PATROL COMMAND (Patrol role)
 ════════════════════════════════════════════ -->
 <div class="page" id="p-patrol">
@@ -3004,6 +3040,7 @@ function showPage(id,btn,mobileId){
   if(mobileId) document.getElementById(mobileId).classList.add('active');
   if(id==='maint') setTimeout(initRouteMap,100);
   if(id==='patrol') setTimeout(() => { if(window.initPatrolMap) initPatrolMap(); }, 100);
+  if(id==='tech') renderTechDashboard();
   if(id==='home' && osmLightMapInstance) setTimeout(() => osmLightMapInstance.invalidateSize(), 60);
 }
 
@@ -3424,6 +3461,7 @@ function applyLiveTelemetry(data){
     recalcAndRenderKpis();
     renderFaultTable();
     renderLiveAlerts();
+    renderTechDashboard();
     if(document.getElementById('ml-modal') && document.getElementById('ml-modal').style.display !== 'none'){
       renderManageLightsList();
     }
@@ -3509,6 +3547,87 @@ function renderFaultTable(){
     </tr>`;
   }).join('');
 }
+
+// Rebuilds the Technician View — a stripped-down, field-friendly page
+// showing ONLY faulty lights (no online/dim noise), each as a card with
+// live readings, the specific fault reason, and one-tap Call/Message/
+// Directions actions. Kept in sync with LIGHT_NODES everywhere its
+// status can change: live MQTT ticks, adding, and removing lights.
+function renderTechDashboard(){
+  const grid = document.getElementById('tech-fault-grid');
+  if(!grid) return; // page not in the DOM yet on first paint — fine, initApp() calls this again after render
+
+  const faults = LIGHT_NODES.filter(n => n.s === 'fault');
+
+  document.getElementById('tech-fault-count').textContent = faults.length;
+  const updatedEl = document.getElementById('tech-updated-at');
+  if(updatedEl) updatedEl.textContent = 'Updated ' + new Date().toLocaleTimeString('en-IN', { hour12: false });
+
+  [document.getElementById('tech-nav-badge'), document.getElementById('tech-nav-badge-m')].forEach(badge => {
+    if(!badge) return;
+    if(faults.length){
+      badge.textContent = faults.length;
+      badge.style.display = 'inline-block';
+    } else {
+      badge.style.display = 'none';
+    }
+  });
+
+  if(!faults.length){
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px 20px;color:var(--muted);">
+      <div style="font-size:40px;margin-bottom:10px;">✅</div>
+      <div style="font-size:15px;font-weight:700;color:var(--text);">All lights are working properly</div>
+      <div style="font-size:12px;font-family:'Share Tech Mono',monospace;margin-top:4px;">Nothing needs attention right now.</div>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = faults.map(n => {
+    const live = LIGHT_LIVE_DATA[n.id];
+    const reason = (live && live.reasons && live.reasons.length) ? live.reasons[0] : 'Lamp failure — no live telemetry yet';
+    const liveReadout = live
+      ? `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0;">
+          <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:8px;text-align:center;">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;color:var(--muted);">VOLTAGE</div>
+            <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--red);">${live.voltage.toFixed(1)}V</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:8px;text-align:center;">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;color:var(--muted);">CURRENT</div>
+            <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--red);">${live.current.toFixed(2)}A</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:8px;text-align:center;">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;color:var(--muted);">POWER</div>
+            <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--red);">${live.power.toFixed(1)}W</div>
+          </div>
+        </div>`
+      : `<div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);margin:10px 0;">No live telemetry received yet for this light.</div>`;
+
+    return `<div class="card" style="padding:16px;border-color:rgba(255,59,92,0.3);background:linear-gradient(135deg,rgba(255,59,92,0.06),transparent);">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+        <div>
+          <div style="font-family:'Orbitron',monospace;font-size:17px;font-weight:800;color:var(--red);">${n.id}</div>
+          <div style="font-size:12px;font-weight:600;margin-top:2px;">${n.notes || 'Unnamed location'}</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);">Zone ${n.z} · ${n.lat.toFixed(4)}, ${n.lon.toFixed(4)}</div>
+        </div>
+        <span class="badge red" style="flex-shrink:0;">🔴 FAULTY</span>
+      </div>
+
+      ${liveReadout}
+
+      <div style="display:flex;align-items:flex-start;gap:6px;font-size:11px;color:#ff8fa3;background:rgba(255,59,92,0.08);border:1px solid rgba(255,59,92,0.2);border-radius:8px;padding:8px 10px;margin-bottom:12px;">
+        <span style="flex-shrink:0;">⚠</span><span>${reason}</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button class="btn sm primary" style="justify-content:center;" onclick="callAboutFault('${n.id}')">📞 Call</button>
+        <button class="btn sm" style="justify-content:center;" onclick="messageAboutFault('${n.id}')">💬 Message</button>
+        <button class="btn sm" style="justify-content:center;" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${n.lat},${n.lon}','_blank')">🧭 Directions</button>
+        <button class="btn sm" style="justify-content:center;" onclick="openLightDetail('${n.id}')">📊 Full Details</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+window.renderTechDashboard = renderTechDashboard;
 
 // Rebuilds the "Live Alerts" panel on the Home page from LIGHT_NODES.
 function renderLiveAlerts(){
@@ -4006,6 +4125,8 @@ function handleAddLightSubmit(event){
   setTimeout(() => addLightNodeToMap(node), osmLightMapInstance ? 0 : 150);
 
   updateHomeKpisAfterAdd(status);
+  renderFaultTable();
+  renderTechDashboard();
   closeAddLightModal();
 
   const statusLabel = LIGHT_STATUS_LABEL[status] || status;
@@ -4053,6 +4174,8 @@ function removeStreetLight(id, opts){
   renderGridZoneOverlays();
   renderGridBuildingLabels();
   updateHomeKpisAfterRemove(node.s);
+  renderFaultTable();
+  renderTechDashboard();
   if(window.renderManageLightsList) renderManageLightsList();
   if(window.showToast) showToast(id + ' removed from the system', '#ff3b5c');
 }
@@ -4371,6 +4494,7 @@ window.attachMnodeTooltip = attachMnodeTooltip;
   }
   renderFaultTable();
   renderLiveAlerts();
+  renderTechDashboard();
   recalcAndRenderKpis();
   initMqttLive();
 })();
