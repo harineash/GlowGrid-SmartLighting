@@ -1440,6 +1440,17 @@ function logoutApp(){
           <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted);">Location</span><span id="ld-notes">—</span></div>
         </div>
 
+        <div style="border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;">PHYSICAL SIREN (REMOTE)</div>
+            <span id="ld-siren-status" style="font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;color:var(--muted);">UNKNOWN</span>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn sm" style="flex:1;padding:9px;color:#ff3b5c;border-color:rgba(255,59,92,0.35);" onclick="publishSirenCommand(currentLightDetailId,'SIREN_ON')">🔊 Activate Siren</button>
+            <button class="btn sm" style="flex:1;padding:9px;" onclick="publishSirenCommand(currentLightDetailId,'SIREN_OFF')">🔇 Deactivate</button>
+          </div>
+        </div>
+
         <div style="display:flex;gap:10px;">
           <button class="btn sm" style="flex:1;padding:10px;" id="ld-call-btn" onclick="callAboutFault(currentLightDetailId)">📞 Call</button>
           <button class="btn sm" style="flex:1;padding:10px;" id="ld-msg-btn" onclick="messageAboutFault(currentLightDetailId)">💬 Message</button>
@@ -2235,11 +2246,20 @@ function logoutApp(){
     </div>
   </div>
 
-  <div class="card" style="padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,rgba(255,59,92,0.1),rgba(255,59,92,0.02));border-color:rgba(255,59,92,0.25);">
-    <div style="font-family:'Orbitron',monospace;font-size:32px;font-weight:800;color:var(--red);" id="tech-fault-count">0</div>
-    <div>
-      <div style="font-size:14px;font-weight:700;">Faulty Lights Right Now</div>
-      <div style="font-size:11px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Live — updates automatically as MQTT readings come in</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+    <div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,rgba(255,59,92,0.1),rgba(255,59,92,0.02));border-color:rgba(255,59,92,0.25);">
+      <div style="font-family:'Orbitron',monospace;font-size:32px;font-weight:800;color:var(--red);" id="tech-fault-count">0</div>
+      <div>
+        <div style="font-size:14px;font-weight:700;">Faulty Lights</div>
+        <div style="font-size:10.5px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Live — updates on every MQTT reading</div>
+      </div>
+    </div>
+    <div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,rgba(255,179,0,0.1),rgba(255,179,0,0.02));border-color:rgba(255,179,0,0.25);">
+      <div style="font-family:'Orbitron',monospace;font-size:32px;font-weight:800;color:var(--amber);" id="tech-dim-count">0</div>
+      <div>
+        <div style="font-size:14px;font-weight:700;">Dim Lights</div>
+        <div style="font-size:10.5px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Underpowered — worth a look, not urgent</div>
+      </div>
     </div>
   </div>
 
@@ -3109,10 +3129,18 @@ function zoneColor(z){ return ZONE_COLORS[z] || '#00e5ff'; }
 //                                  "energy" are read automatically if your firmware
 //                                  sends them — safely ignored otherwise)
 //   Topic "streetlights/status" → plain text: "ESP32 ONLINE"
-//   Topic "streetlights/sos"    → panic-button press signal (see handleSosSignal()
-//                                  below for the accepted payload shapes). Wire your
-//                                  hardware button to publish here to trigger the
-//                                  Patrol page's siren + Emergency Lighting protocol.
+//   Topic "streetlights/sos"    → panic-button press signal, e.g.
+//                                  {"node":"SL-01","event":"SOS"} (also accepts
+//                                  the older {"light":...}/bare-id shapes — see
+//                                  handleSosSignal() below). Wire your hardware
+//                                  button to publish here to trigger the siren +
+//                                  Patrol page's Emergency Lighting protocol.
+//   Topic "streetlights/command" → WEBSITE PUBLISHES here to remote-control a
+//                                  physical siren: {"node":"SL-01","command":"SIREN_ON"}
+//                                  or "SIREN_OFF". The ETS IoT WDM gateway relays
+//                                  this over LoRa to the target node only.
+//   Topic "streetlights/ack"    → streetlight confirms a command took effect:
+//                                  {"node":"SL-01","command":"SIREN_ON","status":"ACTIVE"}
 // ══════════════════════════════════════════════════════════════════
 const MQTT_WS_URL = 'wss://broker.hivemq.com:8884/mqtt';
 const MQTT_DATA_TOPIC = 'streetlights/data';
@@ -3120,6 +3148,11 @@ const MQTT_STATUS_TOPIC = 'streetlights/status';
 const MQTT_SOS_TOPIC = 'streetlights/sos';
 const MQTT_COMMAND_TOPIC = 'streetlights/command';
 const MQTT_ACK_TOPIC = 'streetlights/ack';
+
+// Latest known remote-siren state per light: { command:'SIREN_ON'|'SIREN_OFF',
+// status:'PENDING'|'ACTIVE'|'OFF', ts }. PENDING is set the moment the website
+// publishes a command and cleared once the real ACK arrives from hardware.
+const LIGHT_SIREN_STATE = {};
 
 // Latest telemetry per light ID: { voltage, current, power, pf, freq, kwh, ts }
 const LIGHT_LIVE_DATA = {};
@@ -3341,7 +3374,9 @@ function handleSosSignal(text){
   let payload = {};
   try { payload = JSON.parse(text); } catch(e){ /* not JSON — fall through to plain-text handling */ }
 
-  let lightId = payload.light || payload.id;
+  // Accepts {"node":"SL-01","event":"SOS"} (pilot spec), the earlier
+  // {"light":...}/{"id":...} shapes, or a bare light-id string.
+  let lightId = payload.node || payload.light || payload.id;
   if(!lightId && text && LIGHT_NODES.some(n => n.id === text.trim())) lightId = text.trim();
   lightId = lightId || 'SOS-BTN';
 
@@ -3353,39 +3388,60 @@ function handleSosSignal(text){
 }
 window.handleSosSignal = handleSosSignal;
 
-// Starts the audible + visual siren and kicks off the Patrol page's
-// Emergency Lighting protocol automatically — this is the "pressing a
-// physical button should activate the siren on the patrol side" path.
-function publishSirenCommand(node, command){
+// ══════════════════════════════════════════════════════════════════
+// WEBSITE → PHYSICAL SIREN (remote command + ACK confirmation)
+// Publishing here does NOT play the browser's own siren sound — that's
+// reserved for a real SOS button press. This is strictly for remotely
+// switching a light's physical hardware siren on/off, with a genuine
+// ACK required before the UI calls it "active" or "off".
+// ══════════════════════════════════════════════════════════════════
+function publishSirenCommand(nodeId, command){
   if(!mqttLiveClient || !mqttLiveClient.connected){
-    if(window.showToast) showToast('MQTT not connected — command not sent', '#ff3b5c', 5000);
-    return false;
+    if(window.showToast) showToast('Not connected to MQTT — command not sent', '#ff3b5c');
+    return;
   }
-  const msg = JSON.stringify({node: node, command: command, ts: Date.now()});
-  mqttLiveClient.publish(MQTT_COMMAND_TOPIC, msg, {qos: 1, retain: false}, (err) => {
-    if(err) console.warn('Siren command publish failed', err);
+  LIGHT_SIREN_STATE[nodeId] = { command, status: 'PENDING', ts: Date.now() };
+  if(currentLightDetailId === nodeId) renderLightDetail();
+
+  mqttLiveClient.publish(MQTT_COMMAND_TOPIC, JSON.stringify({ node: nodeId, command }), (err) => {
+    if(err){
+      console.warn('Siren command publish failed', err);
+      if(window.showToast) showToast('Failed to send siren command to ' + nodeId, '#ff3b5c');
+    }
   });
-  return true;
+
+  if(window.showToast) showToast(`Sent ${command === 'SIREN_ON' ? '🔊 Activate' : '🔇 Deactivate'} Siren → ${nodeId} · waiting for ACK…`, '#00e5ff');
 }
 window.publishSirenCommand = publishSirenCommand;
 
+// Streetlight hardware confirms a command actually took effect. Only
+// this — never the publish itself — updates a light's siren state to
+// ACTIVE/OFF; until then the UI shows PENDING.
 function handleSirenAck(text){
-  let p = {};
-  try { p = JSON.parse(text); } catch(e){ return; }
-  const node = p.node || p.light || 'UNKNOWN';
-  const command = p.command || '';
-  const status = p.status || 'ACK';
-  if(window.showToast) showToast(`✓ ${node} · ${command} · ${status}`, '#00f07a', 4500);
+  let payload = {};
+  try { payload = JSON.parse(text); } catch(e){ console.warn('Bad ACK JSON', e); return; }
+
+  const nodeId = payload.node;
+  if(!nodeId) return;
+  const status = (payload.status || '').toUpperCase(); // 'ACTIVE' | 'OFF'
+
+  LIGHT_SIREN_STATE[nodeId] = { command: payload.command, status: status || 'UNKNOWN', ts: Date.now() };
+
+  const isOn = status === 'ACTIVE';
+  if(window.showToast){
+    showToast(`✓ ${nodeId} — SIREN ${isOn ? 'ACTIVE' : 'OFF'} · ACK RECEIVED`, isOn ? '#ff3b5c' : '#00e676');
+  }
+  if(currentLightDetailId === nodeId) renderLightDetail();
 }
 window.handleSirenAck = handleSirenAck;
 
+// Starts the audible + visual siren and kicks off the Patrol page's
+// Emergency Lighting protocol automatically — this is the "pressing a
+// physical button should activate the siren on the patrol side" path.
 function triggerSosSiren(lightId, location){
   startSiren();
 
   document.getElementById('siren-banner-detail').textContent = `${lightId} · ${location}`;
-
-  // Route the physical siren command back to the exact streetlight node.
-  publishSirenCommand(lightId, 'SIREN_ON');
 
   if(window.showToast) showToast('🚨 SOS button pressed — ' + lightId, '#ff3b5c', 6000);
 
@@ -3653,10 +3709,17 @@ function renderTechDashboard(){
     .map(n => ({ node: n, priority: getFaultPriority(n) }))
     .sort((a, b) => a.priority.rank - b.priority.rank || b.priority.minutesFaulty - a.priority.minutesFaulty);
 
+  const dims = LIGHT_NODES.filter(n => n.s === 'dim');
+
   document.getElementById('tech-fault-count').textContent = faults.length;
+  const dimCountEl = document.getElementById('tech-dim-count');
+  if(dimCountEl) dimCountEl.textContent = dims.length;
   const updatedEl = document.getElementById('tech-updated-at');
   if(updatedEl) updatedEl.textContent = 'Updated ' + new Date().toLocaleTimeString('en-IN', { hour12: false });
 
+  // The urgent red nav badge reflects FAULTS only (dim lights are worth
+  // monitoring but aren't an active outage) — dims are still fully
+  // visible in the page body below.
   [document.getElementById('tech-nav-badge'), document.getElementById('tech-nav-badge-m')].forEach(badge => {
     if(!badge) return;
     if(faults.length){
@@ -3667,16 +3730,17 @@ function renderTechDashboard(){
     }
   });
 
-  // ── Overview strip: counts by priority + how many zones are affected ──
+  // ── Overview strip: fault priority counts + dim count + zones affected ──
   const overview = document.getElementById('tech-overview');
   if(overview){
-    if(!faults.length){
+    if(!faults.length && !dims.length){
       overview.style.display = 'none';
     } else {
       overview.style.display = 'grid';
       const counts = { HIGH: 0, MEDIUM: 0, LOW: 0 };
       const zones = new Set();
       faults.forEach(f => { counts[f.priority.level]++; zones.add(f.node.z); });
+      dims.forEach(n => zones.add(n.z));
       overview.innerHTML = `
         <div style="background:rgba(255,59,92,0.08);border:1px solid rgba(255,59,92,0.25);border-radius:10px;padding:12px;text-align:center;">
           <div style="font-family:'Orbitron',monospace;font-size:22px;font-weight:800;color:#ff3b5c;">${counts.HIGH}</div>
@@ -3690,6 +3754,10 @@ function renderTechDashboard(){
           <div style="font-family:'Orbitron',monospace;font-size:22px;font-weight:800;color:#00e5ff;">${counts.LOW}</div>
           <div style="font-family:'Share Tech Mono',monospace;font-size:9.5px;color:var(--muted);">🔵 LOW / JUST REPORTED</div>
         </div>
+        <div style="background:rgba(255,179,0,0.06);border:1px solid rgba(255,179,0,0.2);border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:'Orbitron',monospace;font-size:22px;font-weight:800;color:#ffb300;">${dims.length}</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:9.5px;color:var(--muted);">🟡 DIM · MONITOR</div>
+        </div>
         <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;">
           <div style="font-family:'Orbitron',monospace;font-size:22px;font-weight:800;color:var(--text);">${zones.size}</div>
           <div style="font-family:'Share Tech Mono',monospace;font-size:9.5px;color:var(--muted);">ZONES AFFECTED</div>
@@ -3697,7 +3765,8 @@ function renderTechDashboard(){
     }
   }
 
-  if(!faults.length){
+  if(!faults.length && !dims.length){
+    grid.style.display = 'block';
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px 20px;color:var(--muted);">
       <div style="font-size:40px;margin-bottom:10px;">✅</div>
       <div style="font-size:15px;font-weight:700;color:var(--text);">All lights are working properly</div>
@@ -3706,63 +3775,67 @@ function renderTechDashboard(){
     return;
   }
 
-  // ── Group cards under priority headers, in priority order ──
+  // Shared card renderer for both fault (priority-colored) and dim
+  // (always amber) sections, so the two stay visually consistent.
+  function buildLightCard(n, accentColor, badgeHtml, defaultReason){
+    const live = LIGHT_LIVE_DATA[n.id];
+    const reason = (live && live.reasons && live.reasons.length) ? live.reasons[0] : defaultReason;
+    const liveReadout = live
+      ? `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0;">
+          <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:8px;text-align:center;">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;color:var(--muted);">VOLTAGE</div>
+            <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:${accentColor};">${live.voltage.toFixed(1)}V</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:8px;text-align:center;">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;color:var(--muted);">CURRENT</div>
+            <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:${accentColor};">${live.current.toFixed(2)}A</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:8px;text-align:center;">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;color:var(--muted);">POWER</div>
+            <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:${accentColor};">${live.power.toFixed(1)}W</div>
+          </div>
+        </div>`
+      : `<div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);margin:10px 0;">No live telemetry received yet for this light.</div>`;
+
+    return `<div class="card" style="padding:16px;border-color:${accentColor}4d;background:linear-gradient(135deg,${accentColor}12,transparent);">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+        <div>
+          <div style="font-family:'Orbitron',monospace;font-size:17px;font-weight:800;color:${accentColor};">${n.id}</div>
+          <div style="font-size:12px;font-weight:600;margin-top:2px;">${n.notes || 'Unnamed location'}</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);">Zone ${n.z} · ${n.lat.toFixed(4)}, ${n.lon.toFixed(4)}</div>
+        </div>
+        <div style="flex-shrink:0;text-align:right;">${badgeHtml}</div>
+      </div>
+
+      ${liveReadout}
+
+      <div style="display:flex;align-items:flex-start;gap:6px;font-size:11px;color:${accentColor};background:${accentColor}14;border:1px solid ${accentColor}33;border-radius:8px;padding:8px 10px;margin-bottom:12px;">
+        <span style="flex-shrink:0;">⚠</span><span>${reason}</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button class="btn sm primary" style="justify-content:center;" onclick="callAboutFault('${n.id}')">📞 Call</button>
+        <button class="btn sm" style="justify-content:center;" onclick="messageAboutFault('${n.id}')">💬 Message</button>
+        <button class="btn sm" style="justify-content:center;" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${n.lat},${n.lon}','_blank')">🧭 Directions</button>
+        <button class="btn sm" style="justify-content:center;" onclick="openLightDetail('${n.id}')">📊 Full Details</button>
+      </div>
+    </div>`;
+  }
+
+  // ── Group fault cards under priority headers, in priority order ──
   const groups = [
     { level: 'HIGH', title: '🔴 High Priority — Attend First', color: '#ff3b5c' },
     { level: 'MEDIUM', title: '🟡 Medium Priority', color: '#ffb300' },
     { level: 'LOW', title: '🔵 Low Priority — Just Reported', color: '#00e5ff' },
   ];
 
-  grid.style.display = 'block';
-  grid.innerHTML = groups.map(g => {
+  let html = groups.map(g => {
     const items = faults.filter(f => f.priority.level === g.level);
     if(!items.length) return '';
     const cards = items.map(({ node: n, priority }) => {
-      const live = LIGHT_LIVE_DATA[n.id];
-      const reason = (live && live.reasons && live.reasons.length) ? live.reasons[0] : 'Lamp failure — no live telemetry yet';
-      const liveReadout = live
-        ? `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0;">
-            <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:8px;text-align:center;">
-              <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;color:var(--muted);">VOLTAGE</div>
-              <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--red);">${live.voltage.toFixed(1)}V</div>
-            </div>
-            <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:8px;text-align:center;">
-              <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;color:var(--muted);">CURRENT</div>
-              <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--red);">${live.current.toFixed(2)}A</div>
-            </div>
-            <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:8px;text-align:center;">
-              <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;color:var(--muted);">POWER</div>
-              <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--red);">${live.power.toFixed(1)}W</div>
-            </div>
-          </div>`
-        : `<div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);margin:10px 0;">No live telemetry received yet for this light.</div>`;
-
-      return `<div class="card" style="padding:16px;border-color:${priority.color}4d;background:linear-gradient(135deg,${priority.color}12,transparent);">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
-          <div>
-            <div style="font-family:'Orbitron',monospace;font-size:17px;font-weight:800;color:var(--red);">${n.id}</div>
-            <div style="font-size:12px;font-weight:600;margin-top:2px;">${n.notes || 'Unnamed location'}</div>
-            <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);">Zone ${n.z} · ${n.lat.toFixed(4)}, ${n.lon.toFixed(4)}</div>
-          </div>
-          <div style="flex-shrink:0;text-align:right;">
-            <span class="badge" style="background:${priority.color}22;color:${priority.color};border:1px solid ${priority.color}55;">${priority.icon} ${priority.level}</span>
-            <div style="font-family:'Share Tech Mono',monospace;font-size:9.5px;color:var(--muted);margin-top:4px;">${faultDurationLabel(priority.minutesFaulty)}</div>
-          </div>
-        </div>
-
-        ${liveReadout}
-
-        <div style="display:flex;align-items:flex-start;gap:6px;font-size:11px;color:#ff8fa3;background:rgba(255,59,92,0.08);border:1px solid rgba(255,59,92,0.2);border-radius:8px;padding:8px 10px;margin-bottom:12px;">
-          <span style="flex-shrink:0;">⚠</span><span>${reason}</span>
-        </div>
-
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <button class="btn sm primary" style="justify-content:center;" onclick="callAboutFault('${n.id}')">📞 Call</button>
-          <button class="btn sm" style="justify-content:center;" onclick="messageAboutFault('${n.id}')">💬 Message</button>
-          <button class="btn sm" style="justify-content:center;" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${n.lat},${n.lon}','_blank')">🧭 Directions</button>
-          <button class="btn sm" style="justify-content:center;" onclick="openLightDetail('${n.id}')">📊 Full Details</button>
-        </div>
-      </div>`;
+      const badge = `<span class="badge" style="background:${priority.color}22;color:${priority.color};border:1px solid ${priority.color}55;">${priority.icon} ${priority.level}</span>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:9.5px;color:var(--muted);margin-top:4px;">${faultDurationLabel(priority.minutesFaulty)}</div>`;
+      return buildLightCard(n, priority.color, badge, 'Lamp failure — no live telemetry yet');
     }).join('');
 
     return `<div style="margin-bottom:20px;">
@@ -3770,6 +3843,22 @@ function renderTechDashboard(){
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;">${cards}</div>
     </div>`;
   }).join('');
+
+  // ── Dim lights section — separate from faults, always shown together ──
+  if(dims.length){
+    const dimColor = '#ffb300';
+    const cards = dims.map(n => {
+      const badge = `<span class="badge" style="background:${dimColor}22;color:${dimColor};border:1px solid ${dimColor}55;">🟡 DIM</span>`;
+      return buildLightCard(n, dimColor, badge, 'Operating below normal — underpowered');
+    }).join('');
+    html += `<div style="margin-bottom:20px;">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:700;color:${dimColor};letter-spacing:0.5px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid ${dimColor}33;">🟡 Dim Lights — Monitor <span style="color:var(--muted);font-weight:400;">(${dims.length})</span></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;">${cards}</div>
+    </div>`;
+  }
+
+  grid.style.display = 'block';
+  grid.innerHTML = html;
 }
 window.renderTechDashboard = renderTechDashboard;
 
@@ -4413,6 +4502,24 @@ function renderLightDetail(){
   document.getElementById('ld-gps').textContent = `${node.lat.toFixed(5)}, ${node.lon.toFixed(5)}`;
   document.getElementById('ld-fixture').textContent = node.type || '—';
   document.getElementById('ld-notes').textContent = node.notes || '—';
+
+  const sirenState = LIGHT_SIREN_STATE[node.id];
+  const sirenEl = document.getElementById('ld-siren-status');
+  if(sirenEl){
+    if(!sirenState){
+      sirenEl.textContent = 'UNKNOWN';
+      sirenEl.style.color = 'var(--muted)';
+    } else if(sirenState.status === 'PENDING'){
+      sirenEl.textContent = '⏳ WAITING FOR ACK…';
+      sirenEl.style.color = 'var(--amber)';
+    } else if(sirenState.status === 'ACTIVE'){
+      sirenEl.textContent = '✓ ACTIVE';
+      sirenEl.style.color = 'var(--red)';
+    } else {
+      sirenEl.textContent = '✓ OFF';
+      sirenEl.style.color = 'var(--green)';
+    }
+  }
 
   const live = LIGHT_LIVE_DATA[node.id];
   const banner = document.getElementById('ld-live-banner');
